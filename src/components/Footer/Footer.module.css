@@ -58,8 +58,6 @@
   transform: translateX(5px);
 }
 
-/* ---- link columns ---- */
-
 .col {
   display: flex;
   flex-direction: column;
@@ -121,8 +119,6 @@
   transform: translateY(-3px);
 }
 
-/* ---- oversized wordmark ---- */
-
 .markRow {
   border-top: 1px solid var(--light-line);
   padding-top: 26px;
@@ -146,8 +142,6 @@
   color: rgba(193, 66, 15, 0.14);
   -webkit-text-stroke-color: rgba(193, 66, 15, 0.7);
 }
-
-/* ---- bottom bar ---- */
 
 .bottom {
   display: flex;

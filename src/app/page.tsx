@@ -24,7 +24,6 @@ export default function Home() {
 
       <AboutSculptor />
 
-      {/* ---------------- meet the artists ---------------- */}
       <section className="section">
         <div className="wrap">
           <SectionHead
@@ -53,7 +52,6 @@ export default function Home() {
 
       <ChiselRule />
 
-      {/* ---------------- exhibitions ---------------- */}
       <section className="section">
         <div className="wrap">
           <SectionHead
@@ -82,7 +80,6 @@ export default function Home() {
 
       <ChiselRule />
 
-      {/* ---------------- available works ---------------- */}
       <section className={`section ${styles.shop}`}>
         <div className="wrap">
           <SectionHead

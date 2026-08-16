@@ -34,7 +34,6 @@ export default function Hero() {
       let cancelled = false;
 
       const cancelFonts = whenFontsReady(() => {
-        // Hold the type back until the intro curtain has lifted.
         introDone.then(() => {
           if (cancelled || !root.current) return;
 
@@ -104,7 +103,6 @@ export default function Hero() {
               "-=0.8"
             );
 
-          // Endless drift on the floating marks.
           q("[data-hero-shape]").forEach((shape, i) => {
             gsap.to(shape, {
               y: i % 2 === 0 ? 18 : -22,
@@ -117,7 +115,6 @@ export default function Hero() {
             });
           });
 
-          // Scroll cue breathing.
           gsap.to(q("[data-hero-cue] span"), {
             yPercent: 180,
             duration: 1.6,
@@ -128,7 +125,6 @@ export default function Hero() {
         });
       });
 
-      // Depth on scroll: text lifts a little faster than the plate.
       gsap.to(q("[data-hero-copy]"), {
         yPercent: -14,
         opacity: 0.35,
@@ -141,7 +137,6 @@ export default function Hero() {
         scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: 0.6 },
       });
 
-      // Pointer parallax across the whole stage.
       const onMove = (e: PointerEvent) => {
         const rx = e.clientX / window.innerWidth - 0.5;
         const ry = e.clientY / window.innerHeight - 0.5;
@@ -245,7 +240,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Now-on-view banner, pinned to the base of the hero */}
       <div className={`wrap ${styles.bannerWrap}`}>
         <Link href="/exhibitions" className={styles.banner} data-hero-banner data-reveal>
           <span className={styles.bannerTag}>Now on view</span>

@@ -4,10 +4,6 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger, prefersReducedMotion } from "@/lib/gsap";
 
-/**
- * Re-mounts on every route change, which gives each page a short entrance:
- * an oxide seam sweeps across the top while the content settles up.
- */
 export default function Template({ children }: { children: React.ReactNode }) {
   const scope = useRef<HTMLDivElement>(null);
 

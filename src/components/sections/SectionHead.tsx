@@ -6,11 +6,9 @@ type SectionHeadProps = {
   kicker: string;
   title: ReactNode;
   body?: string;
-  /** Extra content pinned to the right column, under the body copy. */
   aside?: ReactNode;
 };
 
-/** The two-column heading used at the top of most sections. */
 export default function SectionHead({ kicker, title, body, aside }: SectionHeadProps) {
   return (
     <div className="sectionHead">

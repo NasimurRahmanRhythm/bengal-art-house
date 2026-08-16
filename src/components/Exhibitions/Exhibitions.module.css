@@ -1,5 +1,3 @@
-/* ---------------- carousel ---------------- */
-
 .carousel {
   position: relative;
 }
@@ -131,8 +129,6 @@
   transform: translateX(6px);
 }
 
-/* ---- controls ---- */
-
 .controls {
   display: flex;
   align-items: center;
@@ -183,8 +179,6 @@
 .flip {
   transform: rotate(180deg);
 }
-
-/* ---------------- timeline (exhibitions page) ---------------- */
 
 .timeline {
   position: relative;

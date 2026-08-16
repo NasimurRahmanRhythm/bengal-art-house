@@ -11,17 +11,11 @@ type SplitHeadingProps = {
   style?: CSSProperties;
   id?: string;
   delay?: number;
-  /** Skip ScrollTrigger and play as soon as the fonts are ready (hero use). */
   immediate?: boolean;
   start?: string;
-  /** Split into words rather than whole lines — for short, punchy headings. */
   by?: "lines" | "words";
 };
 
-/**
- * Editorial heading reveal: the text is sliced into masked lines that swing up
- * from below their own baseline, one after the next.
- */
 export default function SplitHeading({
   children,
   as: Tag = "h2",

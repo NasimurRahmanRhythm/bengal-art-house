@@ -60,7 +60,6 @@ export default function ExhibitionCarousel() {
     };
   }, [syncProgress]);
 
-  /* Cards fan in from the right; pointer-drag turns the rail into a slider. */
   useGSAP(
     () => {
       const el = rail.current;
@@ -89,7 +88,6 @@ export default function ExhibitionCarousel() {
       let startScroll = 0;
 
       const onDown = (e: PointerEvent) => {
-        // Let buttons and links keep their own click behaviour.
         if ((e.target as HTMLElement).closest("a,button")) return;
         down = true;
         startX = e.clientX;

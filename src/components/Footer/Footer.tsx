@@ -19,7 +19,6 @@ export default function Footer() {
       const mark = root.current?.querySelector(`.${styles.bigMark}`);
       if (!mark || prefersReducedMotion()) return;
 
-      // The giant wordmark slides sideways as the footer scrolls into frame.
       gsap.fromTo(
         mark,
         { xPercent: -6, opacity: 0.5 },

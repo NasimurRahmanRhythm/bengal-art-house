@@ -6,10 +6,8 @@ export type Artwork = {
   title: string;
   artist: string;
   medium: string;
-  /** Price in BDT. */
   price: number;
   status: "available" | "sold";
-  /** Which generative plate to draw, or a real photograph. */
   plate: number;
   photo?: string;
   year: string;

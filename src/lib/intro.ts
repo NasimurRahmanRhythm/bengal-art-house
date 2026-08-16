@@ -1,8 +1,3 @@
-/**
- * Small handshake between the preloader and the hero animation: the hero waits
- * on `introDone` so its type does not play behind the curtain.
- */
-
 let resolve: () => void = () => {};
 
 export const introDone: Promise<void> = new Promise((r) => {
@@ -18,6 +13,5 @@ export function finishIntro(): void {
 }
 
 if (typeof window !== "undefined") {
-  // Safety net — never leave the page waiting on a curtain that failed to lift.
   window.setTimeout(finishIntro, 4000);
 }

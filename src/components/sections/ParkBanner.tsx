@@ -10,7 +10,6 @@ import Reveal from "@/components/motion/Reveal";
 import Magnetic from "@/components/motion/Magnetic";
 import styles from "./Sections.module.css";
 
-/** Patina banner for the sculpture park, with drifting silhouettes behind it. */
 export default function ParkBanner() {
   const root = useRef<HTMLElement>(null);
 

@@ -22,7 +22,6 @@ export default function ArtworkCard({ artwork, onQuickView }: Props) {
   const sold = artwork.status === "sold";
   const inCart = has(artwork.id);
 
-  /* Light 3D tilt that follows the pointer across the card. */
   useGSAP(
     () => {
       const el = card.current;

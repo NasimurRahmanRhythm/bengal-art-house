@@ -43,7 +43,6 @@
   flex-shrink: 0;
 }
 
-/* every other word drops to an outline for rhythm */
 .item:nth-child(even) {
   color: transparent;
   -webkit-text-stroke: 1px rgba(22, 21, 15, 0.45);

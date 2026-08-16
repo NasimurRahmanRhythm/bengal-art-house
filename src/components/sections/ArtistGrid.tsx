@@ -38,8 +38,6 @@ export default function ArtistGrid() {
     <div ref={grid} className={styles.artistGrid}>
       {ARTISTS.map((a) => (
         <article key={a.slug} className={`${styles.artistCard} plateHost`}>
-          {/* The whole card is one link — `display: contents` keeps the flex
-              layout of its children exactly as if the Link weren't there. */}
           <Link
             href={`/artists/${a.slug}`}
             style={{ display: "contents" }}

@@ -12,16 +12,10 @@ const C = {
 };
 
 type PlateProps = {
-  /** Which of the nine compositions to draw. */
   variant: number;
   className?: string;
 };
 
-/**
- * Nine hand-composed abstract plates standing in for artwork photography.
- * The vocabulary — standing form, wing, arch, pierced eye — is drawn from
- * the sculptor's own motifs so the grid reads as one body of work.
- */
 export default function ArtPlate({ variant, className }: PlateProps) {
   const uid = useId().replace(/:/g, "");
   const v = ((variant % 9) + 9) % 9;

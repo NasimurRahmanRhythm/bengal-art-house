@@ -10,10 +10,6 @@ const SESSION_KEY = "bah_intro_played";
 const COLUMNS = 6;
 const WORD = "ART HOUSE";
 
-/**
- * First-visit curtain. Six ink columns hold the page back while the wordmark
- * assembles and a counter runs, then lift away in sequence.
- */
 export default function Preloader() {
   const root = useRef<HTMLDivElement>(null);
   const counter = useRef<HTMLSpanElement>(null);
@@ -26,9 +22,7 @@ export default function Preloader() {
       let seen = false;
       try {
         seen = window.sessionStorage.getItem(SESSION_KEY) === "1";
-      } catch {
-        /* storage blocked — treat as a first visit */
-      }
+      } catch {}
 
       if (seen || prefersReducedMotion()) {
         gsap.set(el, { display: "none" });
@@ -38,9 +32,7 @@ export default function Preloader() {
 
       try {
         window.sessionStorage.setItem(SESSION_KEY, "1");
-      } catch {
-        /* nothing to do */
-      }
+      } catch {}
 
       document.body.style.overflow = "hidden";
 

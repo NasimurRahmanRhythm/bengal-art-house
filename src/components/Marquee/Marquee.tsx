@@ -7,15 +7,10 @@ import styles from "./Marquee.module.css";
 
 type MarqueeProps = {
   items: readonly string[];
-  /** Seconds for one full pass. */
   speed?: number;
   tone?: "light" | "dark";
 };
 
-/**
- * Endless materials strip. It runs on its own, but scrolling pushes it —
- * scroll down and it speeds up, scroll up and it reverses.
- */
 export default function Marquee({ items, speed = 26, tone = "light" }: MarqueeProps) {
   const root = useRef<HTMLDivElement>(null);
 
@@ -50,7 +45,6 @@ export default function Marquee({ items, speed = 26, tone = "light" }: MarqueePr
     { scope: root, dependencies: [speed] }
   );
 
-  // Duplicated so the -50% shift lands seamlessly on the copy.
   const run = [...items, ...items];
 
   return (

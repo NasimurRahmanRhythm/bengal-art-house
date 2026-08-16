@@ -12,7 +12,6 @@ const LINKS = [
   { kicker: "Support", title: "Services", href: "/services", note: "Advisory, conservation, valuation" },
 ];
 
-/** Four doors into the rest of the site. */
 export default function QuickLinks() {
   return (
     <section className="section">

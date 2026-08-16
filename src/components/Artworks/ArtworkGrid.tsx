@@ -17,10 +17,8 @@ const FILTERS: { id: ArtGroup | "all"; label: string }[] = [
 ];
 
 type Props = {
-  /** Cap the number of cards — the home page shows a short edit. */
   limit?: number;
   showFilters?: boolean;
-  /** Restrict to one artist's works — used on artist profile pages. */
   artist?: string;
 };
 
@@ -39,7 +37,6 @@ export default function ArtworkGrid({ limit, showFilters = false, artist }: Prop
     return typeof limit === "number" ? list.slice(0, limit) : list;
   }, [filter, limit, byArtist]);
 
-  /* Cards drop into place on first view, and re-deal on every filter change. */
   useGSAP(
     () => {
       const cards = grid.current?.children;

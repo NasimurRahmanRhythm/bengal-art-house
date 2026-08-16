@@ -7,7 +7,6 @@
   isolation: isolate;
 }
 
-/* soft light falling from the top-left, like a gallery spot */
 .grain {
   position: absolute;
   inset: 0;
@@ -29,8 +28,6 @@
   align-items: center;
   padding-bottom: clamp(40px, 6vw, 74px);
 }
-
-/* ---------------- copy ---------------- */
 
 .eyebrow {
   display: flex;
@@ -129,8 +126,6 @@
   border-color: var(--marble);
 }
 
-/* ---- stats ---- */
-
 .stats {
   display: flex;
   flex-wrap: wrap;
@@ -157,8 +152,6 @@
   border-left: 2px solid rgba(239, 234, 224, 0.32);
   padding-left: 14px;
 }
-
-/* ---------------- figure ---------------- */
 
 .stage {
   position: relative;
@@ -204,7 +197,6 @@
   color: var(--text-muted);
 }
 
-/* floating chisel marks behind the plate */
 .shape {
   position: absolute;
   z-index: 1;
@@ -238,8 +230,6 @@
   border: 1px solid rgba(22, 21, 15, 0.35);
   transform: rotate(18deg);
 }
-
-/* ---------------- now-on-view banner ---------------- */
 
 .bannerWrap {
   position: relative;
@@ -310,8 +300,6 @@
   transition: transform 0.4s var(--ease-out);
 }
 
-/* ---------------- scroll cue ---------------- */
-
 .cue {
   position: absolute;
   left: 50%;
@@ -331,8 +319,6 @@
   background: var(--marble);
   transform: translateY(-100%);
 }
-
-/* ---------------- responsive ---------------- */
 
 @media (max-width: 980px) {
   .grid {

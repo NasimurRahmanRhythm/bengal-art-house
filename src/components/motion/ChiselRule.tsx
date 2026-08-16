@@ -9,15 +9,10 @@ const POINTS =
   "0,7 60,3 120,10 180,4 240,8 300,3 360,9 420,5 480,10 540,4 600,8 660,3 720,9 780,5 840,10 900,4 960,8 1020,3 1080,9 1140,5 1200,7";
 
 type ChiselRuleProps = {
-  /** Light rules read better on the ink/patina sections. */
   tone?: "dark" | "light" | "oxide";
   className?: string;
 };
 
-/**
- * The site's signature divider — a chisel-mark line that draws itself across
- * the viewport as you reach it.
- */
 export default function ChiselRule({ tone = "dark", className }: ChiselRuleProps) {
   const wrap = useRef<HTMLDivElement>(null);
 

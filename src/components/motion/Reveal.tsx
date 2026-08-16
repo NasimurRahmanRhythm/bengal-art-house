@@ -6,11 +6,6 @@ import { gsap, prefersReducedMotion } from "@/lib/gsap";
 
 type Variant = "rise" | "fade" | "wipe" | "scale" | "fromLeft" | "fromRight";
 
-/**
- * Every variant declares both ends of the tween. The CSS baseline hides
- * `[data-reveal]` elements up front, so an open-ended `from()` would read that
- * `opacity: 0` back as the destination — `fromTo` keeps the target explicit.
- */
 const VARIANTS: Record<Variant, { from: gsap.TweenVars; to: gsap.TweenVars }> = {
   rise: { from: { y: 46, opacity: 0 }, to: { y: 0, opacity: 1 } },
   fade: { from: { opacity: 0 }, to: { opacity: 1 } },
@@ -28,13 +23,10 @@ const VARIANTS: Record<Variant, { from: gsap.TweenVars; to: gsap.TweenVars }> = 
 
 type RevealProps = {
   children: ReactNode;
-  /** Motion flavour for the reveal. */
   variant?: Variant;
-  /** Animate direct children one after another instead of the wrapper itself. */
   stagger?: number;
   delay?: number;
   duration?: number;
-  /** ScrollTrigger `start` value. */
   start?: string;
   as?: ElementType;
   className?: string;
@@ -42,12 +34,6 @@ type RevealProps = {
   id?: string;
 };
 
-/**
- * Scroll-triggered entrance for a block of content.
- *
- * With `stagger`, the wrapper's direct children animate in sequence — which is
- * what every card grid on the site uses.
- */
 export default function Reveal({
   children,
   variant = "rise",

@@ -4,7 +4,6 @@
   display: block;
 }
 
-/* The focal shape drifts a touch when its card is hovered. */
 .accent {
   transform-origin: 50% 60%;
   transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);

@@ -26,7 +26,6 @@ export default function Navbar() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
-  /* ---------- entrance + scroll behaviour ---------- */
   useGSAP(
     () => {
       const el = header.current;
@@ -43,14 +42,12 @@ export default function Navbar() {
         });
       }
 
-      // Condense the bar once the hero starts leaving.
       ScrollTrigger.create({
         start: "top -60",
         end: "max",
         onToggle: (self) => el.classList.toggle(styles.condensed, self.isActive),
       });
 
-      // Reading-progress hairline along the bottom edge.
       if (progress.current) {
         gsap.fromTo(
           progress.current,
@@ -66,7 +63,6 @@ export default function Navbar() {
     { scope: header }
   );
 
-  /* ---------- cart badge reacts to every add ---------- */
   useEffect(() => {
     if (!pulse || !badge.current || prefersReducedMotion()) return;
     gsap.fromTo(
@@ -76,7 +72,6 @@ export default function Navbar() {
     );
   }, [pulse]);
 
-  /* ---------- mobile panel ---------- */
   useGSAP(
     () => {
       const el = panel.current;
@@ -110,7 +105,6 @@ export default function Navbar() {
     { dependencies: [menuOpen] }
   );
 
-  // Close everything when the route changes.
   useEffect(() => {
     setMenuOpen(false);
     setOpenDrop(null);
@@ -135,7 +129,6 @@ export default function Navbar() {
 
   return (
     <header ref={header} className={styles.header}>
-      {/* utility strip */}
       <div className={styles.utility}>
         <div className={`wrap ${styles.utilityInner}`}>
           <span className={styles.utilityText}>{SITE.address}</span>
@@ -165,7 +158,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* main bar */}
       <div className={`wrap ${styles.bar}`}>
         <Link href="/" className={styles.brand} data-nav-item aria-label={`${SITE.name} — home`}>
           <span className={styles.brandMark}>
@@ -252,7 +244,6 @@ export default function Navbar() {
 
       <span ref={progress} className={styles.progress} aria-hidden="true" />
 
-      {/* mobile panel */}
       <div ref={panel} className={styles.panel} id="mobile-menu">
         <div className={styles.panelInner}>
           {NAV.map((item, i) => (

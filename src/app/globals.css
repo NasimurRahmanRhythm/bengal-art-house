@@ -1,8 +1,3 @@
-/* =============================================================
-   GALLERY HAMIDUZZAMAN — Global design system
-   Palette: marble / ink / oxide / patina / stone
-   ============================================================= */
-
 *,
 *::before,
 *::after {
@@ -12,14 +7,12 @@
 }
 
 :root {
-  /* ---- surface ---- */
   --ink: #16150f;
   --ink-soft: #26241f;
   --marble: #efeae0;
   --marble-dim: #e3ddcf;
   --marble-deep: #d8d1c0;
 
-  /* ---- accents ---- */
   --oxide: #c1420f;
   --oxide-dark: #7e3521;
   --oxide-light: #e2714a;
@@ -27,24 +20,20 @@
   --patina-dark: #5c6b4d;
   --stone: #9c9284;
 
-  /* ---- lines & text ---- */
   --stone-line: rgba(22, 21, 15, 0.14);
   --stone-line-strong: rgba(22, 21, 15, 0.28);
   --light-line: rgba(239, 234, 224, 0.16);
   --text-muted: #5c574f;
   --text-muted-light: #a49b8c;
 
-  /* ---- type ---- */
   --font-display: var(--font-fraunces), "Fraunces", Georgia, serif;
   --font-body: var(--font-work-sans), "Work Sans", system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
 
-  /* ---- metrics ---- */
   --wrap: 1240px;
   --gutter: 34px;
   --header-h: 76px;
 
-  /* ---- motion ---- */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
@@ -67,7 +56,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Paper grain — sits above the page, ignores pointer events */
 body::after {
   content: "";
   position: fixed;
@@ -120,7 +108,6 @@ select {
   color: var(--marble);
 }
 
-/* ---------- scrollbar ---------- */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -134,10 +121,6 @@ select {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--oxide);
 }
-
-/* =============================================================
-   Shared layout utilities
-   ============================================================= */
 
 .wrap {
   width: 100%;
@@ -203,7 +186,6 @@ select {
   color: var(--text-muted-light);
 }
 
-/* screen-reader only */
 .srOnly {
   position: absolute;
   width: 1px;
@@ -216,11 +198,6 @@ select {
   border: 0;
 }
 
-/* -------------------------------------------------------------
-   Pre-animation state.
-   The `js` class is set by an inline script in <head>, so the
-   hidden state only ever applies when GSAP can undo it again.
-   ------------------------------------------------------------- */
 html.js [data-reveal] {
   opacity: 0;
 }

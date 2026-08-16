@@ -51,7 +51,6 @@ export const FOOTER_POLICY = [
   { label: "Returns", href: "/contact" },
 ];
 
-/** Materials strip used by the scrolling marquee. */
 export const MATERIALS = [
   "Bronze",
   "Granite",

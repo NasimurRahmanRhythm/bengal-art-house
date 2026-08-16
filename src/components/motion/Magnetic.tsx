@@ -6,14 +6,9 @@ import { gsap, prefersReducedMotion } from "@/lib/gsap";
 
 type MagneticProps = {
   children: ReactElement;
-  /** How far the element is allowed to drift toward the pointer, in px. */
   strength?: number;
 };
 
-/**
- * Gives a button or link a light gravitational pull toward the cursor.
- * Pointer-fine devices only — it is a no-op on touch.
- */
 export default function Magnetic({ children, strength = 16 }: MagneticProps) {
   const holder = useRef<HTMLSpanElement>(null);
 

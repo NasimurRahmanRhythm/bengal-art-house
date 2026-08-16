@@ -59,8 +59,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className={`${fraunces.variable} ${workSans.variable} ${plexMono.variable}`}>
       <head>
-        {/* Marks the document as script-capable before first paint, so the
-            pre-animation hidden state is only applied when GSAP can undo it. */}
         <script
           dangerouslySetInnerHTML={{
             __html: `document.documentElement.classList.add('js')`,

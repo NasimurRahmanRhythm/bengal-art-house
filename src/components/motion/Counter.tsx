@@ -6,7 +6,6 @@ import { gsap, prefersReducedMotion } from "@/lib/gsap";
 
 type CounterProps = {
   value: number;
-  /** Rendered before/after the number, e.g. "+" or "yr". */
   suffix?: string;
   prefix?: string;
   duration?: number;
@@ -14,7 +13,6 @@ type CounterProps = {
   className?: string;
 };
 
-/** Counts up to `value` once it scrolls into view. */
 export default function Counter({
   value,
   suffix = "",

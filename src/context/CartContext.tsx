@@ -25,7 +25,6 @@ type CartValue = {
   count: number;
   total: number;
   isOpen: boolean;
-  /** Bumps on every add — the header badge animates off this. */
   pulse: number;
   add: (artwork: Artwork) => void;
   remove: (id: string) => void;
@@ -45,14 +44,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [pulse, setPulse] = useState(0);
   const [hydrated, setHydrated] = useState(false);
 
-  // Restore after mount so the server and client markup agree.
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) setLines(JSON.parse(raw) as CartLine[]);
-    } catch {
-      /* a corrupt or blocked store just means an empty cart */
-    }
+    } catch {}
     setHydrated(true);
   }, []);
 
@@ -60,12 +56,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (!hydrated) return;
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(lines));
-    } catch {
-      /* private mode — hold the cart in memory only */
-    }
+    } catch {}
   }, [lines, hydrated]);
 
-  // Lock the page behind the drawer.
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => {

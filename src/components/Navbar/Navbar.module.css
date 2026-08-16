@@ -7,8 +7,6 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.18);
 }
 
-/* ---------------- utility strip ---------------- */
-
 .utility {
   position: relative;
   z-index: 3;
@@ -73,8 +71,6 @@
   color: var(--marble);
 }
 
-/* ---------------- main bar ---------------- */
-
 .bar {
   position: relative;
   z-index: 3;
@@ -89,8 +85,6 @@
 .condensed .bar {
   height: 62px;
 }
-
-/* ---- brand ---- */
 
 .brand {
   display: flex;
@@ -149,8 +143,6 @@
   line-height: 1.05;
 }
 
-/* ---- links ---- */
-
 .nav {
   flex: 1;
   display: flex;
@@ -186,7 +178,6 @@
   color: var(--marble);
 }
 
-/* Roll-up label: the same word sits above itself and slides on hover. */
 .navLabel {
   position: relative;
   display: inline-block;
@@ -242,8 +233,6 @@
   transform: rotate(180deg);
 }
 
-/* ---- dropdown ---- */
-
 .drop {
   position: absolute;
   top: 100%;
@@ -296,8 +285,6 @@
   margin-top: 3px;
 }
 
-/* ---- actions ---- */
-
 .actions {
   display: flex;
   align-items: center;
@@ -339,8 +326,6 @@
   line-height: 1;
 }
 
-/* ---- burger ---- */
-
 .burger {
   display: none;
   width: 42px;
@@ -374,8 +359,6 @@
   transform: rotate(-45deg);
 }
 
-/* ---- scroll progress ---- */
-
 .progress {
   position: absolute;
   z-index: 4;
@@ -388,15 +371,13 @@
   transform-origin: left;
 }
 
-/* ---------------- mobile panel ---------------- */
-
 .panel {
   position: fixed;
   inset: 0;
   top: 0;
   background: var(--ink);
   color: var(--marble);
-  z-index: 1; /* sits behind .bar so the close button stays reachable */
+  z-index: 1;
   pointer-events: none;
   clip-path: inset(0% 0% 100% 0%);
   overflow-y: auto;
@@ -467,8 +448,6 @@
   margin-top: 14px;
   color: var(--marble);
 }
-
-/* ---------------- responsive ---------------- */
 
 @media (max-width: 1080px) {
   .navList {

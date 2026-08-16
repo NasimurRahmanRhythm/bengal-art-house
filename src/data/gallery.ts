@@ -1,4 +1,3 @@
-/* Content transcribed from the source gallery pages. */
 
 export type Work = {
   index: string;
@@ -7,7 +6,6 @@ export type Work = {
   location: string;
 };
 
-/** Notable public sculpture — the "Notable Works" grid. */
 export const WORKS: Work[] = [
   {
     index: "01",
@@ -198,7 +196,6 @@ export const SERVICES: Service[] = [
   },
 ];
 
-/** Hamiduzzaman Khan's biography facts — reused on his artist page and the homepage feature. */
 export const FACTS = [
   { label: "Born", value: "16 March 1946, Kishoreganj" },
   { label: "Mentor", value: "Zainul Abedin" },
@@ -218,9 +215,7 @@ export type Artist = {
   initials: string;
   name: string;
   role: string;
-  /** Short bio used on directory cards. */
   body: string;
-  /** Full biography, used on the artist's own profile page. */
   bio: string[];
   facts: ArtistFact[];
   works: string;

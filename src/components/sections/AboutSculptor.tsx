@@ -11,11 +11,6 @@ import Reveal from "@/components/motion/Reveal";
 import Magnetic from "@/components/motion/Magnetic";
 import styles from "./Sections.module.css";
 
-/**
- * Homepage-only "Featured Artist" band. Hamiduzzaman Khan fills this slot
- * today as the gallery's founding figure; the full biography lives on his
- * own profile page at `/artists/hamiduzzaman-khan`.
- */
 export default function AboutSculptor() {
   const root = useRef<HTMLElement>(null);
 
@@ -25,7 +20,6 @@ export default function AboutSculptor() {
       const bar = root.current?.querySelector(`.${styles.quoteBar}`);
       if (!bar) return;
 
-      // The oxide rule beside the pull-quote grows down as it arrives.
       gsap.fromTo(
         bar,
         { scaleY: 0 },
