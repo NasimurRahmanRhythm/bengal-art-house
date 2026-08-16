@@ -1,0 +1,55 @@
+.marquee {
+  overflow: hidden;
+  padding: 22px 0;
+  border-top: 1px solid var(--stone-line);
+  border-bottom: 1px solid var(--stone-line);
+  user-select: none;
+}
+
+.dark {
+  background: var(--ink);
+  border-color: var(--light-line);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: 30px;
+  padding-right: 30px;
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.6vw, 32px);
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+.dark .item {
+  color: var(--marble);
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--oxide);
+  flex-shrink: 0;
+}
+
+/* every other word drops to an outline for rhythm */
+.item:nth-child(even) {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(22, 21, 15, 0.45);
+  font-style: normal;
+}
+
+.dark .item:nth-child(even) {
+  -webkit-text-stroke-color: rgba(239, 234, 224, 0.45);
+}

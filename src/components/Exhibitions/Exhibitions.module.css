@@ -1,0 +1,306 @@
+/* ---------------- carousel ---------------- */
+
+.carousel {
+  position: relative;
+}
+
+.rail {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 6px;
+  scrollbar-width: none;
+  cursor: grab;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  user-select: none;
+}
+
+.card {
+  flex: 0 0 clamp(266px, 30vw, 340px);
+  scroll-snap-align: start;
+  background: var(--marble);
+  border: 1px solid var(--stone-line);
+  transition: border-color 0.4s ease, transform 0.6s var(--ease-out);
+}
+
+.card:hover {
+  border-color: var(--stone-line-strong);
+  transform: translateY(-6px);
+}
+
+.cardLink {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.cardPlate {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--marble-dim);
+  border-bottom: 1px solid var(--stone-line);
+}
+
+.status {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  color: var(--marble);
+  background: var(--ink);
+}
+
+.current {
+  background: var(--oxide);
+}
+
+.upcoming {
+  background: var(--patina);
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 22px 22px 24px;
+}
+
+.cardDate {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 10px;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.18;
+  margin-bottom: 8px;
+}
+
+.cardVenue {
+  font-size: 13px;
+  color: var(--oxide);
+  margin-bottom: 12px;
+}
+
+.cardBlurb {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin-bottom: 20px;
+}
+
+.cardMore {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--stone-line);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.cardMore svg {
+  transition: transform 0.4s var(--ease-out);
+}
+
+.card:hover .cardMore svg {
+  transform: translateX(6px);
+}
+
+/* ---- controls ---- */
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 30px;
+}
+
+.track {
+  position: relative;
+  flex: 1;
+  height: 1px;
+  background: var(--stone-line);
+}
+
+.bar {
+  position: absolute;
+  inset: 0;
+  background: var(--oxide);
+  transform-origin: left;
+  transform: scaleX(0.1);
+}
+
+.arrows {
+  display: flex;
+  gap: 8px;
+}
+
+.arrow {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--stone-line);
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+}
+
+.arrow:hover:not(:disabled) {
+  background: var(--ink);
+  color: var(--marble);
+  border-color: var(--ink);
+}
+
+.arrow:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+}
+
+.flip {
+  transform: rotate(180deg);
+}
+
+/* ---------------- timeline (exhibitions page) ---------------- */
+
+.timeline {
+  position: relative;
+  border-top: 1px solid var(--stone-line);
+}
+
+.spine {
+  position: absolute;
+  left: 118px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--oxide);
+  transform-origin: top;
+  transform: scaleY(0);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 118px 1fr 220px;
+  gap: 28px;
+  align-items: start;
+  padding: 34px 0;
+  border-bottom: 1px solid var(--stone-line);
+  transition: background 0.4s ease;
+}
+
+.row:hover {
+  background: rgba(22, 21, 15, 0.03);
+}
+
+.year {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--oxide);
+  line-height: 1;
+}
+
+.node {
+  position: absolute;
+  right: -32px;
+  top: 8px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--marble);
+  border: 1px solid var(--oxide);
+  transition: background 0.35s ease, transform 0.45s var(--ease-out);
+}
+
+.row:hover .node {
+  background: var(--oxide);
+  transform: scale(1.5);
+}
+
+.rowTitle {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.rowVenue {
+  font-size: 14.5px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.rowBlurb {
+  font-size: 14px;
+  color: var(--text-muted);
+  max-width: 58ch;
+}
+
+.rowMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  text-align: right;
+}
+
+.rowTag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--patina);
+}
+
+.rowStatus {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  color: var(--marble);
+  background: var(--stone);
+}
+
+@media (max-width: 900px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .spine {
+    display: none;
+  }
+  .node {
+    display: none;
+  }
+  .rowMeta {
+    align-items: flex-start;
+    text-align: left;
+    flex-direction: row;
+    margin-top: 6px;
+  }
+}

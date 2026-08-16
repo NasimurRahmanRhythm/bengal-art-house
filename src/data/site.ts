@@ -1,0 +1,64 @@
+export const SITE = {
+  name: "Bengal Art House",
+  shortName: "BAH",
+  tagline: "Representing Bangladeshi sculpture, drawing & public art",
+  email: "info@bengalarthouse.example",
+  phone: "+880 0000 000000",
+  phoneHref: "+8800000000000",
+  address: "Dhanmondi, Dhaka, Bangladesh",
+  established: "Dhaka, Bangladesh — Est. 2026",
+} as const;
+
+export type NavItem = {
+  label: string;
+  href: string;
+  children?: { label: string; href: string; note: string }[];
+};
+
+export const NAV: NavItem[] = [
+  { label: "Home", href: "/" },
+  {
+    label: "Explore Art",
+    href: "/artworks",
+    children: [
+      { label: "Artworks", href: "/artworks", note: "Available for acquisition" },
+      { label: "Artists", href: "/artists", note: "The studio and its circle" },
+    ],
+  },
+  { label: "Exhibitions", href: "/exhibitions" },
+  { label: "Collaborations", href: "/collaborations" },
+  { label: "Services", href: "/services" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+];
+
+export const SOCIALS = [
+  { label: "Facebook", href: "https://facebook.com", icon: "facebook" as const },
+  { label: "Instagram", href: "https://instagram.com", icon: "instagram" as const },
+  { label: "LinkedIn", href: "https://linkedin.com", icon: "linkedin" as const },
+];
+
+export const FOOTER_EXPLORE = [
+  { label: "Sculptures", href: "/about#sculptures" },
+  { label: "Exhibitions", href: "/exhibitions" },
+  { label: "Sculpture Park", href: "/#park" },
+  { label: "About the Gallery", href: "/about" },
+];
+
+export const FOOTER_POLICY = [
+  { label: "Terms", href: "/contact" },
+  { label: "Privacy", href: "/contact" },
+  { label: "Returns", href: "/contact" },
+];
+
+/** Materials strip used by the scrolling marquee. */
+export const MATERIALS = [
+  "Bronze",
+  "Granite",
+  "Mild Steel",
+  "Marble",
+  "Stainless Steel",
+  "Watercolour",
+  "Concrete",
+  "Steel Wire",
+];

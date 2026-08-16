@@ -1,0 +1,259 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  background: rgba(22, 21, 15, 0.55);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  cursor: pointer;
+}
+
+.sheet {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(440px, 100%);
+  background: var(--marble);
+  border-left: 3px solid var(--oxide);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -30px 0 70px rgba(22, 21, 15, 0.24);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 26px var(--gutter) 20px;
+  border-bottom: 1px solid var(--stone-line);
+}
+
+.headKicker {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--oxide);
+  margin-bottom: 6px;
+}
+
+.headTitle {
+  font-size: 26px;
+}
+
+.close {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--stone-line);
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.close:hover {
+  background: var(--ink);
+  color: var(--marble);
+  border-color: var(--ink);
+}
+
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px var(--gutter) 20px;
+}
+
+.list {
+  list-style: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 62px 1fr 28px;
+  gap: 16px;
+  align-items: start;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--stone-line);
+}
+
+.thumb {
+  display: block;
+  width: 62px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--marble-dim);
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rowBody {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.rowArtist {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+
+.rowTitle {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.rowPrice {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--oxide);
+  margin-top: 4px;
+}
+
+.remove {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  color: var(--stone);
+  transition: color 0.25s ease, transform 0.35s var(--ease-out);
+}
+
+.remove:hover {
+  color: var(--oxide);
+  transform: rotate(90deg);
+}
+
+/* ---- empty ---- */
+
+.empty {
+  padding: 48px 0;
+  max-width: 34ch;
+}
+
+.emptyMark {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 44px;
+  color: var(--oxide);
+  line-height: 1;
+  margin-bottom: 14px;
+}
+
+.empty p {
+  color: var(--text-muted);
+  font-size: 15px;
+  margin-bottom: 22px;
+}
+
+.emptyLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 1px solid var(--oxide);
+  padding-bottom: 5px;
+}
+
+.emptyLink:hover {
+  color: var(--oxide);
+}
+
+/* ---- footer ---- */
+
+.foot {
+  border-top: 1px solid var(--stone-line);
+  padding: 22px var(--gutter) 26px;
+  background: var(--marble-dim);
+}
+
+.totalRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.totalRow strong {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+}
+
+.footNote {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin: 12px 0 18px;
+  line-height: 1.55;
+}
+
+.enquire {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 20px;
+  background: var(--ink);
+  color: var(--marble);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: background 0.3s ease;
+}
+
+.enquire:hover {
+  background: var(--oxide);
+}
+
+.clear {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 8px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stone);
+  transition: color 0.25s ease;
+}
+
+.clear:hover {
+  color: var(--oxide);
+}
+
+@media (max-width: 560px) {
+  .sheet {
+    width: 100%;
+  }
+}

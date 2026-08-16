@@ -1,0 +1,24 @@
+.shop {
+  background: var(--marble-dim);
+  border-top: 1px solid var(--stone-line);
+  border-bottom: 1px solid var(--stone-line);
+}
+
+.textLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--oxide);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  transition: color 0.3s ease, gap 0.4s var(--ease-out);
+}
+
+.textLink:hover {
+  color: var(--oxide);
+  gap: 16px;
+}

@@ -1,0 +1,501 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: linear-gradient(178deg, var(--oxide) 0%, var(--oxide-dark) 140%);
+  color: var(--marble);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+/* ---------------- utility strip ---------------- */
+
+.utility {
+  position: relative;
+  z-index: 3;
+  border-bottom: 1px solid rgba(239, 234, 224, 0.16);
+  height: 34px;
+  overflow: hidden;
+  transition: height 0.45s var(--ease-out), opacity 0.3s ease;
+}
+
+.condensed .utility {
+  height: 0;
+  opacity: 0;
+  border-bottom-color: transparent;
+}
+
+.utilityInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 34px;
+}
+
+.utilityText,
+.members {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(239, 234, 224, 0.78);
+}
+
+.utilityRight {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.socials {
+  display: flex;
+  gap: 14px;
+}
+
+.socialLink {
+  color: rgba(239, 234, 224, 0.7);
+  transition: color 0.25s ease, transform 0.35s var(--ease-out);
+  display: inline-flex;
+}
+
+.socialLink:hover {
+  color: var(--marble);
+  transform: translateY(-2px);
+}
+
+.members {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: color 0.25s ease;
+}
+
+.members:hover {
+  color: var(--marble);
+}
+
+/* ---------------- main bar ---------------- */
+
+.bar {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: var(--header-h);
+  transition: height 0.45s var(--ease-out);
+}
+
+.condensed .bar {
+  height: 62px;
+}
+
+/* ---- brand ---- */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  flex-shrink: 0;
+}
+
+.brandMark {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--marble);
+  padding: 3px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.16);
+  transition: transform 0.7s var(--ease-out), width 0.45s var(--ease-out),
+    height 0.45s var(--ease-out);
+}
+
+.condensed .brandMark {
+  width: 34px;
+  height: 34px;
+}
+
+.brand:hover .brandMark {
+  transform: rotate(-14deg) scale(1.06);
+}
+
+.brandImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(239, 234, 224, 0.72);
+  line-height: 1.3;
+}
+
+.brandName {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--marble);
+  line-height: 1.05;
+}
+
+/* ---- links ---- */
+
+.nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.navList {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2.1vw, 30px);
+  list-style: none;
+}
+
+.navList > li {
+  position: relative;
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(239, 234, 224, 0.86);
+  transition: color 0.25s ease;
+}
+
+.navLink:hover {
+  color: var(--marble);
+}
+
+/* Roll-up label: the same word sits above itself and slides on hover. */
+.navLabel {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.navLabel::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  transform: translateY(105%);
+  color: var(--ink);
+  transition: transform 0.42s var(--ease-out);
+}
+
+.navLabel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.42s var(--ease-out);
+}
+
+.navLink:hover .navLabel::after {
+  transform: translateY(0);
+}
+
+.navLink:hover .navLabel::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.navLinkActive {
+  color: var(--marble);
+}
+
+.navLinkActive .navLabel::before {
+  transform: scaleX(1);
+}
+
+.chevron {
+  opacity: 0.65;
+  transition: transform 0.3s ease;
+}
+
+.hasDrop:hover .chevron {
+  transform: rotate(180deg);
+}
+
+/* ---- dropdown ---- */
+
+.drop {
+  position: absolute;
+  top: 100%;
+  left: -18px;
+  min-width: 236px;
+  background: var(--marble);
+  border: 1px solid var(--stone-line);
+  box-shadow: 0 24px 48px rgba(22, 21, 15, 0.18);
+  padding: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity 0.28s ease, transform 0.36s var(--ease-out), visibility 0.28s;
+}
+
+.dropOpen {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropLink {
+  display: block;
+  padding: 12px 14px;
+  color: var(--ink);
+  border-left: 2px solid transparent;
+  transition: background 0.25s ease, border-color 0.25s ease, padding-left 0.3s var(--ease-out);
+}
+
+.dropLink:hover {
+  background: var(--marble-dim);
+  border-left-color: var(--oxide);
+  padding-left: 20px;
+}
+
+.dropTitle {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.dropNote {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-top: 3px;
+}
+
+/* ---- actions ---- */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.cartBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 15px;
+  border: 1px solid rgba(239, 234, 224, 0.45);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--marble);
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.cartBtn:hover {
+  background: var(--marble);
+  color: var(--ink);
+  border-color: var(--marble);
+}
+
+.cartCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--marble);
+  font-size: 10px;
+  line-height: 1;
+}
+
+/* ---- burger ---- */
+
+.burger {
+  display: none;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(239, 234, 224, 0.45);
+  position: relative;
+}
+
+.burger span {
+  position: absolute;
+  left: 11px;
+  width: 18px;
+  height: 1.5px;
+  background: var(--marble);
+  transition: transform 0.42s var(--ease-out), top 0.28s var(--ease-out);
+}
+
+.burger span:nth-child(1) {
+  top: 17px;
+}
+.burger span:nth-child(2) {
+  top: 23px;
+}
+
+.burgerOpen span:nth-child(1) {
+  top: 20px;
+  transform: rotate(45deg);
+}
+.burgerOpen span:nth-child(2) {
+  top: 20px;
+  transform: rotate(-45deg);
+}
+
+/* ---- scroll progress ---- */
+
+.progress {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 2px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* ---------------- mobile panel ---------------- */
+
+.panel {
+  position: fixed;
+  inset: 0;
+  top: 0;
+  background: var(--ink);
+  color: var(--marble);
+  z-index: 1; /* sits behind .bar so the close button stays reachable */
+  pointer-events: none;
+  clip-path: inset(0% 0% 100% 0%);
+  overflow-y: auto;
+  padding: calc(var(--header-h) + 40px) 0 48px;
+}
+
+.panelInner {
+  padding: 0 var(--gutter);
+  max-width: 640px;
+}
+
+.panelRow {
+  border-bottom: 1px solid var(--light-line);
+}
+
+.panelLink {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 18px 0 14px;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 8vw, 40px);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.panelIndex {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--oxide-light);
+}
+
+.panelSub {
+  display: flex;
+  gap: 20px;
+  padding: 0 0 18px 42px;
+}
+
+.panelSubLink {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted-light);
+  border-bottom: 1px solid transparent;
+}
+
+.panelSubLink:hover {
+  color: var(--marble);
+  border-bottom-color: var(--oxide);
+}
+
+.panelFoot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 34px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--text-muted-light);
+}
+
+.panelSocials {
+  display: flex;
+  gap: 18px;
+  margin-top: 14px;
+  color: var(--marble);
+}
+
+/* ---------------- responsive ---------------- */
+
+@media (max-width: 1080px) {
+  .navList {
+    gap: 16px;
+  }
+  .cartLabel {
+    display: none;
+  }
+}
+
+@media (max-width: 940px) {
+  .nav {
+    display: none;
+  }
+  .burger {
+    display: block;
+  }
+  .utility {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .brandText {
+    font-size: 8px;
+  }
+  .brandName {
+    font-size: 16px;
+  }
+}

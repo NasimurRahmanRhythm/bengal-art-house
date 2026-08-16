@@ -1,0 +1,267 @@
+/* =============================================================
+   GALLERY HAMIDUZZAMAN — Global design system
+   Palette: marble / ink / oxide / patina / stone
+   ============================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* ---- surface ---- */
+  --ink: #16150f;
+  --ink-soft: #26241f;
+  --marble: #efeae0;
+  --marble-dim: #e3ddcf;
+  --marble-deep: #d8d1c0;
+
+  /* ---- accents ---- */
+  --oxide: #c1420f;
+  --oxide-dark: #7e3521;
+  --oxide-light: #e2714a;
+  --patina: #6e7f5c;
+  --patina-dark: #5c6b4d;
+  --stone: #9c9284;
+
+  /* ---- lines & text ---- */
+  --stone-line: rgba(22, 21, 15, 0.14);
+  --stone-line-strong: rgba(22, 21, 15, 0.28);
+  --light-line: rgba(239, 234, 224, 0.16);
+  --text-muted: #5c574f;
+  --text-muted-light: #a49b8c;
+
+  /* ---- type ---- */
+  --font-display: var(--font-fraunces), "Fraunces", Georgia, serif;
+  --font-body: var(--font-work-sans), "Work Sans", system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
+
+  /* ---- metrics ---- */
+  --wrap: 1240px;
+  --gutter: 34px;
+  --header-h: 76px;
+
+  /* ---- motion ---- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 24px);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--marble);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.62;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Paper grain — sits above the page, ignores pointer events */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.32'/%3E%3C/svg%3E");
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+::selection {
+  background: var(--oxide);
+  color: var(--marble);
+}
+
+/* ---------- scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--marble-dim);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--stone);
+  border: 3px solid var(--marble-dim);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--oxide);
+}
+
+/* =============================================================
+   Shared layout utilities
+   ============================================================= */
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.section {
+  padding: clamp(64px, 9vw, 118px) 0;
+  position: relative;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--oxide);
+  margin-bottom: 16px;
+}
+
+.kicker::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.sectionHead {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: end;
+  gap: clamp(24px, 4vw, 60px);
+  margin-bottom: clamp(38px, 5vw, 62px);
+}
+
+.sectionHead h2 {
+  font-size: clamp(30px, 4.4vw, 52px);
+}
+
+.sectionHead p {
+  color: var(--text-muted);
+  font-size: 15.5px;
+  max-width: 44ch;
+  padding-bottom: 6px;
+}
+
+.em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--oxide);
+}
+
+.onDark .kicker {
+  color: var(--oxide-light);
+}
+.onDark .sectionHead p {
+  color: var(--text-muted-light);
+}
+
+/* screen-reader only */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* -------------------------------------------------------------
+   Pre-animation state.
+   The `js` class is set by an inline script in <head>, so the
+   hidden state only ever applies when GSAP can undo it again.
+   ------------------------------------------------------------- */
+html.js [data-reveal] {
+  opacity: 0;
+}
+
+html.js [data-reveal-stagger] > * {
+  opacity: 0;
+}
+
+[data-reveal],
+[data-reveal-stagger] > * {
+  will-change: transform, opacity;
+}
+
+@media (max-width: 900px) {
+  :root {
+    --gutter: 24px;
+  }
+  .sectionHead {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  .sectionHead p {
+    padding-bottom: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --gutter: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

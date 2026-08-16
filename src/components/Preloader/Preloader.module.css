@@ -1,0 +1,88 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.columns {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+
+.column {
+  flex: 1;
+  height: 100%;
+  background: var(--ink);
+}
+
+.column:nth-child(odd) {
+  background: #1b1a13;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  width: min(880px, 84vw);
+  color: var(--marble);
+  text-align: center;
+}
+
+.wordTop {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--oxide-light);
+  margin-bottom: 14px;
+  padding-left: 0.5em;
+}
+
+.letters {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.letterMask {
+  display: inline-block;
+  overflow: hidden;
+  line-height: 0.94;
+}
+
+.letter {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(28px, 7.4vw, 92px);
+  letter-spacing: -0.03em;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 34px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+
+.counter {
+  color: var(--oxide-light);
+}
+
+.bar {
+  display: block;
+  height: 1px;
+  margin-top: 10px;
+  background: var(--oxide);
+  transform: scaleX(0);
+  transform-origin: left;
+}

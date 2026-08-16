@@ -1,0 +1,24 @@
+.rule {
+  position: relative;
+  width: 100%;
+  height: 14px;
+  line-height: 0;
+}
+
+.rule svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.dark polyline {
+  stroke: rgba(22, 21, 15, 0.3);
+}
+
+.light polyline {
+  stroke: rgba(239, 234, 224, 0.32);
+}
+
+.oxide polyline {
+  stroke: rgba(193, 66, 15, 0.55);
+}
