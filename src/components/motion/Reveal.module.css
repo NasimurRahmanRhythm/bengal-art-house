@@ -1,0 +1,73 @@
+.reveal {
+  --reveal-x: 0px;
+  --reveal-y: 0px;
+  --reveal-scale: 1;
+  --reveal-opacity: 1;
+  --reveal-blur: 0px;
+  --reveal-clip: inset(0% 0% 0% 0%);
+  --reveal-duration: 1s;
+  --reveal-delay: 0s;
+}
+
+.rise {
+  --reveal-y: 46px;
+  --reveal-opacity: 0;
+}
+
+.fade {
+  --reveal-opacity: 0;
+}
+
+.wipe {
+  --reveal-y: 26px;
+  --reveal-opacity: 0;
+  --reveal-clip: inset(0% 0% 100% 0%);
+}
+
+.scale {
+  --reveal-scale: 0.94;
+  --reveal-opacity: 0;
+  --reveal-blur: 8px;
+}
+
+.fromLeft {
+  --reveal-x: -54px;
+  --reveal-opacity: 0;
+}
+
+.fromRight {
+  --reveal-x: 54px;
+  --reveal-opacity: 0;
+}
+
+.reveal:not(.stagger) {
+  opacity: var(--reveal-opacity);
+  transform: translate(var(--reveal-x), var(--reveal-y)) scale(var(--reveal-scale));
+  clip-path: var(--reveal-clip);
+  filter: blur(var(--reveal-blur));
+  transition:
+    opacity var(--reveal-duration) var(--ease-out) var(--reveal-delay),
+    transform var(--reveal-duration) var(--ease-out) var(--reveal-delay),
+    clip-path var(--reveal-duration) var(--ease-out) var(--reveal-delay),
+    filter var(--reveal-duration) var(--ease-out) var(--reveal-delay);
+}
+
+.reveal:not(.stagger).visible {
+  opacity: 1;
+  transform: none;
+  clip-path: inset(0% 0% 0% 0%);
+  filter: blur(0px);
+}
+
+.reveal.stagger > * {
+  opacity: var(--reveal-opacity);
+  transform: translate(var(--reveal-x), var(--reveal-y)) scale(var(--reveal-scale));
+  transition:
+    opacity var(--reveal-duration) var(--ease-out) var(--item-delay, var(--reveal-delay)),
+    transform var(--reveal-duration) var(--ease-out) var(--item-delay, var(--reveal-delay));
+}
+
+.reveal.stagger > *.visible {
+  opacity: 1;
+  transform: none;
+}

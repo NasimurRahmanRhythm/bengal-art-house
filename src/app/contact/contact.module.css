@@ -1,0 +1,33 @@
+.roomFigure {
+  position: relative;
+  border: 1px solid var(--stone-line);
+  background: var(--marble-dim);
+}
+
+/* The image is taller than its frame so the parallax has room to travel. */
+.roomFigure > div {
+  height: clamp(280px, 46vw, 520px);
+  overflow: hidden;
+}
+
+.roomImg {
+  width: 100%;
+  height: calc(100% + 120px);
+  margin-top: -60px;
+  object-fit: cover;
+}
+
+.roomCaption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 14px 20px;
+  border-top: 1px solid var(--stone-line);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}

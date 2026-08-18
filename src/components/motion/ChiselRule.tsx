@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import { gsap, prefersReducedMotion } from "@/lib/gsap";
+import { useEffect, useRef } from "react";
+import { prefersReducedMotion, revealOnce } from "@/lib/motion";
 import styles from "./ChiselRule.module.css";
 
 const POINTS =
@@ -16,25 +15,26 @@ type ChiselRuleProps = {
 export default function ChiselRule({ tone = "dark", className }: ChiselRuleProps) {
   const wrap = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const line = wrap.current?.querySelector("polyline");
-      if (!line || prefersReducedMotion()) return;
+  useEffect(() => {
+    const root = wrap.current;
+    const line = root?.querySelector("polyline");
+    if (!root || !line) return;
 
-      const length = line.getTotalLength();
-      gsap.fromTo(
-        line,
-        { strokeDasharray: length, strokeDashoffset: length },
-        {
-          strokeDashoffset: 0,
-          duration: 1.6,
-          ease: "power2.inOut",
-          scrollTrigger: { trigger: wrap.current, start: "top 95%", once: true },
-        }
-      );
-    },
-    { scope: wrap }
-  );
+    const length = line.getTotalLength();
+    line.style.strokeDasharray = `${length}`;
+    line.style.strokeDashoffset = `${length}`;
+    if (!prefersReducedMotion()) {
+      line.style.transition = "stroke-dashoffset 1.6s var(--ease-in-out)";
+    }
+
+    return revealOnce(
+      root,
+      () => {
+        line.style.strokeDashoffset = "0";
+      },
+      { threshold: 0 }
+    );
+  }, []);
 
   return (
     <div

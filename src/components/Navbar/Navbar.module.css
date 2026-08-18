@@ -86,6 +86,22 @@
   height: 62px;
 }
 
+@keyframes navItemIn {
+  from {
+    opacity: 0;
+    transform: translateY(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.navItem {
+  animation: navItemIn 0.8s var(--ease-out) both;
+  animation-delay: calc(0.15s + var(--i, 0) * 0.05s);
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -326,6 +342,22 @@
   line-height: 1;
 }
 
+@keyframes badgePulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.75);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.cartCount.pulse {
+  animation: badgePulse 0.44s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 .burger {
   display: none;
   width: 42px;
@@ -382,6 +414,13 @@
   clip-path: inset(0% 0% 100% 0%);
   overflow-y: auto;
   padding: calc(var(--header-h) + 40px) 0 48px;
+  transition: clip-path 0.45s var(--ease-in-out);
+}
+
+.panelOpen {
+  pointer-events: auto;
+  clip-path: inset(0% 0% 0% 0%);
+  transition: clip-path 0.6s var(--ease-in-out);
 }
 
 .panelInner {
@@ -391,6 +430,21 @@
 
 .panelRow {
   border-bottom: 1px solid var(--light-line);
+}
+
+.panelRow,
+.panelFoot {
+  opacity: 0;
+  transform: translateY(34px);
+  transition:
+    opacity 0.55s var(--ease-out) calc(0.32s + var(--i, 0) * 0.055s),
+    transform 0.55s var(--ease-out) calc(0.32s + var(--i, 0) * 0.055s);
+}
+
+.panelOpen .panelRow,
+.panelOpen .panelFoot {
+  opacity: 1;
+  transform: none;
 }
 
 .panelLink {

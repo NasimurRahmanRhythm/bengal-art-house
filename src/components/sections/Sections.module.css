@@ -122,6 +122,12 @@
   width: 2px;
   background: var(--oxide);
   transform-origin: top;
+  transform: scaleY(0);
+  transition: transform 1.1s var(--ease-in-out);
+}
+
+.quoteBarVisible {
+  transform: scaleY(1);
 }
 
 .facts {
@@ -444,6 +450,16 @@
   gap: 28px;
   align-items: start;
   padding: 34px 0;
+  opacity: 0;
+  transform: translateY(34px);
+  transition:
+    opacity 0.8s var(--ease-out) var(--item-delay, 0s),
+    transform 0.8s var(--ease-out) var(--item-delay, 0s);
+}
+
+.collabRow.rowVisible {
+  opacity: 1;
+  transform: none;
 }
 
 .collabLine {
@@ -454,6 +470,12 @@
   height: 1px;
   background: var(--stone-line);
   transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 1.1s var(--ease-in-out) var(--item-delay, 0s);
+}
+
+.collabRow.rowVisible .collabLine {
+  transform: scaleX(1);
 }
 
 .collabPlace {
@@ -480,6 +502,45 @@
   letter-spacing: 0.09em;
   color: var(--stone);
   text-align: right;
+}
+
+.gridReveal > * {
+  opacity: 0;
+  transform: translateY(44px);
+  transition:
+    opacity 0.8s var(--ease-out) var(--item-delay, 0s),
+    transform 0.8s var(--ease-out) var(--item-delay, 0s);
+}
+
+.gridReveal > *.inView {
+  opacity: 1;
+  transform: none;
+}
+
+.worksReveal > * {
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  transition:
+    opacity 0.8s var(--ease-out) var(--item-delay, 0s),
+    transform 0.8s var(--ease-out) var(--item-delay, 0s);
+}
+
+.worksReveal > *.inView {
+  opacity: 1;
+  transform: none;
+}
+
+.artistReveal > * {
+  opacity: 0;
+  transform: translateY(60px) rotate(-1.2deg);
+  transition:
+    opacity 0.95s var(--ease-out) var(--item-delay, 0s),
+    transform 0.95s var(--ease-out) var(--item-delay, 0s);
+}
+
+.artistReveal > *.inView {
+  opacity: 1;
+  transform: none;
 }
 
 .serviceGrid {
@@ -801,8 +862,32 @@ a.detailValue:hover {
   transform: translateX(5px);
 }
 
+.form [data-field] {
+  transition:
+    opacity 0.35s ease-in,
+    transform 0.35s ease-in;
+}
+
+.formExiting [data-field] {
+  opacity: 0;
+  transform: translateY(-14px);
+  transition-delay: calc(var(--i, 0) * 0.05s);
+}
+
 .sentNote {
   padding: 20px 0;
+  animation: sentIn 0.7s var(--ease-out);
+}
+
+@keyframes sentIn {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .sentMark {

@@ -1,9 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { useGSAP } from "@gsap/react";
-import { gsap, prefersReducedMotion } from "@/lib/gsap";
+import { revealOnce } from "@/lib/motion";
 import { ARTISTS } from "@/data/gallery";
 import ArtPlate from "@/components/ArtPlate/ArtPlate";
 import { ArrowIcon } from "@/components/Icons";
@@ -12,30 +11,21 @@ import styles from "./Sections.module.css";
 export default function ArtistGrid() {
   const grid = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const el = grid.current;
-      if (!el || prefersReducedMotion()) return;
+  useEffect(() => {
+    const el = grid.current;
+    if (!el) return;
 
-      gsap.fromTo(
-        el.children,
-        { opacity: 0, y: 60, rotate: -1.2 },
-        {
-          opacity: 1,
-          y: 0,
-          rotate: 0,
-          duration: 0.95,
-          stagger: 0.13,
-          ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 86%", once: true },
-        }
-      );
-    },
-    { scope: grid }
-  );
+    Array.from(el.children).forEach((child, i) => {
+      (child as HTMLElement).style.setProperty("--item-delay", `${i * 0.13}s`);
+    });
+
+    return revealOnce(el, () => {
+      Array.from(el.children).forEach((child) => child.classList.add(styles.inView));
+    });
+  }, []);
 
   return (
-    <div ref={grid} className={styles.artistGrid}>
+    <div ref={grid} className={`${styles.artistGrid} ${styles.artistReveal}`}>
       {ARTISTS.map((a) => (
         <article key={a.slug} className={`${styles.artistCard} plateHost`}>
           <Link

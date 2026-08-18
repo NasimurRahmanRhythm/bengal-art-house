@@ -1,65 +1,25 @@
 "use client";
 
-import { useRef } from "react";
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useGSAP } from "@gsap/react";
-import { gsap, prefersReducedMotion } from "@/lib/gsap";
 import { useCart } from "@/context/CartContext";
 import { formatBDT } from "@/data/artworks";
 import ArtPlate from "@/components/ArtPlate/ArtPlate";
 import { ArrowIcon, CloseIcon } from "@/components/Icons";
 import styles from "./CartDrawer.module.css";
 
+const itemDelay = (i: number) => ({ "--i": i }) as CSSProperties;
+
 export default function CartDrawer() {
   const { lines, count, total, isOpen, closeCart, remove, clear } = useCart();
-  const root = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      const el = root.current;
-      if (!el) return;
-
-      const scrim = el.querySelector(`.${styles.scrim}`);
-      const sheet = el.querySelector(`.${styles.sheet}`);
-      const rows = el.querySelectorAll("[data-cart-row]");
-      const instant = prefersReducedMotion();
-
-      if (isOpen) {
-        gsap.set(el, { pointerEvents: "auto", visibility: "visible" });
-        const tl = gsap.timeline();
-        tl.to(scrim, { opacity: 1, duration: instant ? 0 : 0.4, ease: "power2.out" })
-          .fromTo(
-            sheet,
-            { xPercent: 100 },
-            { xPercent: 0, duration: instant ? 0 : 0.7, ease: "power4.out" },
-            0
-          )
-          .fromTo(
-            rows,
-            { x: 40, opacity: 0 },
-            { x: 0, opacity: 1, duration: instant ? 0 : 0.5, stagger: 0.07, ease: "power3.out" },
-            instant ? 0 : 0.25
-          );
-      } else {
-        gsap
-          .timeline({
-            onComplete: () => gsap.set(el, { pointerEvents: "none", visibility: "hidden" }),
-          })
-          .to(sheet, { xPercent: 100, duration: instant ? 0 : 0.45, ease: "power3.in" })
-          .to(scrim, { opacity: 0, duration: instant ? 0 : 0.35 }, 0);
-      }
-    },
-    { dependencies: [isOpen, lines.length] }
-  );
 
   return (
-    <div ref={root} className={styles.root} aria-hidden={!isOpen}>
+    <div className={`${styles.root} ${isOpen ? styles.open : ""}`} inert={!isOpen}>
       <button
         type="button"
         className={styles.scrim}
         onClick={closeCart}
-        tabIndex={isOpen ? 0 : -1}
         aria-label="Close cart"
       />
 
@@ -81,7 +41,6 @@ export default function CartDrawer() {
             onClick={closeCart}
             className={styles.close}
             aria-label="Close cart"
-            tabIndex={isOpen ? 0 : -1}
           >
             <CloseIcon size={17} />
           </button>
@@ -89,7 +48,7 @@ export default function CartDrawer() {
 
         <div className={styles.body}>
           {count === 0 ? (
-            <div className={styles.empty} data-cart-row>
+            <div className={styles.empty} style={itemDelay(0)}>
               <span className={styles.emptyMark}>—</span>
               <p>
                 Nothing selected yet. Browse the works available for acquisition and add the ones
@@ -101,8 +60,8 @@ export default function CartDrawer() {
             </div>
           ) : (
             <ul className={styles.list}>
-              {lines.map((line) => (
-                <li key={line.id} className={styles.row} data-cart-row>
+              {lines.map((line, i) => (
+                <li key={line.id} className={styles.row} style={itemDelay(i)}>
                   <span className={styles.thumb}>
                     {line.photo ? (
                       <Image src={line.photo} alt="" width={140} height={175} />
@@ -120,7 +79,6 @@ export default function CartDrawer() {
                     className={styles.remove}
                     onClick={() => remove(line.id)}
                     aria-label={`Remove ${line.title}`}
-                    tabIndex={isOpen ? 0 : -1}
                   >
                     <CloseIcon size={14} />
                   </button>

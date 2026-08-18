@@ -1,9 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { useGSAP } from "@gsap/react";
-import { gsap, prefersReducedMotion } from "@/lib/gsap";
+import { revealOnce } from "@/lib/motion";
 import { BIO, FACTS } from "@/data/gallery";
 import { ArrowIcon } from "@/components/Icons";
 import SplitHeading from "@/components/motion/SplitHeading";
@@ -14,25 +13,12 @@ import styles from "./Sections.module.css";
 export default function AboutSculptor() {
   const root = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
-      if (prefersReducedMotion()) return;
-      const bar = root.current?.querySelector(`.${styles.quoteBar}`);
-      if (!bar) return;
-
-      gsap.fromTo(
-        bar,
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          duration: 1.1,
-          ease: "power3.inOut",
-          scrollTrigger: { trigger: bar, start: "top 86%", once: true },
-        }
-      );
-    },
-    { scope: root }
-  );
+  useEffect(() => {
+    const el = root.current;
+    const bar = el?.querySelector(`.${styles.quoteBar}`);
+    if (!el || !bar) return;
+    return revealOnce(bar, () => bar.classList.add(styles.quoteBarVisible));
+  }, []);
 
   return (
     <section ref={root} className={`${styles.dark} onDark`} id="featured-artist">

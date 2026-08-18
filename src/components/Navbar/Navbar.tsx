@@ -1,24 +1,24 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger, prefersReducedMotion } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 import { NAV, SITE, SOCIALS } from "@/data/site";
 import { useCart } from "@/context/CartContext";
 import { CartIcon, ChevronIcon, SOCIAL_ICONS, UserIcon } from "@/components/Icons";
 import styles from "./Navbar.module.css";
+
+const itemDelay = (i: number) => ({ "--i": i }) as CSSProperties;
 
 export default function Navbar() {
   const pathname = usePathname();
   const { count, pulse, openCart } = useCart();
 
   const header = useRef<HTMLElement>(null);
-  const badge = useRef<HTMLSpanElement>(null);
   const progress = useRef<HTMLSpanElement>(null);
-  const panel = useRef<HTMLDivElement>(null);
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [openDrop, setOpenDrop] = useState<string | null>(null);
@@ -26,83 +26,31 @@ export default function Navbar() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
+  // Condensed-on-scroll toggle — a plain threshold check, no scroll math needed.
+  useEffect(() => {
+    const el = header.current;
+    if (!el) return;
+    const onScroll = () => el.classList.toggle(styles.condensed, window.scrollY > 60);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Header scroll-progress bar is continuously scroll-scrubbed — kept on ScrollTrigger.
   useGSAP(
     () => {
-      const el = header.current;
-      if (!el) return;
-
-      if (!prefersReducedMotion()) {
-        gsap.from(el.querySelectorAll("[data-nav-item]"), {
-          y: -18,
-          opacity: 0,
-          duration: 0.8,
-          stagger: 0.05,
-          delay: 0.15,
-          ease: "power3.out",
-        });
-      }
-
-      ScrollTrigger.create({
-        start: "top -60",
-        end: "max",
-        onToggle: (self) => el.classList.toggle(styles.condensed, self.isActive),
-      });
-
-      if (progress.current) {
-        gsap.fromTo(
-          progress.current,
-          { scaleX: 0 },
-          {
-            scaleX: 1,
-            ease: "none",
-            scrollTrigger: { start: 0, end: "max", scrub: 0.3 },
-          }
-        );
-      }
+      if (!progress.current) return;
+      gsap.fromTo(
+        progress.current,
+        { scaleX: 0 },
+        {
+          scaleX: 1,
+          ease: "none",
+          scrollTrigger: { start: 0, end: "max", scrub: 0.3 },
+        }
+      );
     },
     { scope: header }
-  );
-
-  useEffect(() => {
-    if (!pulse || !badge.current || prefersReducedMotion()) return;
-    gsap.fromTo(
-      badge.current,
-      { scale: 1 },
-      { scale: 1.75, duration: 0.22, yoyo: true, repeat: 1, ease: "back.out(3)" }
-    );
-  }, [pulse]);
-
-  useGSAP(
-    () => {
-      const el = panel.current;
-      if (!el) return;
-      const items = el.querySelectorAll("[data-panel-item]");
-
-      if (menuOpen) {
-        gsap
-          .timeline()
-          .set(el, { pointerEvents: "auto" })
-          .fromTo(
-            el,
-            { clipPath: "inset(0% 0% 100% 0%)" },
-            { clipPath: "inset(0% 0% 0% 0%)", duration: 0.6, ease: "power4.inOut" }
-          )
-          .fromTo(
-            items,
-            { y: 34, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.55, stagger: 0.055, ease: "power3.out" },
-            "-=0.28"
-          );
-      } else {
-        gsap.to(el, {
-          clipPath: "inset(0% 0% 100% 0%)",
-          duration: 0.45,
-          ease: "power3.inOut",
-          onComplete: () => gsap.set(el, { pointerEvents: "none" }),
-        });
-      }
-    },
-    { dependencies: [menuOpen] }
   );
 
   useEffect(() => {
@@ -159,7 +107,12 @@ export default function Navbar() {
       </div>
 
       <div className={`wrap ${styles.bar}`}>
-        <Link href="/" className={styles.brand} data-nav-item aria-label={`${SITE.name} — home`}>
+        <Link
+          href="/"
+          className={`${styles.brand} ${styles.navItem}`}
+          style={itemDelay(0)}
+          aria-label={`${SITE.name} — home`}
+        >
           <span className={styles.brandMark}>
             <Image
               src="/images/sculpture.jpg"
@@ -178,7 +131,7 @@ export default function Navbar() {
 
         <nav className={styles.nav} aria-label="Primary">
           <ul className={styles.navList}>
-            {NAV.map((item) => (
+            {NAV.map((item, i) => (
               <li
                 key={item.label}
                 className={item.children ? styles.hasDrop : undefined}
@@ -187,8 +140,8 @@ export default function Navbar() {
               >
                 <Link
                   href={item.href}
-                  data-nav-item
-                  className={`${styles.navLink} ${isActive(item.href) ? styles.navLinkActive : ""}`}
+                  style={itemDelay(i + 1)}
+                  className={`${styles.navLink} ${styles.navItem} ${isActive(item.href) ? styles.navLinkActive : ""}`}
                   aria-expanded={item.children ? openDrop === item.label : undefined}
                 >
                   <span className={styles.navLabel} data-text={item.label}>
@@ -218,13 +171,16 @@ export default function Navbar() {
           <button
             type="button"
             onClick={openCart}
-            className={styles.cartBtn}
-            data-nav-item
+            className={`${styles.cartBtn} ${styles.navItem}`}
+            style={itemDelay(NAV.length + 1)}
             aria-label={`Open cart, ${count} ${count === 1 ? "item" : "items"}`}
           >
             <CartIcon size={15} />
             <span className={styles.cartLabel}>Cart</span>
-            <span ref={badge} className={styles.cartCount}>
+            <span
+              key={pulse}
+              className={`${styles.cartCount} ${pulse > 0 ? styles.pulse : ""}`}
+            >
               {count}
             </span>
           </button>
@@ -244,10 +200,10 @@ export default function Navbar() {
 
       <span ref={progress} className={styles.progress} aria-hidden="true" />
 
-      <div ref={panel} className={styles.panel} id="mobile-menu">
+      <div className={`${styles.panel} ${menuOpen ? styles.panelOpen : ""}`} id="mobile-menu">
         <div className={styles.panelInner}>
           {NAV.map((item, i) => (
-            <div key={item.label} data-panel-item className={styles.panelRow}>
+            <div key={item.label} style={itemDelay(i)} className={styles.panelRow}>
               <Link href={item.href} className={styles.panelLink}>
                 <span className={styles.panelIndex}>{String(i + 1).padStart(2, "0")}</span>
                 {item.label}
@@ -264,7 +220,7 @@ export default function Navbar() {
             </div>
           ))}
 
-          <div data-panel-item className={styles.panelFoot}>
+          <div style={itemDelay(NAV.length)} className={styles.panelFoot}>
             <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
             <a href={`tel:${SITE.phoneHref}`}>{SITE.phone}</a>
             <div className={styles.panelSocials}>

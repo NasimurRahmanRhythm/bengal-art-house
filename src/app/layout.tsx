@@ -57,14 +57,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${workSans.variable} ${plexMono.variable}`}>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `document.documentElement.classList.add('js')`,
-          }}
-        />
-      </head>
+    <html
+      lang="en"
+      className={`${fraunces.variable} ${workSans.variable} ${plexMono.variable}`}
+      suppressHydrationWarning
+    >
       <body>
         <CartProvider>
           <Preloader />
