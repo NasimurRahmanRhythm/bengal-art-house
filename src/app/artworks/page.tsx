@@ -13,7 +13,7 @@ import sections from "@/components/sections/Sections.module.css";
 export const metadata: Metadata = {
   title: "Artworks",
   description:
-    "Studio sculptures, editions, drawings and watercolours available for acquisition from Bengal Art House.",
+    "Studio sculptures, editions, drawings and watercolours available for acquisition from Gallery Hamiduzzaman.",
 };
 
 const available = ARTWORKS.filter((a) => a.status === "available").length;

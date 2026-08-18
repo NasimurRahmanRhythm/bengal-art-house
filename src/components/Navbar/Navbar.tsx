@@ -124,8 +124,8 @@ export default function Navbar() {
             />
           </span>
           <span className={styles.brandText}>
-            Bengal
-            <span className={styles.brandName}>Art House</span>
+            Gallery
+            <span className={styles.brandName}>Hamiduzzaman</span>
           </span>
         </Link>
 

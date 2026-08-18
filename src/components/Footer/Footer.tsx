@@ -26,11 +26,16 @@ export default function Footer() {
           xPercent: 3,
           opacity: 1,
           ease: "none",
-          scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom bottom", scrub: 0.7 },
-        }
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top bottom",
+            end: "bottom bottom",
+            scrub: 0.7,
+          },
+        },
       );
     },
-    { scope: root }
+    { scope: root },
   );
 
   return (
@@ -40,12 +45,14 @@ export default function Footer() {
           <div className={styles.ctaCol}>
             <span className="kicker">Contact</span>
             <SplitHeading as="h2" className={styles.ctaTitle}>
-              Visit the gallery, or arrange a <em className="em">private viewing.</em>
+              Visit the gallery, or arrange a{" "}
+              <em className="em">private viewing.</em>
             </SplitHeading>
             <Reveal delay={0.15}>
               <p className={styles.ctaBody}>
-                {SITE.name} hosts exhibitions and private cultural events, with proceeds
-                supporting continued documentation of Bangladesh&apos;s public sculpture.
+                {SITE.name} hosts exhibitions and private cultural events, with
+                proceeds supporting continued documentation of Bangladesh&apos;s
+                public sculpture.
               </p>
             </Reveal>
             <Reveal delay={0.25}>
@@ -96,11 +103,13 @@ export default function Footer() {
         </div>
 
         <div className={styles.markRow} aria-hidden="true">
-          <span className={styles.bigMark}>BENGAL ART HOUSE</span>
+          <span className={styles.bigMark}>GALLERY HAMIDUZZAMAN</span>
         </div>
 
         <div className={styles.bottom}>
-          <span>© {new Date().getFullYear()} {SITE.name}</span>
+          <span>
+            © {new Date().getFullYear()} {SITE.name}
+          </span>
           <nav className={styles.policy} aria-label="Policies">
             {FOOTER_POLICY.map((l) => (
               <Link key={l.label} href={l.href}>

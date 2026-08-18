@@ -1,4 +1,4 @@
-# Bengal Art House
+# Gallery Hamiduzzaman
 
 Next.js gallery site (Phase 1 — frontend only, dummy data). See `PLAN.md`
 for the roadmap.
@@ -22,6 +22,4 @@ npm run lint    # lint check
 
 ## Requirements
 
-- Node.js 18.18+
-
-# bengal-art-house
+- Node.js 22+ (`@supabase/supabase-js` crashes on Node 20 — no native WebSocket)

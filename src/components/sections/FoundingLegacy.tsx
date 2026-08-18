@@ -16,7 +16,7 @@ export default function FoundingLegacy() {
           <span className={styles.name}>Hamiduzzaman Khan</span>
           <span className={styles.text}>
             The gallery began as a home for his sculpture, drawings and public works — the
-            practice Bengal Art House now carries forward with a growing circle of artists.
+            practice Gallery Hamiduzzaman now carries forward with a growing circle of artists.
           </span>
           <span className={styles.cta}>
             Read his story <ArrowIcon size={14} />

@@ -31,15 +31,15 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://bengalarthouse.example"),
+  metadataBase: new URL("https://galleryhamiduzzaman.example"),
   title: {
-    default: "Bengal Art House — Sculpture, Drawing & Public Art",
-    template: "%s — Bengal Art House",
+    default: "Gallery Hamiduzzaman — Sculpture, Drawing & Public Art",
+    template: "%s — Gallery Hamiduzzaman",
   },
   description:
-    "Bengal Art House represents a growing circle of Bangladeshi sculptors and artists, carrying forward the modern sculpture tradition established by pioneers like Hamiduzzaman Khan (1946–2025).",
+    "Gallery Hamiduzzaman represents a growing circle of Bangladeshi sculptors and artists, carrying forward the modern sculpture tradition established by pioneers like Hamiduzzaman Khan (1946–2025).",
   keywords: [
-    "Bengal Art House",
+    "Gallery Hamiduzzaman",
     "Hamiduzzaman Khan",
     "Bangladesh sculpture",
     "art gallery Dhaka",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     "Ekushey Padak",
   ],
   openGraph: {
-    title: "Bengal Art House",
+    title: "Gallery Hamiduzzaman",
     description:
       "Sculpture, drawing and public art from a growing circle of Bangladeshi artists — Dhaka, Bangladesh.",
     type: "website",

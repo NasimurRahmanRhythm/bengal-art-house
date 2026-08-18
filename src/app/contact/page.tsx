@@ -12,7 +12,7 @@ import styles from "./contact.module.css";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Visit Bengal Art House in Dhanmondi, Dhaka, or arrange a private viewing of the collection.",
+    "Visit Gallery Hamiduzzaman in Dhanmondi, Dhaka, or arrange a private viewing of the collection.",
 };
 
 export default function ContactPage() {
@@ -25,7 +25,7 @@ export default function ContactPage() {
             Visit the gallery, or arrange a <span className="em">private viewing.</span>
           </>
         }
-        lede="Bengal Art House hosts exhibitions and private cultural events, with proceeds supporting continued documentation of Bangladesh's public sculpture."
+        lede="Gallery Hamiduzzaman hosts exhibitions and private cultural events, with proceeds supporting continued documentation of Bangladesh's public sculpture."
         crumbs={[{ label: "Home", href: "/" }]}
         meta={[
           { label: "District", value: "Dhanmondi" },

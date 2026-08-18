@@ -6,9 +6,9 @@ import { gsap, ScrollTrigger, prefersReducedMotion } from "@/lib/gsap";
 import { finishIntro } from "@/lib/intro";
 import styles from "./Preloader.module.css";
 
-const SESSION_KEY = "bah_intro_played";
+const SESSION_KEY = "gh_intro_played";
 const COLUMNS = 6;
-const WORD = "ART HOUSE";
+const WORD = "HAMIDUZZAMAN";
 
 export default function Preloader() {
   const root = useRef<HTMLDivElement>(null);
@@ -56,7 +56,7 @@ export default function Preloader() {
         .from(
           el.querySelector(`.${styles.meta}`),
           { opacity: 0, duration: 0.6 },
-          "-=0.55"
+          "-=0.55",
         )
         .to(
           num,
@@ -66,17 +66,19 @@ export default function Preloader() {
             ease: "power2.inOut",
             onUpdate: () => {
               if (counter.current) {
-                counter.current.textContent = String(Math.round(num.n)).padStart(3, "0");
+                counter.current.textContent = String(
+                  Math.round(num.n),
+                ).padStart(3, "0");
               }
             },
           },
-          0.25
+          0.25,
         )
         .fromTo(
           el.querySelector(`.${styles.bar}`),
           { scaleX: 0 },
           { scaleX: 1, duration: 1.35, ease: "power2.inOut" },
-          0.25
+          0.25,
         )
         .to(el.querySelector(`.${styles.content}`), {
           opacity: 0,
@@ -92,10 +94,10 @@ export default function Preloader() {
             stagger: 0.07,
             ease: "power4.inOut",
           },
-          "-=0.2"
+          "-=0.2",
         );
     },
-    { scope: root }
+    { scope: root },
   );
 
   return (
@@ -108,7 +110,7 @@ export default function Preloader() {
 
       <div className={styles.content}>
         <div className={styles.word}>
-          <span className={styles.wordTop}>Bengal</span>
+          <span className={styles.wordTop}>Gallery</span>
           <span className={styles.letters}>
             {WORD.split("").map((ch, i) => (
               <span key={i} className={styles.letterMask}>

@@ -14,7 +14,7 @@ import { MATERIALS } from "@/data/site";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Bengal Art House represents a growing circle of Bangladeshi artists, carrying forward the modern sculpture tradition founded by Hamiduzzaman Khan.",
+    "Gallery Hamiduzzaman represents a growing circle of Bangladeshi artists, carrying forward the modern sculpture tradition founded by Hamiduzzaman Khan.",
 };
 
 export default function AboutPage() {
@@ -29,7 +29,7 @@ export default function AboutPage() {
             sculpture, drawing <span className="em">&amp; public art.</span>
           </>
         }
-        lede="Bengal Art House represents a growing circle of Bangladeshi artists, carrying forward a tradition of modern sculpture into the country's parks, campuses and public memory."
+        lede="Gallery Hamiduzzaman represents a growing circle of Bangladeshi artists, carrying forward a tradition of modern sculpture into the country's parks, campuses and public memory."
         crumbs={[{ label: "Home", href: "/" }]}
         meta={[
           { label: "Artists", value: "3" },
@@ -49,7 +49,7 @@ export default function AboutPage() {
                 <span className="em">curating exhibitions.</span>
               </>
             }
-            body="Bengal Art House began as a home for the sculpture, drawings and public works of Hamiduzzaman Khan — one of the founding figures of modern sculpture in Bangladesh. Today it represents a small, growing circle of sculptors and artists working across bronze, stone, steel and paper."
+            body="Gallery Hamiduzzaman began as a home for the sculpture, drawings and public works of Hamiduzzaman Khan — one of the founding figures of modern sculpture in Bangladesh. Today it represents a small, growing circle of sculptors and artists working across bronze, stone, steel and paper."
             aside={
               <Reveal delay={0.25}>
                 <p style={{ fontSize: "15px", color: "var(--text-muted)", marginTop: "18px" }}>

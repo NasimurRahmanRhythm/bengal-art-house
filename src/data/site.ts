@@ -1,8 +1,8 @@
 export const SITE = {
-  name: "Bengal Art House",
-  shortName: "BAH",
+  name: "Gallery Hamiduzzaman",
+  shortName: "GH",
   tagline: "Representing Bangladeshi sculpture, drawing & public art",
-  email: "info@bengalarthouse.example",
+  email: "info@galleryhamiduzzaman.example",
   phone: "+880 0000 000000",
   phoneHref: "+8800000000000",
   address: "Dhanmondi, Dhaka, Bangladesh",
