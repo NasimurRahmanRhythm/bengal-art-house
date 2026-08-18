@@ -1,6 +1,12 @@
 node_modules
 .next
+.env
+.env.local
 .env*.local
 *.tsbuildinfo
 *.log
 .vercel
+
+PLAN.md
+supabase-project-password.txt
+gallery-hamiduzzaman-site/
