@@ -4,8 +4,6 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap";
 import { NAV, SITE, SOCIALS } from "@/data/site";
 import { useCart } from "@/context/CartContext";
 import { CartIcon, ChevronIcon, SOCIAL_ICONS, UserIcon } from "@/components/Icons";
@@ -18,7 +16,6 @@ export default function Navbar() {
   const { count, pulse, openCart } = useCart();
 
   const header = useRef<HTMLElement>(null);
-  const progress = useRef<HTMLSpanElement>(null);
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [openDrop, setOpenDrop] = useState<string | null>(null);
@@ -36,22 +33,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Header scroll-progress bar is continuously scroll-scrubbed — kept on ScrollTrigger.
-  useGSAP(
-    () => {
-      if (!progress.current) return;
-      gsap.fromTo(
-        progress.current,
-        { scaleX: 0 },
-        {
-          scaleX: 1,
-          ease: "none",
-          scrollTrigger: { start: 0, end: "max", scrub: 0.3 },
-        }
-      );
-    },
-    { scope: header }
-  );
 
   useEffect(() => {
     setMenuOpen(false);
@@ -144,9 +125,7 @@ export default function Navbar() {
                   className={`${styles.navLink} ${styles.navItem} ${isActive(item.href) ? styles.navLinkActive : ""}`}
                   aria-expanded={item.children ? openDrop === item.label : undefined}
                 >
-                  <span className={styles.navLabel} data-text={item.label}>
-                    {item.label}
-                  </span>
+                  <span className={styles.navLabel}>{item.label}</span>
                   {item.children && <ChevronIcon size={11} className={styles.chevron} />}
                 </Link>
 
@@ -197,8 +176,6 @@ export default function Navbar() {
           </button>
         </div>
       </div>
-
-      <span ref={progress} className={styles.progress} aria-hidden="true" />
 
       <div className={`${styles.panel} ${menuOpen ? styles.panelOpen : ""}`} id="mobile-menu">
         <div className={styles.panelInner}>

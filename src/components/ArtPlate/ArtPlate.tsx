@@ -2,13 +2,13 @@ import { useId } from "react";
 import styles from "./ArtPlate.module.css";
 
 const C = {
-  marble: "#efeae0",
-  marbleDim: "#e3ddcf",
-  ink: "#16150f",
-  oxide: "#c1420f",
-  oxideDark: "#7e3521",
-  patina: "#6e7f5c",
-  stone: "#9c9284",
+  marble: "#ffffff",
+  marbleDim: "#f6f4f0",
+  ink: "#131211",
+  oxide: "#a8391c",
+  oxideDark: "#6e2612",
+  patina: "#4c5d43",
+  stone: "#8c8577",
 };
 
 type PlateProps = {

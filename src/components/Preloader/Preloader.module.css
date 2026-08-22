@@ -20,7 +20,7 @@
 }
 
 .column:nth-child(odd) {
-  background: #1b1a13;
+  background: var(--ink-soft);
 }
 
 .content {

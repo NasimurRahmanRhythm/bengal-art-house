@@ -1,0 +1,34 @@
+.dot {
+  position: fixed;
+  top: -5px;
+  left: -5px;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  /* GSAP writes x/y onto this transform every frame once the dot is
+     enabled — this is only the resting state before the first pointermove. */
+  transform: translate(0, 0);
+}
+
+.dot.visible {
+  opacity: 1;
+}
+
+/* Scale lives on this inner element, owned entirely by a CSS transition —
+   never by GSAP — so it can never collide with the outer element's x/y. */
+.dotInner {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--oxide);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5);
+  transition: transform 0.3s var(--ease-out);
+}
+
+.dot.hover .dotInner {
+  transform: scale(2);
+}

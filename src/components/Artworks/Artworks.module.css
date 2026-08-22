@@ -108,7 +108,7 @@
   inset: 0;
   display: grid;
   place-items: center;
-  background: rgba(22, 21, 15, 0.42);
+  background: rgba(19, 18, 17, 0.42);
   opacity: 0;
   transition: opacity 0.4s ease;
 }
@@ -240,7 +240,7 @@
   position: absolute;
   inset: 0;
   width: 100%;
-  background: rgba(22, 21, 15, 0.62);
+  background: rgba(19, 18, 17, 0.62);
   backdrop-filter: blur(4px);
   opacity: 0;
   cursor: pointer;
@@ -255,7 +255,7 @@
   max-height: min(86vh, 720px);
   background: var(--marble);
   border: 1px solid var(--stone-line);
-  box-shadow: 0 50px 100px rgba(22, 21, 15, 0.4);
+  box-shadow: 0 50px 100px rgba(19, 18, 17, 0.4);
   overflow: hidden;
   opacity: 0;
 }

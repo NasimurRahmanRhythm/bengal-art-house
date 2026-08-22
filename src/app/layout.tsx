@@ -2,12 +2,6 @@ import type { Metadata } from "next";
 import { Fraunces, IBM_Plex_Mono, Work_Sans } from "next/font/google";
 import "./globals.css";
 
-import { CartProvider } from "@/context/CartContext";
-import Navbar from "@/components/Navbar/Navbar";
-import Footer from "@/components/Footer/Footer";
-import CartDrawer from "@/components/CartDrawer/CartDrawer";
-import Preloader from "@/components/Preloader/Preloader";
-
 const fraunces = Fraunces({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "900"],
@@ -31,7 +25,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://galleryhamiduzzaman.example"),
+  metadataBase: new URL("https://www.galleryhamiduzzaman.com"),
   title: {
     default: "Gallery Hamiduzzaman — Sculpture, Drawing & Public Art",
     template: "%s — Gallery Hamiduzzaman",
@@ -55,6 +49,9 @@ export const metadata: Metadata = {
   },
 };
 
+// Deliberately bare: only <html>/<body> and the font variables live here, so
+// /admin can render its own chrome instead of inheriting the gallery's navbar,
+// footer, preloader and cart. The public site's chrome is in (site)/layout.tsx.
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
@@ -62,18 +59,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       className={`${fraunces.variable} ${workSans.variable} ${plexMono.variable}`}
       suppressHydrationWarning
     >
-      <body>
-        <CartProvider>
-          <Preloader />
-          <a href="#main" className="srOnly">
-            Skip to content
-          </a>
-          <Navbar />
-          <main id="main">{children}</main>
-          <Footer />
-          <CartDrawer />
-        </CartProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

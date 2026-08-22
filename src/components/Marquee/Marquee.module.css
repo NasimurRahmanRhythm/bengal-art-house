@@ -45,10 +45,10 @@
 
 .item:nth-child(even) {
   color: transparent;
-  -webkit-text-stroke: 1px rgba(22, 21, 15, 0.45);
+  -webkit-text-stroke: 1px rgba(19, 18, 17, 0.45);
   font-style: normal;
 }
 
 .dark .item:nth-child(even) {
-  -webkit-text-stroke-color: rgba(239, 234, 224, 0.45);
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.45);
 }

@@ -10,7 +10,7 @@
 }
 
 .rise {
-  --reveal-y: 46px;
+  --reveal-y: 34px;
   --reveal-opacity: 0;
 }
 
@@ -19,24 +19,24 @@
 }
 
 .wipe {
-  --reveal-y: 26px;
+  --reveal-y: 20px;
   --reveal-opacity: 0;
   --reveal-clip: inset(0% 0% 100% 0%);
 }
 
 .scale {
-  --reveal-scale: 0.94;
+  --reveal-scale: 0.96;
   --reveal-opacity: 0;
-  --reveal-blur: 8px;
+  --reveal-blur: 6px;
 }
 
 .fromLeft {
-  --reveal-x: -54px;
+  --reveal-x: -40px;
   --reveal-opacity: 0;
 }
 
 .fromRight {
-  --reveal-x: 54px;
+  --reveal-x: 40px;
   --reveal-opacity: 0;
 }
 

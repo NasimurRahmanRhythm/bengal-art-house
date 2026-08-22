@@ -12,13 +12,13 @@
 }
 
 .dark polyline {
-  stroke: rgba(22, 21, 15, 0.3);
+  stroke: rgba(19, 18, 17, 0.3);
 }
 
 .light polyline {
-  stroke: rgba(239, 234, 224, 0.32);
+  stroke: rgba(255, 255, 255, 0.32);
 }
 
 .oxide polyline {
-  stroke: rgba(193, 66, 15, 0.55);
+  stroke: rgba(168, 57, 28, 0.55);
 }

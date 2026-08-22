@@ -1,7 +1,7 @@
 .footer {
   background: var(--ink);
   color: var(--marble);
-  border-top: 3px solid var(--oxide);
+  border-top: 1px solid var(--light-line);
   padding: clamp(58px, 8vw, 96px) 0 32px;
   overflow: hidden;
 }
@@ -76,7 +76,7 @@
 .colLink,
 .colText {
   font-size: 14.5px;
-  color: #cfc9bd;
+  color: var(--text-muted-light);
   margin-bottom: 10px;
   position: relative;
 }
@@ -129,18 +129,18 @@
 .bigMark {
   display: block;
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(34px, 9.9vw, 140px);
   letter-spacing: -0.035em;
   white-space: nowrap;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(239, 234, 224, 0.28);
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.24);
   transition: -webkit-text-stroke-color 0.5s ease, color 0.5s ease;
 }
 
 .markRow:hover .bigMark {
-  color: rgba(193, 66, 15, 0.14);
-  -webkit-text-stroke-color: rgba(193, 66, 15, 0.7);
+  color: rgba(201, 113, 79, 0.14);
+  -webkit-text-stroke-color: rgba(201, 113, 79, 0.7);
 }
 
 .bottom {

@@ -32,8 +32,8 @@ export default function ArtworkCard({ artwork, onQuickView }: Props) {
 
       const onMove = (e: PointerEvent) => {
         const b = el.getBoundingClientRect();
-        rotX((0.5 - (e.clientY - b.top) / b.height) * 7);
-        rotY(((e.clientX - b.left) / b.width - 0.5) * 7);
+        rotX((0.5 - (e.clientY - b.top) / b.height) * 5);
+        rotY(((e.clientX - b.left) / b.width - 0.5) * 5);
       };
       const onLeave = () => {
         rotX(0);

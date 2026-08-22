@@ -10,7 +10,6 @@ import { SITE } from "@/data/site";
 import { EXHIBITIONS } from "@/data/gallery";
 import { ArrowIcon } from "@/components/Icons";
 import Magnetic from "@/components/motion/Magnetic";
-import Counter from "@/components/motion/Counter";
 import styles from "./Hero.module.css";
 
 const onView = EXHIBITIONS.find((e) => e.status === "current") ?? EXHIBITIONS[0];
@@ -56,64 +55,46 @@ export default function Hero() {
             )
             .fromTo(
               split.lines,
-              { yPercent: 118, rotate: 3 },
-              { yPercent: 0, rotate: 0, duration: 1.25, stagger: 0.1 },
+              { yPercent: 112, rotate: 2 },
+              { yPercent: 0, rotate: 0, duration: 1.1, stagger: 0.09 },
               "-=0.45"
             )
             .fromTo(
               q("[data-hero-lede]"),
-              { opacity: 0, y: 26 },
-              { opacity: 1, y: 0, duration: 0.9 },
-              "-=0.85"
+              { opacity: 0, y: 18 },
+              { opacity: 1, y: 0, duration: 0.8 },
+              "-=0.8"
             )
             .fromTo(
               q("[data-hero-cta] > *"),
-              { opacity: 0, y: 24 },
-              { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 },
-              "-=0.6"
-            )
-            .fromTo(
-              q("[data-hero-stat]"),
-              { opacity: 0, y: 20 },
-              { opacity: 1, y: 0, duration: 0.7, stagger: 0.08 },
-              "-=0.5"
+              { opacity: 0, y: 16 },
+              { opacity: 1, y: 0, duration: 0.7, stagger: 0.1 },
+              "-=0.55"
             )
             .fromTo(
               q("[data-hero-figure]"),
               { clipPath: "inset(100% 0% 0% 0%)" },
-              { clipPath: "inset(0% 0% 0% 0%)", duration: 1.4, ease: "power4.inOut" },
-              0.35
+              { clipPath: "inset(0% 0% 0% 0%)", duration: 1.3, ease: "power4.inOut" },
+              0.3
             )
             .fromTo(
               q("[data-hero-img]"),
-              { scale: 1.28, yPercent: 8 },
-              { scale: 1, yPercent: 0, duration: 1.8, ease: "power3.out" },
-              0.35
+              { scale: 1.16, yPercent: 5 },
+              { scale: 1, yPercent: 0, duration: 1.6, ease: "power3.out" },
+              0.3
             )
             .fromTo(
               q("[data-hero-shape]"),
-              { opacity: 0, scale: 0.5, rotate: -30 },
-              { opacity: 1, scale: 1, rotate: 0, duration: 1.1, stagger: 0.12 },
-              "-=1.1"
+              { opacity: 0, scale: 0.6 },
+              { opacity: 1, scale: 1, duration: 1, stagger: 0.12 },
+              "-=1"
             )
             .fromTo(
               q("[data-hero-banner]"),
-              { opacity: 0, y: 34 },
-              { opacity: 1, y: 0, duration: 0.9 },
-              "-=0.8"
+              { opacity: 0, y: 26 },
+              { opacity: 1, y: 0, duration: 0.8 },
+              "-=0.65"
             );
-
-          q("[data-hero-shape]").forEach((shape, i) => {
-            gsap.to(shape, {
-              y: i % 2 === 0 ? 18 : -22,
-              x: i % 2 === 0 ? -10 : 12,
-              rotate: i % 2 === 0 ? 8 : -6,
-              duration: 6 + i * 1.4,
-              ease: "sine.inOut",
-              repeat: -1,
-              yoyo: true,
-            });
-          });
 
           gsap.to(q("[data-hero-cue] span"), {
             yPercent: 180,
@@ -125,32 +106,15 @@ export default function Hero() {
         });
       });
 
-      gsap.to(q("[data-hero-copy]"), {
-        yPercent: -14,
-        opacity: 0.35,
-        ease: "none",
-        scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: 0.6 },
-      });
       gsap.to(q("[data-hero-img]"), {
-        yPercent: 10,
+        yPercent: 7,
         ease: "none",
         scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: 0.6 },
       });
-
-      const onMove = (e: PointerEvent) => {
-        const rx = e.clientX / window.innerWidth - 0.5;
-        const ry = e.clientY / window.innerHeight - 0.5;
-        gsap.to(q("[data-hero-figure]"), { x: rx * -18, y: ry * -14, duration: 1.1 });
-        gsap.to(q("[data-hero-shape]"), { x: rx * 34, y: ry * 26, duration: 1.4 });
-      };
-      if (window.matchMedia("(pointer: fine)").matches) {
-        el.addEventListener("pointermove", onMove);
-      }
 
       return () => {
         cancelled = true;
         cancelFonts();
-        el.removeEventListener("pointermove", onMove);
         split?.revert();
       };
     },
@@ -159,8 +123,6 @@ export default function Hero() {
 
   return (
     <section ref={root} className={styles.hero}>
-      <span className={styles.grain} aria-hidden="true" />
-
       <div className={`wrap ${styles.grid}`}>
         <div className={styles.copy} data-hero-copy>
           <div className={styles.eyebrow}>
@@ -180,44 +142,20 @@ export default function Hero() {
           </p>
 
           <div className={styles.ctaRow} data-hero-cta>
-            <Magnetic>
+            <Magnetic strength={10}>
               <Link href="/artworks" className={styles.primaryBtn} data-cursor="link">
                 Explore the works <ArrowIcon size={15} />
               </Link>
             </Magnetic>
-            <Magnetic strength={12}>
-              <Link href="/exhibitions" className={styles.ghostBtn} data-cursor="link">
-                What&apos;s on view
-              </Link>
-            </Magnetic>
+            <Link href="/exhibitions" className={styles.textLink} data-cursor="link">
+              What&apos;s on view <ArrowIcon size={14} />
+            </Link>
           </div>
-
-          <dl className={styles.stats}>
-            <div data-hero-stat data-reveal>
-              <dt className={styles.statNum}>
-                <Counter value={3} />
-              </dt>
-              <dd className={styles.statLbl}>Artists represented</dd>
-            </div>
-            <div data-hero-stat data-reveal>
-              <dt className={styles.statNum}>
-                <Counter value={4} />
-              </dt>
-              <dd className={styles.statLbl}>Countries exhibited</dd>
-            </div>
-            <div data-hero-stat data-reveal>
-              <dt className={styles.statNum}>
-                <Counter value={5} />
-              </dt>
-              <dd className={styles.statLbl}>Decades of practice</dd>
-            </div>
-          </dl>
         </div>
 
         <div className={styles.stage}>
           <span className={`${styles.shape} ${styles.shapeA}`} data-hero-shape aria-hidden="true" />
           <span className={`${styles.shape} ${styles.shapeB}`} data-hero-shape aria-hidden="true" />
-          <span className={`${styles.shape} ${styles.shapeC}`} data-hero-shape aria-hidden="true" />
 
           <figure className={styles.figure} data-hero-figure data-reveal>
             <span className={styles.figureInner}>
@@ -225,7 +163,7 @@ export default function Hero() {
                 src="/images/sculpture.jpg"
                 alt="Abstract standing sculpture in oxidised red by Hamiduzzaman Khan"
                 width={900}
-                height={900}
+                height={1125}
                 priority
                 sizes="(max-width: 900px) 80vw, 42vw"
                 className={styles.figureImg}

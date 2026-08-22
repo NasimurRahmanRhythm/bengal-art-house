@@ -9,7 +9,7 @@ type MagneticProps = {
   strength?: number;
 };
 
-export default function Magnetic({ children, strength = 16 }: MagneticProps) {
+export default function Magnetic({ children, strength = 11 }: MagneticProps) {
   const holder = useRef<HTMLSpanElement>(null);
 
   useGSAP(

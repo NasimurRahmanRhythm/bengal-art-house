@@ -7,24 +7,27 @@
 }
 
 :root {
-  --ink: #16150f;
-  --ink-soft: #26241f;
-  --marble: #efeae0;
-  --marble-dim: #e3ddcf;
-  --marble-deep: #d8d1c0;
+  /* Gallery-white palette: white/ivory ground carries the room, ink stays
+     near-black rather than true black, and the vermilion accent is spent
+     sparingly — a marker, not a paint. See MEMORY: white-gallery-redesign. */
+  --ink: #131211;
+  --ink-soft: #232019;
+  --marble: #ffffff;
+  --marble-dim: #f6f4f0;
+  --marble-deep: #ece8e0;
 
-  --oxide: #c1420f;
-  --oxide-dark: #7e3521;
-  --oxide-light: #e2714a;
-  --patina: #6e7f5c;
-  --patina-dark: #5c6b4d;
-  --stone: #9c9284;
+  --oxide: #a8391c;
+  --oxide-dark: #6e2612;
+  --oxide-light: #c9714f;
+  --patina: #4c5d43;
+  --patina-dark: #384633;
+  --stone: #8c8577;
 
-  --stone-line: rgba(22, 21, 15, 0.14);
-  --stone-line-strong: rgba(22, 21, 15, 0.28);
-  --light-line: rgba(239, 234, 224, 0.16);
-  --text-muted: #5c574f;
-  --text-muted-light: #a49b8c;
+  --stone-line: rgba(19, 18, 17, 0.11);
+  --stone-line-strong: rgba(19, 18, 17, 0.26);
+  --light-line: rgba(255, 255, 255, 0.14);
+  --text-muted: #56514a;
+  --text-muted-light: #b7b0a2;
 
   --font-display: var(--font-fraunces), "Fraunces", Georgia, serif;
   --font-body: var(--font-work-sans), "Work Sans", system-ui, sans-serif;
@@ -50,21 +53,10 @@ body {
   font-family: var(--font-body);
   font-weight: 400;
   font-size: 16px;
-  line-height: 1.62;
+  line-height: 1.72;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
-  pointer-events: none;
-  opacity: 0.35;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.32'/%3E%3C/svg%3E");
 }
 
 h1,
@@ -72,9 +64,9 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  line-height: 1.08;
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  line-height: 1.1;
 }
 
 a {
@@ -139,10 +131,10 @@ select {
   align-items: center;
   gap: 10px;
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--oxide);
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
   margin-bottom: 16px;
 }
 
@@ -150,7 +142,7 @@ select {
   content: "";
   width: 22px;
   height: 1px;
-  background: currentColor;
+  background: var(--oxide);
   flex-shrink: 0;
 }
 
@@ -180,7 +172,10 @@ select {
 }
 
 .onDark .kicker {
-  color: var(--oxide-light);
+  color: var(--text-muted-light);
+}
+.onDark .kicker::before {
+  background: var(--oxide-light);
 }
 .onDark .sectionHead p {
   color: var(--text-muted-light);

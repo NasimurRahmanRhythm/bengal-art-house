@@ -13,5 +13,5 @@ export function finishIntro(): void {
 }
 
 if (typeof window !== "undefined") {
-  window.setTimeout(finishIntro, 4000);
+  window.setTimeout(finishIntro, 2600);
 }

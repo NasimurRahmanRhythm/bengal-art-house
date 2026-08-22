@@ -62,7 +62,7 @@ export default function Preloader() {
           num,
           {
             n: 100,
-            duration: 1.35,
+            duration: 0.95,
             ease: "power2.inOut",
             onUpdate: () => {
               if (counter.current) {
@@ -72,26 +72,26 @@ export default function Preloader() {
               }
             },
           },
-          0.25,
+          0.2,
         )
         .fromTo(
           el.querySelector(`.${styles.bar}`),
           { scaleX: 0 },
-          { scaleX: 1, duration: 1.35, ease: "power2.inOut" },
-          0.25,
+          { scaleX: 1, duration: 0.95, ease: "power2.inOut" },
+          0.2,
         )
         .to(el.querySelector(`.${styles.content}`), {
           opacity: 0,
-          y: -22,
-          duration: 0.45,
+          y: -18,
+          duration: 0.4,
           ease: "power2.in",
         })
         .to(
           el.querySelectorAll("[data-intro-col]"),
           {
             yPercent: -100,
-            duration: 1.05,
-            stagger: 0.07,
+            duration: 0.85,
+            stagger: 0.05,
             ease: "power4.inOut",
           },
           "-=0.2",

@@ -27,6 +27,8 @@ export const NAV: NavItem[] = [
   },
   { label: "Exhibitions", href: "/exhibitions" },
   { label: "Collaborations", href: "/collaborations" },
+  { label: "Blog", href: "/blog" },
+  { label: "Press", href: "/press" },
   { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
