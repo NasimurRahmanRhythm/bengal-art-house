@@ -86,6 +86,24 @@ export const SOCIAL_ICONS = {
       <circle cx="4" cy="4" r="2" fill="currentColor" />
     </svg>
   ),
+  youtube: ({ size = 15, className }: IconProps) => (
+    <svg {...base(size)} className={className}>
+      <path
+        d="M22.5 7.4a3 3 0 0 0-2.1-2.1C18.5 4.8 12 4.8 12 4.8s-6.5 0-8.4.5A3 3 0 0 0 1.5 7.4 31 31 0 0 0 1 12a31 31 0 0 0 .5 4.6 3 3 0 0 0 2.1 2.1c1.9.5 8.4.5 8.4.5s6.5 0 8.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 23 12a31 31 0 0 0-.5-4.6z"
+        fill="currentColor"
+      />
+      <path d="M10 15.2V8.8l5.2 3.2z" fill="var(--marble, #fff)" />
+    </svg>
+  ),
+  // Post-rebrand mark: the X wordmark, not the old Twitter bird.
+  x: ({ size = 15, className }: IconProps) => (
+    <svg {...base(size)} className={className}>
+      <path
+        d="M17.2 3h3.3l-7.2 8.3L21.8 21h-6.6l-5.2-6.8L4.1 21H.8l7.7-8.8L.5 3h6.8l4.7 6.2zm-1.2 16h1.8L6.9 4.8H5z"
+        fill="currentColor"
+      />
+    </svg>
+  ),
 } as const;
 
 export const SERVICE_ICONS = {
