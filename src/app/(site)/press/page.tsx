@@ -5,7 +5,7 @@ import SectionHead from "@/components/sections/SectionHead";
 import PostGrid from "@/components/sections/PostGrid";
 import ParkBanner from "@/components/sections/ParkBanner";
 import ChiselRule from "@/components/motion/ChiselRule";
-import { SEED } from "@/lib/admin/seed";
+import { PRESS_RELEASES } from "@/data/press";
 
 export const metadata: Metadata = {
   title: "Media & Press",
@@ -13,12 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default function PressIndexPage() {
-  // published implies publishedAt is set — the admin form stamps both
-  // together, so the cast below just names that invariant.
-  const items = [...SEED.pressReleases]
-    .filter((p) => p.published)
-    .sort((a, b) => (b.publishedAt as string).localeCompare(a.publishedAt as string))
-    .map((p) => ({ ...p, publishedAt: p.publishedAt as string }));
+  const items = [...PRESS_RELEASES].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 
   return (
     <>

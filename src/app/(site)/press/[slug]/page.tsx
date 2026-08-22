@@ -5,20 +5,18 @@ import PageHero from "@/components/sections/PageHero";
 import PostBody from "@/components/sections/PostBody";
 import ChiselRule from "@/components/motion/ChiselRule";
 import ParkBanner from "@/components/sections/ParkBanner";
-import { SEED } from "@/lib/admin/seed";
+import { PRESS_RELEASES } from "@/data/press";
 import { formatLongDate } from "@/lib/content";
 
 type Params = Promise<{ slug: string }>;
 
-const published = () => SEED.pressReleases.filter((p) => p.published && p.publishedAt);
-
 export function generateStaticParams() {
-  return published().map((p) => ({ slug: p.slug }));
+  return PRESS_RELEASES.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const item = published().find((p) => p.slug === slug);
+  const item = PRESS_RELEASES.find((p) => p.slug === slug);
   if (!item) return {};
   return {
     title: item.title,
@@ -28,7 +26,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function PressItemPage({ params }: { params: Params }) {
   const { slug } = await params;
-  const item = published().find((p) => p.slug === slug);
+  const item = PRESS_RELEASES.find((p) => p.slug === slug);
   if (!item) notFound();
 
   return (
@@ -42,7 +40,7 @@ export default async function PressItemPage({ params }: { params: Params }) {
           { label: "Media & Press", href: "/press" },
         ]}
         meta={[
-          { label: "Published", value: formatLongDate(item.publishedAt as string) },
+          { label: "Published", value: formatLongDate(item.publishedAt) },
           ...(item.authorName ? [{ label: "By", value: item.authorName }] : []),
         ]}
       />

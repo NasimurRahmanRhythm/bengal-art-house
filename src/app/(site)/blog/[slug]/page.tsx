@@ -5,20 +5,18 @@ import PageHero from "@/components/sections/PageHero";
 import PostBody from "@/components/sections/PostBody";
 import ChiselRule from "@/components/motion/ChiselRule";
 import ParkBanner from "@/components/sections/ParkBanner";
-import { SEED } from "@/lib/admin/seed";
+import { POSTS } from "@/data/posts";
 import { formatLongDate } from "@/lib/content";
 
 type Params = Promise<{ slug: string }>;
 
-const published = () => SEED.posts.filter((p) => p.published && p.publishedAt);
-
 export function generateStaticParams() {
-  return published().map((p) => ({ slug: p.slug }));
+  return POSTS.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const post = published().find((p) => p.slug === slug);
+  const post = POSTS.find((p) => p.slug === slug);
   if (!post) return {};
   return {
     title: post.title,
@@ -28,7 +26,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function BlogPostPage({ params }: { params: Params }) {
   const { slug } = await params;
-  const post = published().find((p) => p.slug === slug);
+  const post = POSTS.find((p) => p.slug === slug);
   if (!post) notFound();
 
   return (
@@ -42,7 +40,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
           { label: "Blog", href: "/blog" },
         ]}
         meta={[
-          { label: "Published", value: formatLongDate(post.publishedAt as string) },
+          { label: "Published", value: formatLongDate(post.publishedAt) },
           ...(post.authorName ? [{ label: "By", value: post.authorName }] : []),
         ]}
       />
