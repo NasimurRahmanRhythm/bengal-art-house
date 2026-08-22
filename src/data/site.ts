@@ -34,10 +34,25 @@ export const NAV: NavItem[] = [
   { label: "Contact", href: "/contact" },
 ];
 
+// The gallery's live profiles. Drop a row to hide that icon everywhere — the
+// navbar, the mobile panel and the footer all render straight from this list.
 export const SOCIALS = [
-  { label: "Facebook", href: "https://facebook.com", icon: "facebook" as const },
-  { label: "Instagram", href: "https://instagram.com", icon: "instagram" as const },
-  { label: "LinkedIn", href: "https://linkedin.com", icon: "linkedin" as const },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/profile.php?id=100093228696724",
+    icon: "facebook" as const,
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/gallery.hamiduzzaman/",
+    icon: "instagram" as const,
+  },
+  { label: "X", href: "https://x.com/g_hamiduzzaman", icon: "x" as const },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/gallery-hamiduzzaman-256203430/",
+    icon: "linkedin" as const,
+  },
 ];
 
 export const FOOTER_EXPLORE = [
