@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV, SITE, SOCIALS } from "@/data/site";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { CartIcon, ChevronIcon, SOCIAL_ICONS, UserIcon } from "@/components/Icons";
 import styles from "./Navbar.module.css";
 
@@ -14,6 +15,7 @@ const itemDelay = (i: number) => ({ "--i": i }) as CSSProperties;
 export default function Navbar() {
   const pathname = usePathname();
   const { count, pulse, openCart } = useCart();
+  const { user, loading, signOut } = useAuth();
 
   const header = useRef<HTMLElement>(null);
 
@@ -79,10 +81,32 @@ export default function Navbar() {
                 );
               })}
             </div>
-            <Link href="/contact" className={styles.members}>
-              <UserIcon size={13} />
-              Members
-            </Link>
+            {!loading && (
+              <div className={styles.authGroup}>
+                {user ? (
+                  <>
+                    <span className={styles.authUser}>{user.email}</span>
+                    <button type="button" onClick={signOut} className={styles.members}>
+                      <UserIcon size={13} />
+                      Sign out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/signin" className={styles.members}>
+                      <UserIcon size={13} />
+                      Sign in
+                    </Link>
+                    <span className={styles.authDivider} aria-hidden="true">
+                      /
+                    </span>
+                    <Link href="/signup" className={styles.members}>
+                      Sign up
+                    </Link>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -198,6 +222,17 @@ export default function Navbar() {
           ))}
 
           <div style={itemDelay(NAV.length)} className={styles.panelFoot}>
+            {!loading &&
+              (user ? (
+                <button type="button" onClick={signOut} className={styles.panelAuthBtn}>
+                  Sign out ({user.email})
+                </button>
+              ) : (
+                <div className={styles.panelAuthRow}>
+                  <Link href="/signin">Sign in</Link>
+                  <Link href="/signup">Sign up</Link>
+                </div>
+              ))}
             <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
             <a href={`tel:${SITE.phoneHref}`}>{SITE.phone}</a>
             <div className={styles.panelSocials}>

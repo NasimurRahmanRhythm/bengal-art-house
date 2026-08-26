@@ -53,6 +53,11 @@ export const SOCIALS = [
     href: "https://www.linkedin.com/in/gallery-hamiduzzaman-256203430/",
     icon: "linkedin" as const,
   },
+  {
+    label: "YouTube",
+    href: "https://www.youtube.com/channel/UC0Y2pdqUqOBhA9tBdJniYOg",
+    icon: "youtube" as const,
+  },
 ];
 
 export const FOOTER_EXPLORE = [

@@ -1,0 +1,207 @@
+.section {
+  padding: clamp(64px, 10vw, 120px) 0;
+}
+
+.cardOuter {
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--marble-dim);
+  border: 1px solid var(--stone-line);
+  padding: clamp(28px, 4vw, 44px);
+}
+
+.head {
+  margin-bottom: 28px;
+}
+
+.head h1 {
+  font-size: clamp(26px, 3vw, 32px);
+  margin-bottom: 10px;
+}
+
+.head p {
+  color: var(--text-muted);
+  font-size: 14.5px;
+  max-width: 40ch;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field > span {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.field input {
+  width: 100%;
+  padding: 13px 14px;
+  background: var(--marble);
+  border: 1px solid var(--stone-line);
+  font-size: 15px;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--oxide);
+  background: var(--marble);
+}
+
+.field input:disabled {
+  opacity: 0.6;
+}
+
+.passwordWrap {
+  position: relative;
+}
+
+.passwordWrap input {
+  padding-right: 44px;
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: var(--stone);
+  transition: color 0.25s ease;
+}
+
+.eyeBtn:hover {
+  color: var(--ink);
+}
+
+.otpInput {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  letter-spacing: 0.5em;
+  text-align: center;
+}
+
+.otpInput::placeholder {
+  letter-spacing: normal;
+  font-size: 15px;
+}
+
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 15px 24px;
+  margin-top: 4px;
+  background: var(--ink);
+  color: var(--marble);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  transition: background 0.3s ease, opacity 0.3s ease;
+}
+
+.submit:hover {
+  background: var(--oxide);
+}
+
+.submit:disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.error {
+  color: var(--oxide);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.notice {
+  color: var(--patina);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.foot {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--stone-line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.05em;
+}
+
+.foot a,
+.linkBtn {
+  color: var(--oxide);
+  border-bottom: 1px solid currentColor;
+}
+
+.linkBtn {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.05em;
+}
+
+.linkBtn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.backRow {
+  margin-bottom: 18px;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: color 0.25s ease;
+}
+
+.backBtn:hover {
+  color: var(--ink);
+}
+
+.backBtn svg {
+  transform: rotate(180deg);
+}

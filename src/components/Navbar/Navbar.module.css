@@ -76,6 +76,45 @@
   color: var(--ink);
 }
 
+.authGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.authDivider {
+  color: var(--stone-line-strong);
+}
+
+.authUser {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panelAuthRow {
+  display: flex;
+  gap: 18px;
+}
+
+.panelAuthBtn {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--text-muted-light);
+  transition: color 0.25s ease;
+}
+
+.panelAuthBtn:hover {
+  color: var(--marble);
+}
+
 .bar {
   position: relative;
   z-index: 3;
