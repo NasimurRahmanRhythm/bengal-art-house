@@ -17,23 +17,13 @@ const STATUS_LABEL = {
 
 export default function ExhibitionCarousel() {
   const rail = useRef<HTMLDivElement>(null);
-  const bar = useRef<HTMLSpanElement>(null);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
-
-  const step = useCallback(() => {
-    const el = rail.current;
-    if (!el) return 0;
-    const card = el.querySelector<HTMLElement>(`.${styles.card}`);
-    return card ? card.offsetWidth + 24 : el.clientWidth * 0.8;
-  }, []);
 
   const syncProgress = useCallback(() => {
     const el = rail.current;
     if (!el) return;
     const max = el.scrollWidth - el.clientWidth;
-    const ratio = max > 0 ? el.scrollLeft / max : 1;
-    if (bar.current) gsap.set(bar.current, { scaleX: gsap.utils.clamp(0.06, 1, ratio) });
     setAtStart(el.scrollLeft < 8);
     setAtEnd(el.scrollLeft > max - 8);
   }, []);
@@ -41,12 +31,17 @@ export default function ExhibitionCarousel() {
   const scrollBy = (dir: 1 | -1) => {
     const el = rail.current;
     if (!el) return;
-    const to = el.scrollLeft + dir * step();
-    if (prefersReducedMotion()) {
-      el.scrollLeft = to;
-      return;
-    }
-    gsap.to(el, { scrollTo: { x: to }, duration: 0.75, ease: "power3.inOut" });
+    const cards = Array.from(el.querySelectorAll<HTMLElement>(`.${styles.card}`));
+    if (!cards.length) return;
+
+    const current = el.scrollLeft;
+    const closest = cards.reduce(
+      (best, card, i) =>
+        Math.abs(card.offsetLeft - current) < Math.abs(cards[best].offsetLeft - current) ? i : best,
+      0
+    );
+    const target = cards[Math.min(cards.length - 1, Math.max(0, closest + dir))];
+    el.scrollTo({ left: target.offsetLeft, behavior: prefersReducedMotion() ? "auto" : "smooth" });
   };
 
   useEffect(() => {
@@ -143,9 +138,6 @@ export default function ExhibitionCarousel() {
       </div>
 
       <div className={styles.controls}>
-        <span className={styles.track}>
-          <span ref={bar} className={styles.bar} />
-        </span>
         <div className={styles.arrows}>
           <button
             type="button"

@@ -132,23 +132,8 @@
 .controls {
   display: flex;
   align-items: center;
-  gap: 24px;
+  justify-content: flex-end;
   margin-top: 30px;
-}
-
-.track {
-  position: relative;
-  flex: 1;
-  height: 1px;
-  background: var(--stone-line);
-}
-
-.bar {
-  position: absolute;
-  inset: 0;
-  background: var(--oxide);
-  transform-origin: left;
-  transform: scaleX(0.1);
 }
 
 .arrows {
