@@ -4,7 +4,7 @@ import { useRef } from "react";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap, prefersReducedMotion } from "@/lib/gsap";
-import { FOOTER_EXPLORE, FOOTER_POLICY, SITE, SOCIALS } from "@/data/site";
+import { FOOTER_EXPLORE, SITE, SOCIALS } from "@/data/site";
 import { SOCIAL_ICONS, ArrowIcon } from "@/components/Icons";
 import Reveal from "@/components/motion/Reveal";
 import SplitHeading from "@/components/motion/SplitHeading";
@@ -16,24 +16,26 @@ export default function Footer() {
 
   useGSAP(
     () => {
-      const mark = root.current?.querySelector(`.${styles.bigMark}`);
-      if (!mark || prefersReducedMotion()) return;
+      const row = root.current?.querySelector<HTMLElement>(`.${styles.markRow}`);
+      const track = root.current?.querySelector<HTMLElement>(`.${styles.markTrack}`);
+      if (!row || !track || prefersReducedMotion()) return;
 
-      gsap.fromTo(
-        mark,
-        { xPercent: -6, opacity: 0.5 },
-        {
-          xPercent: 3,
-          opacity: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: root.current,
-            start: "top bottom",
-            end: "bottom bottom",
-            scrub: 0.7,
-          },
-        },
+      const tween = gsap.fromTo(
+        track,
+        { xPercent: -50 },
+        { xPercent: 0, ease: "none", duration: 24, repeat: -1, paused: true },
       );
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) tween.play();
+          else tween.pause();
+        },
+        { threshold: 0 },
+      );
+      observer.observe(row);
+
+      return () => observer.disconnect();
     },
     { scope: root },
   );
@@ -103,20 +105,20 @@ export default function Footer() {
         </div>
 
         <div className={styles.markRow} aria-hidden="true">
-          <span className={styles.bigMark}>GALLERY HAMIDUZZAMAN</span>
+          <div className={styles.markTrack}>
+            <span className={styles.markGroup}>
+              <span className={styles.bigMark}>GALLERY HAMIDUZZAMAN</span>
+            </span>
+            <span className={styles.markGroup}>
+              <span className={styles.bigMark}>GALLERY HAMIDUZZAMAN</span>
+            </span>
+          </div>
         </div>
 
         <div className={styles.bottom}>
           <span>
             © {new Date().getFullYear()} {SITE.name}
           </span>
-          <nav className={styles.policy} aria-label="Policies">
-            {FOOTER_POLICY.map((l) => (
-              <Link key={l.label} href={l.href}>
-                {l.label}
-              </Link>
-            ))}
-          </nav>
           <span>{SITE.tagline}</span>
         </div>
       </div>

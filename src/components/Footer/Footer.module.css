@@ -126,8 +126,20 @@
   line-height: 0.82;
 }
 
+.markTrack {
+  display: inline-flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.markGroup {
+  display: inline-flex;
+  align-items: center;
+  padding-right: clamp(24px, 4vw, 64px);
+}
+
 .bigMark {
-  display: block;
+  display: inline-block;
   font-family: var(--font-display);
   font-weight: 500;
   font-size: clamp(34px, 9.9vw, 140px);
@@ -141,6 +153,12 @@
 .markRow:hover .bigMark {
   color: rgba(201, 113, 79, 0.14);
   -webkit-text-stroke-color: rgba(201, 113, 79, 0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .markGroup:last-child {
+    display: none;
+  }
 }
 
 .bottom {
@@ -157,15 +175,6 @@
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--stone);
-}
-
-.policy {
-  display: flex;
-  gap: 20px;
-}
-
-.policy a:hover {
-  color: var(--oxide-light);
 }
 
 @media (max-width: 900px) {
