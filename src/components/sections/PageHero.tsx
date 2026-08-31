@@ -11,7 +11,9 @@ import styles from "./Sections.module.css";
 type PageHeroProps = {
   kicker: string;
   title: React.ReactNode;
-  lede: string;
+  /** Optional — a page with nothing to add here leaves the column to the
+      figures rather than repeating text that appears again further down. */
+  lede?: string;
   crumbs?: { label: string; href: string }[];
   meta?: { label: string; value: string }[];
 };
@@ -55,9 +57,11 @@ export default function PageHero({ kicker, title, lede, crumbs = [], meta = [] }
           </SplitHeading>
 
           <div>
-            <Reveal delay={0.2}>
-              <p className={styles.pageLede}>{lede}</p>
-            </Reveal>
+            {lede && (
+              <Reveal delay={0.2}>
+                <p className={styles.pageLede}>{lede}</p>
+              </Reveal>
+            )}
 
             {meta.length > 0 && (
               <Reveal className={styles.pageMeta} stagger={0.08} delay={0.3}>

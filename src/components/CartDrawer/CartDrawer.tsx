@@ -95,11 +95,17 @@ export default function CartDrawer() {
               <strong>{formatBDT(total)}</strong>
             </div>
             <p className={styles.footNote}>
-              Prices are indicative and confirmed on enquiry. Every acquisition is backed by the
-              gallery&apos;s provenance and authentication service.
+              Payment is taken securely by SSLCommerz — card, bKash, Nagad or net banking. Every
+              acquisition is backed by the gallery&apos;s provenance and authentication service.
             </p>
-            <Link href="/contact" className={styles.enquire} onClick={closeCart}>
-              Enquire about these works <ArrowIcon size={15} />
+            <Link href="/checkout" className={styles.enquire} onClick={closeCart}>
+              Proceed to checkout <ArrowIcon size={15} />
+            </Link>
+            {/* Kept alongside, not replaced: a collector deciding on a
+                six-figure sculpture often wants to speak to the gallery
+                before they pay for it. */}
+            <Link href="/contact" className={styles.secondary} onClick={closeCart}>
+              Enquire about these works instead
             </Link>
             <button type="button" className={styles.clear} onClick={clear}>
               Clear selection

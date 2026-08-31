@@ -6,7 +6,7 @@ import ExhibitionCarousel from "@/components/Exhibitions/ExhibitionCarousel";
 import ExhibitionTimeline from "@/components/Exhibitions/ExhibitionTimeline";
 import ChiselRule from "@/components/motion/ChiselRule";
 import ParkBanner from "@/components/sections/ParkBanner";
-import { EXHIBITIONS } from "@/data/gallery";
+import { getExhibitions } from "@/lib/site-data";
 
 export const metadata: Metadata = {
   title: "Exhibitions",
@@ -14,8 +14,9 @@ export const metadata: Metadata = {
     "Solo and retrospective exhibitions tracing sculpture, watercolour, drawing and print across five decades.",
 };
 
-export default function ExhibitionsPage() {
-  const live = EXHIBITIONS.filter((e) => e.status !== "past").length;
+export default async function ExhibitionsPage() {
+  const exhibitions = await getExhibitions();
+  const live = exhibitions.filter((e) => e.status !== "past").length;
 
   return (
     <>
@@ -30,7 +31,7 @@ export default function ExhibitionsPage() {
         crumbs={[{ label: "Home", href: "/" }]}
         meta={[
           { label: "This season", value: String(live) },
-          { label: "In the archive", value: String(EXHIBITIONS.length) },
+          { label: "In the archive", value: String(exhibitions.length) },
           { label: "Since", value: "1976" },
         ]}
       />
@@ -50,7 +51,7 @@ export default function ExhibitionsPage() {
           />
         </div>
         <div className="wrap">
-          <ExhibitionCarousel />
+          <ExhibitionCarousel exhibitions={exhibitions} />
         </div>
       </section>
 
@@ -69,7 +70,7 @@ export default function ExhibitionsPage() {
             }
             body="The full exhibition history held by the gallery, from group shows and awards through to the museum retrospectives."
           />
-          <ExhibitionTimeline />
+          <ExhibitionTimeline exhibitions={exhibitions} />
         </div>
       </section>
 

@@ -119,19 +119,34 @@ export default function QuickView({ artwork, onClose }: Props) {
                 {artwork.note}
               </p>
 
+              {/* Year, dimensions and material are all optional on a piece, so
+                  each row appears only when there is something in it — an empty
+                  "Dimensions —" reads as missing data rather than a short entry. */}
               <dl className={styles.qvSpecs} data-qv-line>
-                <div>
-                  <dt>Medium</dt>
-                  <dd>{artwork.medium}</dd>
-                </div>
-                <div>
-                  <dt>Year</dt>
-                  <dd>{artwork.year}</dd>
-                </div>
-                <div>
-                  <dt>Dimensions</dt>
-                  <dd>{artwork.dimensions}</dd>
-                </div>
+                {artwork.category && (
+                  <div>
+                    <dt>Category</dt>
+                    <dd>{artwork.category}</dd>
+                  </div>
+                )}
+                {artwork.material && (
+                  <div>
+                    <dt>Material</dt>
+                    <dd>{artwork.material}</dd>
+                  </div>
+                )}
+                {artwork.year && (
+                  <div>
+                    <dt>Year</dt>
+                    <dd>{artwork.year}</dd>
+                  </div>
+                )}
+                {artwork.dimensions && (
+                  <div>
+                    <dt>Dimensions</dt>
+                    <dd>{artwork.dimensions}</dd>
+                  </div>
+                )}
                 <div>
                   <dt>Status</dt>
                   <dd>{sold ? "Sold" : "Available"}</dd>

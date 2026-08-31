@@ -58,6 +58,7 @@ export type Exhibition = {
   status: "current" | "upcoming" | "past";
   plate: number;
   blurb: string;
+  photo?: string;
 };
 
 export const EXHIBITIONS: Exhibition[] = [
@@ -120,6 +121,43 @@ export const EXHIBITIONS: Exhibition[] = [
     plate: 2,
     blurb:
       "The watercolours made on the rivers of Kishoreganj, shown together for the first and only time.",
+  },
+];
+
+// The people who run the gallery. Placeholder rows, same as everything else
+// here: the moment governing_body has one row in it, this list stops being used.
+export type GoverningMember = {
+  id: string;
+  name: string;
+  role: string;
+  bio: string;
+  photo?: string;
+};
+
+export const GOVERNING_BODY: GoverningMember[] = [
+  {
+    id: "chair",
+    name: "Ivy Zaman",
+    role: "Chairperson",
+    bio: "Sculptor and custodian of the studio archive, overseeing the gallery's collection and its programme of exhibitions.",
+  },
+  {
+    id: "director",
+    name: "Zubair Khan",
+    role: "Director",
+    bio: "Leads acquisitions and the gallery's work with public institutions commissioning sculpture.",
+  },
+  {
+    id: "secretary",
+    name: "Farhana Rahman",
+    role: "Secretary",
+    bio: "Responsible for records, provenance and the gallery's correspondence with collectors.",
+  },
+  {
+    id: "treasurer",
+    name: "Imran Chowdhury",
+    role: "Treasurer",
+    bio: "Oversees the gallery's accounts and the financing of its restoration work.",
   },
 ];
 
@@ -220,6 +258,9 @@ export type Artist = {
   facts: ArtistFact[];
   works: string;
   plate: number;
+  // Absent throughout the placeholder data below — the gallery has supplied no
+  // portraits yet, so those cards fall back to the generated plate.
+  photo?: string;
 };
 
 export const ARTISTS: Artist[] = [

@@ -7,6 +7,19 @@ import { createClient } from "@/lib/supabase/client";
 import { ArrowIcon, EyeIcon } from "@/components/Icons";
 import styles from "@/components/auth/AuthCard.module.css";
 
+/** Where to land once signed in. Read off window rather than through
+ *  useSearchParams so this page needs no Suspense boundary and stays
+ *  statically renderable.
+ *
+ *  Only same-origin paths are honoured: a `next` of "//evil.example" is a
+ *  protocol-relative URL, and accepting one would turn the sign-in form into
+ *  an open redirect. */
+function nextPath(): string {
+  if (typeof window === "undefined") return "/";
+  const raw = new URLSearchParams(window.location.search).get("next");
+  return raw && raw.startsWith("/") && !raw.startsWith("//") ? raw : "/";
+}
+
 export default function SignInPage() {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
@@ -35,7 +48,7 @@ export default function SignInPage() {
       return;
     }
 
-    router.push("/");
+    router.push(nextPath());
     router.refresh();
   };
 

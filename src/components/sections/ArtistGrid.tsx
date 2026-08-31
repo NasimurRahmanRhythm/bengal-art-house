@@ -3,12 +3,12 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { revealOnce } from "@/lib/motion";
-import { ARTISTS } from "@/data/gallery";
+import type { Artist } from "@/data/gallery";
 import ArtPlate from "@/components/ArtPlate/ArtPlate";
 import { ArrowIcon } from "@/components/Icons";
 import styles from "./Sections.module.css";
 
-export default function ArtistGrid() {
+export default function ArtistGrid({ artists }: { artists: Artist[] }) {
   const grid = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function ArtistGrid() {
 
   return (
     <div ref={grid} className={`${styles.artistGrid} ${styles.artistReveal}`}>
-      {ARTISTS.map((a) => (
+      {artists.map((a) => (
         <article key={a.slug} className={`${styles.artistCard} plateHost`}>
           <Link
             href={`/artists/${a.slug}`}
@@ -35,12 +35,19 @@ export default function ArtistGrid() {
             aria-label={`View ${a.name}'s profile`}
           >
             <span className={styles.artistPlate}>
-              <ArtPlate variant={a.plate} />
-              <span className={styles.artistInitials}>{a.initials}</span>
+              {a.photo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={a.photo} alt="" className={styles.artistPhoto} />
+              ) : (
+                <>
+                  <ArtPlate variant={a.plate} />
+                  <span className={styles.artistInitials}>{a.initials}</span>
+                </>
+              )}
             </span>
             <div className={styles.artistBody}>
               <h3 className={styles.artistName}>{a.name}</h3>
-              <p className={styles.artistRole}>{a.role}</p>
+              {a.role && <p className={styles.artistRole}>{a.role}</p>}
               <p className={styles.artistText}>{a.body}</p>
               <span className={styles.artistLink}>
                 View profile <ArrowIcon size={14} />

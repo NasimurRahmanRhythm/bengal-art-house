@@ -7,15 +7,15 @@ import { useGSAP } from "@gsap/react";
 import { gsap, SplitText, prefersReducedMotion, whenFontsReady } from "@/lib/gsap";
 import { introDone } from "@/lib/intro";
 import { SITE } from "@/data/site";
-import { EXHIBITIONS } from "@/data/gallery";
+import type { Exhibition } from "@/data/gallery";
 import { ArrowIcon } from "@/components/Icons";
 import Magnetic from "@/components/motion/Magnetic";
 import styles from "./Hero.module.css";
 
-const onView = EXHIBITIONS.find((e) => e.status === "current") ?? EXHIBITIONS[0];
-
-export default function Hero() {
+export default function Hero({ exhibitions }: { exhibitions: Exhibition[] }) {
   const root = useRef<HTMLElement>(null);
+  // Whatever is open today, falling back to the most recent show when nothing is.
+  const onView = exhibitions.find((e) => e.status === "current") ?? exhibitions[0];
 
   useGSAP(
     () => {
@@ -178,16 +178,20 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className={`wrap ${styles.bannerWrap}`}>
-        <Link href="/exhibitions" className={styles.banner} data-hero-banner data-reveal>
-          <span className={styles.bannerTag}>Now on view</span>
-          <span className={styles.bannerTitle}>{onView.title}</span>
-          <span className={styles.bannerMeta}>{onView.date}</span>
-          <span className={styles.bannerLink}>
-            See more <ArrowIcon size={14} />
-          </span>
-        </Link>
-      </div>
+      {onView && (
+        <div className={`wrap ${styles.bannerWrap}`}>
+          <Link href="/exhibitions" className={styles.banner} data-hero-banner data-reveal>
+            <span className={styles.bannerTag}>
+              {onView.status === "current" ? "Now on view" : "Most recent"}
+            </span>
+            <span className={styles.bannerTitle}>{onView.title}</span>
+            <span className={styles.bannerMeta}>{onView.date}</span>
+            <span className={styles.bannerLink}>
+              See more <ArrowIcon size={14} />
+            </span>
+          </Link>
+        </div>
+      )}
 
       <span className={styles.cue} data-hero-cue aria-hidden="true">
         <span />

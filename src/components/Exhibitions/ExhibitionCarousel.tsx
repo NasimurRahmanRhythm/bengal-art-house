@@ -6,7 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { gsap, prefersReducedMotion } from "@/lib/gsap";
 import ArtPlate from "@/components/ArtPlate/ArtPlate";
 import { ArrowIcon } from "@/components/Icons";
-import { EXHIBITIONS } from "@/data/gallery";
+import type { Exhibition } from "@/data/gallery";
 import styles from "./Exhibitions.module.css";
 
 const STATUS_LABEL = {
@@ -15,7 +15,7 @@ const STATUS_LABEL = {
   past: "Archive",
 } as const;
 
-export default function ExhibitionCarousel() {
+export default function ExhibitionCarousel({ exhibitions }: { exhibitions: Exhibition[] }) {
   const rail = useRef<HTMLDivElement>(null);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
@@ -114,7 +114,7 @@ export default function ExhibitionCarousel() {
   return (
     <div className={styles.carousel}>
       <div ref={rail} className={styles.rail} tabIndex={0} aria-label="Exhibitions carousel">
-        {EXHIBITIONS.map((ex) => (
+        {exhibitions.map((ex) => (
           <article key={ex.id} className={`${styles.card} plateHost`}>
             <Link href="/exhibitions" className={styles.cardLink} data-cursor="View">
               <span className={styles.cardPlate}>

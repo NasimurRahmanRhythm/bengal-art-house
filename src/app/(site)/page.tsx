@@ -13,12 +13,19 @@ import ExhibitionCarousel from "@/components/Exhibitions/ExhibitionCarousel";
 import ArtworkGrid from "@/components/Artworks/ArtworkGrid";
 import { ArrowIcon } from "@/components/Icons";
 import { MATERIALS } from "@/data/site";
+import { getArtists, getArtworks, getExhibitions } from "@/lib/site-data";
 import styles from "./page.module.css";
 
-export default function Home() {
+export default async function Home() {
+  const [artworks, artists, exhibitions] = await Promise.all([
+    getArtworks(),
+    getArtists(),
+    getExhibitions(),
+  ]);
+
   return (
     <>
-      <Hero />
+      <Hero exhibitions={exhibitions} />
 
       <Marquee items={MATERIALS} />
 
@@ -42,7 +49,7 @@ export default function Home() {
               </Reveal>
             }
           />
-          <ArtistGrid />
+          <ArtistGrid artists={artists} />
         </div>
       </section>
 
@@ -74,7 +81,7 @@ export default function Home() {
           />
         </div>
         <div className="wrap">
-          <ExhibitionCarousel />
+          <ExhibitionCarousel exhibitions={exhibitions} />
         </div>
       </section>
 
@@ -100,7 +107,7 @@ export default function Home() {
               </Reveal>
             }
           />
-          <ArtworkGrid limit={6} />
+          <ArtworkGrid artworks={artworks} limit={6} />
         </div>
       </section>
 

@@ -2,11 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import { gridStaggerDelay, revealOnce } from "@/lib/motion";
-import { SERVICES } from "@/data/gallery";
+import type { Service } from "@/data/gallery";
 import { SERVICE_ICONS } from "@/components/Icons";
 import styles from "./Sections.module.css";
 
-export default function ServiceGrid() {
+export default function ServiceGrid({ items }: { items: Service[] }) {
   const grid = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function ServiceGrid() {
 
   return (
     <div ref={grid} className={`${styles.serviceGrid} ${styles.gridReveal}`}>
-      {SERVICES.map((s, i) => {
+      {items.map((s, i) => {
         const Icon = SERVICE_ICONS[s.icon];
         return (
           <article key={s.title} className={styles.serviceCard}>

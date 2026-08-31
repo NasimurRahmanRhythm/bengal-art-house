@@ -5,18 +5,18 @@ import PageHero from "@/components/sections/PageHero";
 import PostBody from "@/components/sections/PostBody";
 import ChiselRule from "@/components/motion/ChiselRule";
 import ParkBanner from "@/components/sections/ParkBanner";
-import { PRESS_RELEASES } from "@/data/press";
+import { getPressReleases } from "@/lib/site-data";
 import { formatLongDate } from "@/lib/content";
 
 type Params = Promise<{ slug: string }>;
 
-export function generateStaticParams() {
-  return PRESS_RELEASES.map((p) => ({ slug: p.slug }));
+export async function generateStaticParams() {
+  return (await getPressReleases()).map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const item = PRESS_RELEASES.find((p) => p.slug === slug);
+  const item = (await getPressReleases()).find((p) => p.slug === slug);
   if (!item) return {};
   return {
     title: item.title,
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function PressItemPage({ params }: { params: Params }) {
   const { slug } = await params;
-  const item = PRESS_RELEASES.find((p) => p.slug === slug);
+  const item = (await getPressReleases()).find((p) => p.slug === slug);
   if (!item) notFound();
 
   return (

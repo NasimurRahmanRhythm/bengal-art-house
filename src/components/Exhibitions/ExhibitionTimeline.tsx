@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, prefersReducedMotion } from "@/lib/gsap";
 import { revealOnce } from "@/lib/motion";
-import { EXHIBITIONS } from "@/data/gallery";
+import type { Exhibition } from "@/data/gallery";
 import styles from "./Exhibitions.module.css";
 
 const STATUS_LABEL = {
@@ -14,7 +14,7 @@ const STATUS_LABEL = {
 } as const;
 
 /** Chronological list with a spine that draws itself as you scroll past it. */
-export default function ExhibitionTimeline() {
+export default function ExhibitionTimeline({ exhibitions }: { exhibitions: Exhibition[] }) {
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export default function ExhibitionTimeline() {
     <div ref={root} className={styles.timeline}>
       <span className={styles.spine} aria-hidden="true" />
 
-      {EXHIBITIONS.map((ex) => (
+      {exhibitions.map((ex) => (
         <article key={ex.id} className={styles.row}>
           <div className={styles.year}>
             {ex.year}

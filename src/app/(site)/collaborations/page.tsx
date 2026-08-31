@@ -6,6 +6,7 @@ import CollabList from "@/components/sections/CollabList";
 import Marquee from "@/components/Marquee/Marquee";
 import ChiselRule from "@/components/motion/ChiselRule";
 import ParkBanner from "@/components/sections/ParkBanner";
+import { getCollaborations } from "@/lib/site-data";
 
 const PLACES = ["Baroda", "Seoul", "Dhaka", "New York", "London", "Cairo", "Kishoreganj"];
 
@@ -15,7 +16,9 @@ export const metadata: Metadata = {
     "Study, exchange and installation across borders — Baroda, Seoul Olympic Park, Europe, the United States and North Africa.",
 };
 
-export default function CollaborationsPage() {
+export default async function CollaborationsPage() {
+  const collaborations = await getCollaborations();
+
   return (
     <>
       <PageHero
@@ -49,7 +52,7 @@ export default function CollaborationsPage() {
             }
             body="Each of these journeys left something in the work — a way of siting a form, of finishing a surface, of letting a monument hold a public square."
           />
-          <CollabList />
+          <CollabList items={collaborations} />
         </div>
       </section>
 

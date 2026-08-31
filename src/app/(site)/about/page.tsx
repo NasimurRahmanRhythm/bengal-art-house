@@ -10,6 +10,7 @@ import Marquee from "@/components/Marquee/Marquee";
 import ChiselRule from "@/components/motion/ChiselRule";
 import Reveal from "@/components/motion/Reveal";
 import { MATERIALS } from "@/data/site";
+import { getWorks } from "@/lib/site-data";
 
 export const metadata: Metadata = {
   title: "About",
@@ -17,7 +18,9 @@ export const metadata: Metadata = {
     "Gallery Hamiduzzaman represents a growing circle of Bangladeshi artists, carrying forward the modern sculpture tradition founded by Hamiduzzaman Khan.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const works = await getWorks();
+
   return (
     <>
       <PageHero
@@ -101,7 +104,7 @@ export default function AboutPage() {
           />
         </div>
         <div className="wrap">
-          <WorksGrid />
+          <WorksGrid items={works} />
         </div>
       </section>
 

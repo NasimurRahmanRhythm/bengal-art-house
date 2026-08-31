@@ -5,7 +5,7 @@ import SectionHead from "@/components/sections/SectionHead";
 import PostGrid from "@/components/sections/PostGrid";
 import ParkBanner from "@/components/sections/ParkBanner";
 import ChiselRule from "@/components/motion/ChiselRule";
-import { POSTS } from "@/data/posts";
+import { getPosts } from "@/lib/site-data";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
     "Notes from the studio — process, exhibitions and new work, written by Gallery Hamiduzzaman.",
 };
 
-export default function BlogIndexPage() {
-  const posts = [...POSTS].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+export default async function BlogIndexPage() {
+  const posts = (await getPosts()).sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 
   return (
     <>

@@ -6,6 +6,7 @@ import ServiceGrid from "@/components/sections/ServiceGrid";
 import ChiselRule from "@/components/motion/ChiselRule";
 import ParkBanner from "@/components/sections/ParkBanner";
 import sections from "@/components/sections/Sections.module.css";
+import { getServices } from "@/lib/site-data";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -13,7 +14,9 @@ export const metadata: Metadata = {
     "Advisory, cataloguing, conservation, provenance, public art consultation and valuation for collectors and institutions.",
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const services = await getServices();
+
   return (
     <>
       <PageHero
@@ -45,7 +48,7 @@ export default function ServicesPage() {
             }
             body="Each service is run by the gallery directly, drawing on the studio archive and on conservators who have worked with these materials in the open air."
           />
-          <ServiceGrid />
+          <ServiceGrid items={services} />
         </div>
       </section>
 

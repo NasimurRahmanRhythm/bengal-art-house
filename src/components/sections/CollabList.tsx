@@ -2,10 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import { revealOnce } from "@/lib/motion";
-import { COLLABORATIONS } from "@/data/gallery";
+import type { Collaboration } from "@/data/gallery";
 import styles from "./Sections.module.css";
 
-export default function CollabList() {
+export default function CollabList({ items }: { items: Collaboration[] }) {
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function CollabList() {
 
   return (
     <div ref={root} className={styles.collabList}>
-      {COLLABORATIONS.map((c) => (
+      {items.map((c) => (
         <article key={c.title} className={styles.collabRow}>
           <span className={styles.collabLine} aria-hidden="true" />
           <span className={styles.collabPlace}>{c.place}</span>

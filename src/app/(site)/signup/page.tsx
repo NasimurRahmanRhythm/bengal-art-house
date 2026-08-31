@@ -9,6 +9,14 @@ import styles from "@/components/auth/AuthCard.module.css";
 
 const RESEND_COOLDOWN = 30;
 
+/** Where to land once the account is confirmed. Same-origin paths only —
+ *  see the matching note on the sign-in page. */
+function nextPath(): string {
+  if (typeof window === "undefined") return "/";
+  const raw = new URLSearchParams(window.location.search).get("next");
+  return raw && raw.startsWith("/") && !raw.startsWith("//") ? raw : "/";
+}
+
 export default function SignUpPage() {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
@@ -83,7 +91,7 @@ export default function SignUpPage() {
       return;
     }
 
-    router.push("/");
+    router.push(nextPath());
     router.refresh();
   };
 

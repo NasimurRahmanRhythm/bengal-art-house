@@ -5,6 +5,7 @@ import SectionHead from "@/components/sections/SectionHead";
 import ArtistGrid from "@/components/sections/ArtistGrid";
 import ParkBanner from "@/components/sections/ParkBanner";
 import ChiselRule from "@/components/motion/ChiselRule";
+import { getArtists } from "@/lib/site-data";
 
 export const metadata: Metadata = {
   title: "Artists",
@@ -12,7 +13,9 @@ export const metadata: Metadata = {
     "The studio and its circle — Hamiduzzaman Khan, Ivy Zaman, and the family carrying the archive forward.",
 };
 
-export default function ArtistsPage() {
+export default async function ArtistsPage() {
+  const artists = await getArtists();
+
   return (
     <>
       <PageHero
@@ -25,7 +28,7 @@ export default function ArtistsPage() {
         lede="The artists behind the work — founder, family, and the studio carrying the archive forward."
         crumbs={[{ label: "Home", href: "/" }]}
         meta={[
-          { label: "Artists", value: "3" },
+          { label: "Artists", value: String(artists.length) },
           { label: "Generations", value: "2" },
           { label: "Based in", value: "Dhaka" },
         ]}
@@ -44,7 +47,7 @@ export default function ArtistsPage() {
             }
             body="What began in a Dhaka studio in the 1970s is now held by the people who worked closest to it — as sculptors in their own right, and as its archivists."
           />
-          <ArtistGrid />
+          <ArtistGrid artists={artists} />
         </div>
       </section>
 

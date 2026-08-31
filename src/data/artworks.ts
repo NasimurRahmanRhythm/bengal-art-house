@@ -1,10 +1,18 @@
-export type ArtGroup = "bronze" | "stone" | "steel" | "paper";
+// The four the artworks page filters by. Fixed on purpose — unlike `material`,
+// this has to mean the same thing on every row for the filter to be worth
+// anything.
+export const CATEGORIES = ["Calligraphy", "Installation", "Paintings", "Sculpture"] as const;
+export type Category = (typeof CATEGORIES)[number];
 
 export type Artwork = {
   id: string;
-  group: ArtGroup;
   title: string;
   artist: string;
+  category: Category | "";
+  // Short, and free text — the gallery types it in its own words. The filter
+  // chips on /artworks are built from whichever values actually appear, so a
+  // piece in a new material brings its own chip with it, without a code change.
+  material: string;
   medium: string;
   price: number;
   status: "available" | "sold";
@@ -18,7 +26,8 @@ export type Artwork = {
 export const ARTWORKS: Artwork[] = [
   {
     id: "untitled-abstract-form",
-    group: "steel",
+    category: "Sculpture",
+    material: "Steel",
     title: "Untitled Abstract Form",
     artist: "Hamiduzzaman Khan",
     medium: "Painted wood & steel, studio edition",
@@ -32,7 +41,8 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: "bird-study-ii",
-    group: "bronze",
+    category: "Sculpture",
+    material: "Bronze",
     title: "Bird Study II",
     artist: "Hamiduzzaman Khan",
     medium: "Bronze, small edition",
@@ -45,7 +55,8 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: "riverline-watercolour",
-    group: "paper",
+    category: "Paintings",
+    material: "Watercolour",
     title: "Riverline (Watercolour Series)",
     artist: "Hamiduzzaman Khan",
     medium: "Watercolour on paper, framed",
@@ -58,7 +69,8 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: "black-granite-form",
-    group: "stone",
+    category: "Sculpture",
+    material: "Granite",
     title: "Black Granite Form",
     artist: "Hamiduzzaman Khan",
     medium: "Black granite, single eye motif",
@@ -71,7 +83,8 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: "seated-form",
-    group: "stone",
+    category: "Sculpture",
+    material: "Marble",
     title: "Seated Form",
     artist: "Ivy Zaman",
     medium: "Marble di Carrara, small scale",
@@ -84,7 +97,8 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: "sketch-for-shangshaptok",
-    group: "paper",
+    category: "Paintings",
+    material: "Drawing",
     title: "Sketch for Shangshaptok",
     artist: "Hamiduzzaman Khan",
     medium: "Graphite & ink on paper, archival",
@@ -97,7 +111,8 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: "wing-fragment",
-    group: "steel",
+    category: "Sculpture",
+    material: "Steel",
     title: "Wing Fragment",
     artist: "Hamiduzzaman Khan",
     medium: "Mild steel, welded plate",
@@ -110,7 +125,8 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: "steps-maquette",
-    group: "stone",
+    category: "Sculpture",
+    material: "Stone",
     title: "Steps (Maquette)",
     artist: "Hamiduzzaman Khan",
     medium: "Cast stone, artist's maquette",
@@ -123,7 +139,8 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: "study-in-patina",
-    group: "bronze",
+    category: "Sculpture",
+    material: "Bronze",
     title: "Study in Patina",
     artist: "Zubair Khan",
     medium: "Bronze on granite base",

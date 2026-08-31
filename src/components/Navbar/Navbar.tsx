@@ -85,9 +85,22 @@ export default function Navbar() {
               <div className={styles.authGroup}>
                 {user ? (
                   <>
-                    <span className={styles.authUser}>{user.email}</span>
+                    {/* The address doubles as the way in to the profile — it is
+                        already the one thing on this bar that identifies the
+                        person, so making it the link avoids a second control
+                        saying the same thing. */}
+                    <Link
+                      href="/account"
+                      className={styles.authUser}
+                      title="Your profile and orders"
+                    >
+                      <UserIcon size={13} className={styles.authUserIcon} />
+                      <span className={styles.authUserEmail}>{user.email}</span>
+                    </Link>
+                    <span className={styles.authDivider} aria-hidden="true">
+                      /
+                    </span>
                     <button type="button" onClick={signOut} className={styles.members}>
-                      <UserIcon size={13} />
                       Sign out
                     </button>
                   </>
@@ -171,11 +184,28 @@ export default function Navbar() {
         </nav>
 
         <div className={styles.actions}>
+          {/* Repeated from the utility bar on purpose: that bar is hidden on
+              phones and collapses on scroll, and the profile is the one place
+              a customer goes looking for an order they have already paid for. */}
+          {!loading && (
+            <Link
+              href={user ? "/account" : "/signin?next=/account"}
+              className={`${styles.profileBtn} ${styles.navItem} ${
+                pathname.startsWith("/account") ? styles.profileBtnActive : ""
+              }`}
+              style={itemDelay(NAV.length + 1)}
+              aria-label={user ? "Your profile and orders" : "Sign in"}
+              title={user ? "Your profile and orders" : "Sign in"}
+            >
+              <UserIcon size={15} />
+            </Link>
+          )}
+
           <button
             type="button"
             onClick={openCart}
             className={`${styles.cartBtn} ${styles.navItem}`}
-            style={itemDelay(NAV.length + 1)}
+            style={itemDelay(NAV.length + 2)}
             aria-label={`Open cart, ${count} ${count === 1 ? "item" : "items"}`}
           >
             <CartIcon size={15} />
@@ -224,9 +254,12 @@ export default function Navbar() {
           <div style={itemDelay(NAV.length)} className={styles.panelFoot}>
             {!loading &&
               (user ? (
-                <button type="button" onClick={signOut} className={styles.panelAuthBtn}>
-                  Sign out ({user.email})
-                </button>
+                <div className={styles.panelAuthRow}>
+                  <Link href="/account">Your profile</Link>
+                  <button type="button" onClick={signOut} className={styles.panelAuthBtn}>
+                    Sign out
+                  </button>
+                </div>
               ) : (
                 <div className={styles.panelAuthRow}>
                   <Link href="/signin">Sign in</Link>

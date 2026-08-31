@@ -5,15 +5,17 @@ import SectionHead from "@/components/sections/SectionHead";
 import PostGrid from "@/components/sections/PostGrid";
 import ParkBanner from "@/components/sections/ParkBanner";
 import ChiselRule from "@/components/motion/ChiselRule";
-import { PRESS_RELEASES } from "@/data/press";
+import { getPressReleases } from "@/lib/site-data";
 
 export const metadata: Metadata = {
   title: "Media & Press",
   description: "Press coverage and media mentions of Gallery Hamiduzzaman.",
 };
 
-export default function PressIndexPage() {
-  const items = [...PRESS_RELEASES].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+export default async function PressIndexPage() {
+  const items = (await getPressReleases()).sort((a, b) =>
+    b.publishedAt.localeCompare(a.publishedAt),
+  );
 
   return (
     <>

@@ -25,8 +25,15 @@ export default function ArtistProfile({ artist }: Props) {
     <div ref={root} className={styles.grid}>
       <div>
         <span className={styles.plate}>
-          <ArtPlate variant={artist.plate} />
-          <span className={styles.initials}>{artist.initials}</span>
+          {artist.photo ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={artist.photo} alt={artist.name} className={styles.photo} />
+          ) : (
+            <>
+              <ArtPlate variant={artist.plate} />
+              <span className={styles.initials}>{artist.initials}</span>
+            </>
+          )}
         </span>
 
         <Reveal className={styles.facts} stagger={0.08} delay={0.15}>

@@ -2,10 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import { gridStaggerDelay, revealOnce } from "@/lib/motion";
-import { WORKS } from "@/data/gallery";
+import type { Work } from "@/data/gallery";
 import styles from "./Sections.module.css";
 
-export default function WorksGrid() {
+export default function WorksGrid({ items }: { items: Work[] }) {
   const grid = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function WorksGrid() {
 
   return (
     <div ref={grid} className={`${styles.worksGrid} ${styles.worksReveal}`} id="sculptures">
-      {WORKS.map((w) => (
+      {items.map((w) => (
         <article key={w.index} className={styles.workCard}>
           <span className={styles.workIndex}>{w.index}</span>
           <div>

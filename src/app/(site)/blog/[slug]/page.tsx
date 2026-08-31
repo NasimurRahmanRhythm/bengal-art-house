@@ -5,18 +5,18 @@ import PageHero from "@/components/sections/PageHero";
 import PostBody from "@/components/sections/PostBody";
 import ChiselRule from "@/components/motion/ChiselRule";
 import ParkBanner from "@/components/sections/ParkBanner";
-import { POSTS } from "@/data/posts";
+import { getPosts } from "@/lib/site-data";
 import { formatLongDate } from "@/lib/content";
 
 type Params = Promise<{ slug: string }>;
 
-export function generateStaticParams() {
-  return POSTS.map((p) => ({ slug: p.slug }));
+export async function generateStaticParams() {
+  return (await getPosts()).map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const post = POSTS.find((p) => p.slug === slug);
+  const post = (await getPosts()).find((p) => p.slug === slug);
   if (!post) return {};
   return {
     title: post.title,
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function BlogPostPage({ params }: { params: Params }) {
   const { slug } = await params;
-  const post = POSTS.find((p) => p.slug === slug);
+  const post = (await getPosts()).find((p) => p.slug === slug);
   if (!post) notFound();
 
   return (

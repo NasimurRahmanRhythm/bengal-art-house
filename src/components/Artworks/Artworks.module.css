@@ -1,8 +1,63 @@
+/* Category chips on one side, the price range on the other. They wrap onto
+   separate lines together rather than the range drifting up beside a short
+   row of chips. */
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 24px;
+  margin-bottom: 34px;
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 34px;
+}
+
+.priceRange {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+
+.priceInput {
+  width: 86px;
+  padding: 10px 11px;
+  border: 1px solid var(--stone-line);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  /* The two boxes are read as a pair, so their digits must line up. */
+  font-variant-numeric: tabular-nums;
+}
+
+.priceInput:focus-visible {
+  outline: none;
+  border-color: var(--ink);
+}
+
+.priceDash,
+.priceLabel {
+  white-space: nowrap;
+}
+
+.priceClear {
+  padding: 4px 2px;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
 }
 
 .filterBtn {

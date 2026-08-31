@@ -7,17 +7,17 @@ import ArtistProfile from "@/components/sections/ArtistProfile";
 import ChiselRule from "@/components/motion/ChiselRule";
 import ParkBanner from "@/components/sections/ParkBanner";
 import ArtworkGrid from "@/components/Artworks/ArtworkGrid";
-import { ARTISTS } from "@/data/gallery";
+import { getArtists, getArtworks } from "@/lib/site-data";
 
 type Params = Promise<{ slug: string }>;
 
-export function generateStaticParams() {
-  return ARTISTS.map((a) => ({ slug: a.slug }));
+export async function generateStaticParams() {
+  return (await getArtists()).map((a) => ({ slug: a.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const artist = ARTISTS.find((a) => a.slug === slug);
+  const artist = (await getArtists()).find((a) => a.slug === slug);
   if (!artist) return {};
   return {
     title: artist.name,
@@ -27,15 +27,18 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function ArtistPage({ params }: { params: Params }) {
   const { slug } = await params;
-  const artist = ARTISTS.find((a) => a.slug === slug);
+  const [artists, artworks] = await Promise.all([getArtists(), getArtworks()]);
+  const artist = artists.find((a) => a.slug === slug);
   if (!artist) notFound();
 
   return (
     <>
+      {/* No lede: the gallery fills in a name, a picture and a biography, so
+          the only text available here is the biography's opening paragraph —
+          which then reads again, in full, a few centimetres below. */}
       <PageHero
         kicker="Artist"
         title={artist.name}
-        lede={artist.body}
         crumbs={[
           { label: "Home", href: "/" },
           { label: "Artists", href: "/artists" },
@@ -61,7 +64,7 @@ export default async function ArtistPage({ params }: { params: Params }) {
               </>
             }
           />
-          <ArtworkGrid artist={artist.name} />
+          <ArtworkGrid artworks={artworks} artist={artist.name} />
         </div>
       </section>
 

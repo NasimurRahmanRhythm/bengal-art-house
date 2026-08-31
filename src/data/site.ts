@@ -26,6 +26,7 @@ export const NAV: NavItem[] = [
     ],
   },
   { label: "Exhibitions", href: "/exhibitions" },
+  { label: "Governing Body", href: "/governing-body" },
   { label: "Collaborations", href: "/collaborations" },
   { label: "Blog", href: "/blog" },
   { label: "Press", href: "/press" },
