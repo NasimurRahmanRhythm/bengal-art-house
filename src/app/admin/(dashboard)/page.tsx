@@ -31,15 +31,6 @@ export default function AdminOverview() {
       />
 
       <div className="a-body">
-        <div className="a-banner">
-          <InfoIcon />
-          <div className="a-bannerBody">
-            <strong>Preview mode — nothing is saved to the database.</strong>
-            Edits are kept in this browser only, so you can click through every screen and judge
-            what each one asks for. Tell me which fields to drop or add, and I&apos;ll change the
-            schema before any of it becomes real.
-          </div>
-        </div>
 
         <div className="a-cards">
           <Link href="/admin/artworks" className="a-stat">
