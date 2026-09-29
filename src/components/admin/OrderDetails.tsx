@@ -3,21 +3,30 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Badge, ConfirmDelete, DetailRow, Modal } from "./ui";
-import { CopyIcon, MailIcon } from "./Icons";
+import { CopyIcon, DownloadIcon, MailIcon } from "./Icons";
 import { useAdmin, useArtistMap, useArtworkMap } from "@/lib/admin/store";
 import { formatBDT, formatDateTime } from "@/lib/admin/slug";
 import { paymentMethod, type Order } from "@/lib/admin/types";
 
+// `cancelled` is carried here even though types.ts still types PaymentStatus
+// as the original three. The payments migration added it to the database, and
+// settle.ts writes it whenever a customer backs out at the gateway — so it
+// arrives at runtime regardless, and without an entry the badge rendered
+// blank. Indexing a four-key map with a three-value union is legal, which is
+// why this fixes the display without dragging the filter row and its counts
+// into a wider change.
 export const PAYMENT_TONE = {
   paid: "good",
   pending: "warn",
   failed: "muted",
+  cancelled: "muted",
 } as const;
 
 export const PAYMENT_LABEL = {
   paid: "Paid",
   pending: "Awaiting payment",
   failed: "Failed",
+  cancelled: "Cancelled",
 } as const;
 
 export const FULFILLMENT_LABEL = {
@@ -89,6 +98,24 @@ export default function OrderDetails({ order, onClose }: { order: Order; onClose
           >
             <MailIcon size={14} /> Email customer
           </a>
+
+          {/* Hidden on a failed or cancelled order: there is no document to
+              issue for money that was never taken, and offering one invites
+              sending a customer an invoice for a payment that never happened.
+              A pending order still gets one — that is the pro-forma the
+              gallery sends when someone asks to pay by other means, and the
+              PDF prints AWAITING PAYMENT across it so it cannot be mistaken
+              for a receipt. */}
+          {(order.paymentStatus === "paid" || order.paymentStatus === "pending") && (
+            <a
+              className="a-btn"
+              data-size="sm"
+              href={`/api/admin/orders/${order.orderNumber}/invoice`}
+              download={`invoice-${order.orderNumber}.pdf`}
+            >
+              <DownloadIcon size={14} /> Invoice
+            </a>
+          )}
 
           {order.paymentStatus === "paid" && nextStep && (
             <button

@@ -1,5 +1,6 @@
 import { PdfDoc, textWidth, wrap } from "./pdf";
 import { SITE } from "@/data/site";
+import type { CustomerOrder } from "./orders";
 
 // The layout of the gallery's invoice. Kept apart from the PDF primitives so
 // that changing what the document says never means touching the file format.
@@ -62,6 +63,35 @@ const STATUS_LABEL: Record<string, string> = {
   failed: "PAYMENT FAILED",
   cancelled: "CANCELLED",
 };
+
+/** Narrows an order row down to just what the invoice prints.
+ *
+ *  Shared by the customer's download and the admin's, so the two can never
+ *  drift into printing different documents for the same order — which, for a
+ *  financial record, is the one difference that would actually matter. */
+export function invoiceFromOrder(order: CustomerOrder): InvoiceOrder {
+  return {
+    orderNumber: order.orderNumber,
+    createdAt: order.createdAt,
+    paidAt: order.paidAt,
+    paymentStatus: order.paymentStatus,
+    customerName: order.customerName,
+    email: order.email,
+    phone: order.phone,
+    address: order.address,
+    city: order.city,
+    postcode: order.postcode,
+    country: order.country,
+    totalAmount: order.totalAmount,
+    currency: order.currency,
+    tranId: order.tranId,
+    bankTranId: order.bankTranId,
+    valId: order.valId,
+    cardType: order.cardType,
+    cardIssuer: order.cardIssuer,
+    items: order.items.map((i) => ({ title: i.title, artist: i.artist, price: i.price })),
+  };
+}
 
 /** Renders a paid (or unpaid — the status is printed either way) invoice and
     returns the finished PDF bytes. */

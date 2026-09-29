@@ -1,9 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
-// Read helpers for the customer's own orders. Everything here goes through the
-// user's session client, never the service-role one — so ownership is enforced
-// by the "read own" RLS policies rather than by a WHERE clause somebody could
-// forget to write.
+// Read helpers for orders. The customer-facing ones go through the user's
+// session client, never the service-role one — so ownership is enforced by the
+// "read own" RLS policies rather than by a WHERE clause somebody could forget
+// to write. The single admin-facing reader at the bottom is the exception, and
+// carries its own warning.
 
 export type OrderLine = {
   id: string;
@@ -138,6 +140,36 @@ export async function getMyOrder(orderNumber: string): Promise<CustomerOrder | n
 
   if (error) {
     console.error("[orders] could not read order", error);
+    return null;
+  }
+
+  return data ? shape(data as RawOrder) : null;
+}
+
+/**
+ * Reads any order, regardless of who it belongs to.
+ *
+ * ⚠️ This one bypasses Row Level Security, so it carries no authorisation of
+ * its own. Every caller MUST have established that the request comes from an
+ * admin first — `checkAdmin()` from `@/lib/admin/auth` — before calling it.
+ * Reaching for this from anywhere a customer can hit is an order-number
+ * enumeration hole: the numbers are sequential.
+ *
+ * It exists because an admin legitimately needs to print a customer's invoice,
+ * and the session-scoped readers above would return nothing for someone
+ * else's order — which is exactly what they are supposed to do.
+ */
+export async function getOrderAsAdmin(orderNumber: string): Promise<CustomerOrder | null> {
+  const db = createAdminClient();
+
+  const { data, error } = await db
+    .from("orders")
+    .select(ORDER_COLUMNS)
+    .eq("order_number", orderNumber)
+    .maybeSingle();
+
+  if (error) {
+    console.error("[orders] admin could not read order", error);
     return null;
   }
 

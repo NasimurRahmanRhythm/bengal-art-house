@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getMyOrder } from "@/lib/payments/orders";
-import { renderInvoice } from "@/lib/payments/invoice";
+import { invoiceFromOrder, renderInvoice } from "@/lib/payments/invoice";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -34,27 +34,7 @@ export async function GET(
     return NextResponse.json({ error: "No such order." }, { status: 404 });
   }
 
-  const pdf = renderInvoice({
-    orderNumber: order.orderNumber,
-    createdAt: order.createdAt,
-    paidAt: order.paidAt,
-    paymentStatus: order.paymentStatus,
-    customerName: order.customerName,
-    email: order.email,
-    phone: order.phone,
-    address: order.address,
-    city: order.city,
-    postcode: order.postcode,
-    country: order.country,
-    totalAmount: order.totalAmount,
-    currency: order.currency,
-    tranId: order.tranId,
-    bankTranId: order.bankTranId,
-    valId: order.valId,
-    cardType: order.cardType,
-    cardIssuer: order.cardIssuer,
-    items: order.items.map((i) => ({ title: i.title, artist: i.artist, price: i.price })),
-  });
+  const pdf = renderInvoice(invoiceFromOrder(order));
 
   return new NextResponse(new Uint8Array(pdf), {
     headers: {

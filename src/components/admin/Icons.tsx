@@ -125,6 +125,13 @@ export const CloseIcon = ({ size = 16, className }: P) => (
   </svg>
 );
 
+export const DownloadIcon = ({ size = 14, className }: P) => (
+  <svg {...base(size)} className={className}>
+    <path d="M12 3v12M7 11l5 5 5-5" />
+    <path d="M4 20h16" />
+  </svg>
+);
+
 export const CopyIcon = ({ size = 14, className }: P) => (
   <svg {...base(size)} className={className}>
     <rect x="9" y="9" width="11" height="11" rx="2" />
