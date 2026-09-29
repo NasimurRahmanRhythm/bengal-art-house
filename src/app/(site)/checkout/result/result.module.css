@@ -1,0 +1,168 @@
+.section {
+  padding: clamp(64px, 10vw, 128px) 0;
+}
+
+.card {
+  max-width: 620px;
+  margin: 0 auto;
+  background: var(--marble-dim);
+  border: 1px solid var(--stone-line);
+  border-top: 2px solid var(--ink);
+  padding: clamp(32px, 5vw, 56px);
+}
+
+.cardGood {
+  border-top-color: var(--patina);
+}
+
+.cardBad {
+  border-top-color: var(--oxide);
+}
+
+.mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  border: 1px solid var(--stone-line-strong);
+  margin-bottom: 22px;
+  color: var(--ink);
+}
+
+.markGood {
+  border-color: var(--patina);
+  color: var(--patina);
+}
+
+.markBad {
+  border-color: var(--oxide);
+  color: var(--oxide);
+}
+
+.card h1 {
+  font-size: clamp(26px, 3.6vw, 36px);
+  margin: 10px 0 14px;
+}
+
+.lead {
+  color: var(--text-muted);
+  font-size: 15.5px;
+  max-width: 46ch;
+}
+
+.receipt {
+  margin: 30px 0;
+  border-top: 1px solid var(--stone-line);
+}
+
+.receiptRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 20px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--stone-line);
+}
+
+.receiptRow dt {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.receiptRow dd {
+  font-size: 14.5px;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+
+.amount {
+  font-family: var(--font-display);
+  font-size: 22px;
+}
+
+.works {
+  list-style: none;
+  margin: 0 0 30px;
+  border-top: 1px solid var(--stone-line);
+}
+
+.work {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--stone-line);
+  font-size: 14.5px;
+}
+
+.workArtist {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.workPrice {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 13px 22px;
+  border: 1px solid var(--stone-line-strong);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn:hover {
+  background: var(--ink);
+  color: var(--marble);
+  border-color: var(--ink);
+}
+
+.btnPrimary {
+  background: var(--ink);
+  color: var(--marble);
+  border-color: var(--ink);
+}
+
+.btnPrimary:hover {
+  background: var(--oxide);
+  border-color: var(--oxide);
+}
+
+.note {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--stone-line);
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
