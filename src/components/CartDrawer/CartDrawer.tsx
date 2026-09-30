@@ -12,7 +12,8 @@ import styles from "./CartDrawer.module.css";
 const itemDelay = (i: number) => ({ "--i": i }) as CSSProperties;
 
 export default function CartDrawer() {
-  const { lines, count, total, isOpen, closeCart, remove, clear } = useCart();
+  const { lines, count, total, isOpen, closeCart, remove, clear, removed, dismissRemoved } =
+    useCart();
 
   return (
     <div className={`${styles.root} ${isOpen ? styles.open : ""}`} inert={!isOpen}>
@@ -47,6 +48,23 @@ export default function CartDrawer() {
         </header>
 
         <div className={styles.body}>
+          {/* A line disappearing on its own is unnerving unless the basket
+              says so. Worded for the common case — the piece is no longer
+              for sale — which covers both "you have just bought it" and
+              "somebody else did". */}
+          {removed.length > 0 && (
+            <div className={styles.notice} role="status">
+              <p>
+                {removed.length === 1
+                  ? `${removed[0].title} is no longer available and has been removed.`
+                  : `${removed.length} works are no longer available and have been removed.`}
+              </p>
+              <button type="button" onClick={dismissRemoved} aria-label="Dismiss">
+                <CloseIcon size={13} />
+              </button>
+            </div>
+          )}
+
           {count === 0 ? (
             <div className={styles.empty} style={itemDelay(0)}>
               <span className={styles.emptyMark}>—</span>

@@ -271,6 +271,35 @@
   background: var(--oxide);
 }
 
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  background: rgba(168, 57, 28, 0.07);
+  border-left: 2px solid var(--oxide);
+}
+
+.notice p {
+  flex: 1;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--oxide-dark);
+}
+
+.notice button {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--oxide-dark);
+  opacity: 0.6;
+  transition: opacity 0.25s ease;
+}
+
+.notice button:hover {
+  opacity: 1;
+}
+
 .secondary {
   display: block;
   width: 100%;

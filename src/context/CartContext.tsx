@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -32,6 +33,10 @@ type CartValue = {
   has: (id: string) => boolean;
   openCart: () => void;
   closeCart: () => void;
+  /** Lines dropped by the last catalogue check, so the drawer can say why
+      something the customer put there is no longer in the basket. */
+  removed: CartLine[];
+  dismissRemoved: () => void;
 };
 
 const STORAGE_KEY = "bah_cart_lines";
@@ -65,6 +70,58 @@ export function CartProvider({ children }: { children: ReactNode }) {
       document.body.style.overflow = "";
     };
   }, [isOpen]);
+
+  // --- keeping the basket honest against the catalogue ----------------------
+  //
+  // The basket used to be emptied by one thing only: the confirmation page
+  // calling clear() after a payment. That page is not reliably reached. A
+  // bKash customer on a phone pays inside the bKash app and very often never
+  // returns to the browser — the IPN settles the order server-side and the
+  // browser, whenever it comes back, still has the piece sitting in its
+  // basket as though nothing happened.
+  //
+  // So the basket no longer waits to be told. It asks the catalogue which of
+  // its lines are still for sale and drops the rest. That covers the payment
+  // the customer just made, a piece someone else bought while this basket sat
+  // open, and a piece the gallery withdrew — all of which are the same
+  // problem, and none of which the browser can know about on its own.
+
+  const linesRef = useRef<CartLine[]>([]);
+  useEffect(() => {
+    linesRef.current = lines;
+  }, [lines]);
+
+  const [removed, setRemoved] = useState<CartLine[]>([]);
+
+  const prune = useCallback(async () => {
+    const current = linesRef.current;
+    if (current.length === 0) return;
+
+    try {
+      const res = await fetch("/api/cart/prune", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: current.map((l) => l.id) }),
+      });
+      if (!res.ok) return;
+
+      const { unavailable } = (await res.json()) as { unavailable?: unknown };
+      if (!Array.isArray(unavailable) || unavailable.length === 0) return;
+
+      const gone = new Set(unavailable.filter((s): s is string => typeof s === "string"));
+      setRemoved(current.filter((l) => gone.has(l.id)));
+      setLines((prev) => prev.filter((l) => !gone.has(l.id)));
+    } catch {
+      // Offline, or the request was cut short. Nobody's basket gets emptied
+      // because a fetch failed — the next check will catch up.
+    }
+  }, []);
+
+  // Once on load, and again whenever the drawer is opened: the two moments the
+  // customer is about to act on what the basket says.
+  useEffect(() => {
+    if (hydrated) void prune();
+  }, [hydrated, prune]);
 
   const add = useCallback((artwork: Artwork) => {
     if (artwork.status === "sold") return;
@@ -100,10 +157,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
       remove,
       clear: () => setLines([]),
       has: (id: string) => lines.some((l) => l.id === id),
-      openCart: () => setIsOpen(true),
+      openCart: () => {
+        setIsOpen(true);
+        void prune();
+      },
       closeCart: () => setIsOpen(false),
+      removed,
+      dismissRemoved: () => setRemoved([]),
     }),
-    [lines, isOpen, pulse, add, remove]
+    [lines, isOpen, pulse, add, remove, prune, removed]
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
