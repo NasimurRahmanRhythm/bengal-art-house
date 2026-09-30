@@ -14,7 +14,9 @@ async function handle(request: Request) {
   const fields = await readCallback(request);
   const tranId = fields.tran_id?.trim();
 
-  const orderNumber = tranId ? await markUnpaid(tranId, "failed", { callback: fields }) : null;
+  const orderNumber = tranId
+    ? await markUnpaid(tranId, "failed", "fail", { callback: fields })
+    : null;
 
   const url = new URL("/checkout/result", siteUrl());
   url.searchParams.set("status", "failed");

@@ -11,6 +11,20 @@ export type Settlement = {
   reason?: string;
 };
 
+/** Which route is asking — recorded on the order as `settled_by`.
+ *
+ *  The success redirect and the IPN send an identical body, so without this
+ *  the database cannot say which of them confirmed a payment, and the IPN
+ *  becomes untestable: it can be completely broken while every order still
+ *  looks fine. That is not a theoretical worry here — a bKash customer on a
+ *  phone usually never returns to the browser, so the IPN is the only leg
+ *  that fires, and a silent failure means money taken against an order stuck
+ *  at 'pending'.
+ *
+ *  `checkout` is the odd one out: it means the order never reached the
+ *  gateway at all, because SSLCommerz refused to open a session. */
+export type SettleSource = "checkout" | "success" | "fail" | "cancel" | "ipn";
+
 /** Reads a callback body regardless of how SSLCommerz encoded it. The gateway
     sends form-encoded POSTs, but the IPN can be configured to send JSON, and
     the cancel leg has been observed arriving as a bare GET with query
@@ -43,9 +57,14 @@ export async function readCallback(request: Request): Promise<Record<string, str
  *  the order to `paid`.
  *
  *  Called from both the success redirect and the IPN, which race each other.
- *  Whichever arrives first does the work; the second sees payment_status
- *  already 'paid' and returns 'already-paid' without touching anything. */
-export async function settlePayment(fields: Record<string, string>): Promise<Settlement> {
+ *  Whichever arrives first does the work and stamps `settled_by` with its own
+ *  name; the second sees payment_status already 'paid' and returns
+ *  'already-paid' without touching anything. So the stamp always names the
+ *  leg that actually confirmed the money. */
+export async function settlePayment(
+  fields: Record<string, string>,
+  source: SettleSource,
+): Promise<Settlement> {
   const tranId = fields.tran_id?.trim();
   if (!tranId) return { outcome: "unknown", orderNumber: null, reason: "no tran_id in callback" };
 
@@ -74,7 +93,7 @@ export async function settlePayment(fields: Record<string, string>): Promise<Set
 
   const valId = fields.val_id?.trim();
   if (!valId) {
-    await markUnpaid(tranId, "failed");
+    await markUnpaid(tranId, "failed", source);
     return {
       outcome: "failed",
       orderNumber: order.order_number,
@@ -95,7 +114,7 @@ export async function settlePayment(fields: Record<string, string>): Promise<Set
         reason: "validator unreachable; order left pending",
       };
     }
-    await markUnpaid(tranId, "failed", validation);
+    await markUnpaid(tranId, "failed", source, validation);
     return {
       outcome: "failed",
       orderNumber: order.order_number,
@@ -115,7 +134,7 @@ export async function settlePayment(fields: Record<string, string>): Promise<Set
     };
   }
   if ((validation.currency ?? "BDT") !== order.currency) {
-    await markUnpaid(tranId, "failed", validation);
+    await markUnpaid(tranId, "failed", source, validation);
     return {
       outcome: "failed",
       orderNumber: order.order_number,
@@ -125,7 +144,7 @@ export async function settlePayment(fields: Record<string, string>): Promise<Set
   // Tolerance of one poisha absorbs float formatting, nothing more — an
   // underpayment of any real size is a failed order, not a discount.
   if (paidAmount + 0.01 < expected) {
-    await markUnpaid(tranId, "failed", validation);
+    await markUnpaid(tranId, "failed", source, validation);
     return {
       outcome: "failed",
       orderNumber: order.order_number,
@@ -145,6 +164,7 @@ export async function settlePayment(fields: Record<string, string>): Promise<Set
       risk_level: validation.risk_level ?? null,
       risk_title: validation.risk_title ?? null,
       paid_at: parseTranDate(validation.tran_date),
+      settled_by: source,
       sslcommerz_response: { callback: fields, validation },
     })
     .eq("id", order.id)
@@ -170,6 +190,7 @@ export async function settlePayment(fields: Record<string, string>): Promise<Set
 export async function markUnpaid(
   tranId: string,
   status: "failed" | "cancelled",
+  source: SettleSource,
   extra?: unknown,
 ): Promise<string | null> {
   const db = createAdminClient();
@@ -178,6 +199,7 @@ export async function markUnpaid(
     .from("orders")
     .update({
       payment_status: status,
+      settled_by: source,
       ...(extra ? { sslcommerz_response: extra } : {}),
     })
     .eq("tran_id", tranId)

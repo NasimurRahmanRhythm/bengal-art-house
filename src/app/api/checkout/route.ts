@@ -186,13 +186,23 @@ export async function POST(request: Request) {
     // sslConfig() throws when a credential is missing. That is a deployment
     // fault, not a customer one, so it is logged in full and reported plainly.
     console.error("[checkout] gateway not configured", err);
-    await db.from("orders").update({ payment_status: "failed" }).eq("id", order.id);
+    // settled_by 'checkout' distinguishes this from a declined card: the
+    // customer never reached the gateway at all. Without the stamp the two
+    // look identical in the panel, and a missing credential gets chased as a
+    // payment problem.
+    await db
+      .from("orders")
+      .update({ payment_status: "failed", settled_by: "checkout" })
+      .eq("id", order.id);
     return bad("Card payment is not configured yet. Please contact the gallery.", 500);
   }
 
   if (!session.ok) {
     console.error(`[checkout] SSLCommerz refused the session: ${session.reason}`);
-    await db.from("orders").update({ payment_status: "failed" }).eq("id", order.id);
+    await db
+      .from("orders")
+      .update({ payment_status: "failed", settled_by: "checkout" })
+      .eq("id", order.id);
     return bad("The payment gateway could not start a session. Please try again.", 502);
   }
 

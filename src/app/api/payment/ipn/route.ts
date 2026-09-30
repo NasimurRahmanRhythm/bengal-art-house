@@ -21,14 +21,14 @@ export async function POST(request: Request) {
   if (gatewayStatus === "FAILED" || gatewayStatus === "CANCELLED") {
     const tranId = fields.tran_id?.trim();
     if (tranId) {
-      await markUnpaid(tranId, gatewayStatus === "FAILED" ? "failed" : "cancelled", {
+      await markUnpaid(tranId, gatewayStatus === "FAILED" ? "failed" : "cancelled", "ipn", {
         callback: fields,
       });
     }
     return NextResponse.json({ received: true, applied: gatewayStatus.toLowerCase() });
   }
 
-  const result = await settlePayment(fields);
+  const result = await settlePayment(fields, "ipn");
 
   if (result.reason) {
     console.error(`[sslcommerz:ipn] ${result.outcome} — ${result.reason}`);

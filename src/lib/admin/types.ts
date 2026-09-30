@@ -122,9 +122,28 @@ export type Order = {
   fulfillmentStatus: FulfillmentStatus;
   tranId: string | null;
   gateway: GatewayReceipt | null;
+  /** Which route last moved this order off pending. Null for orders written
+      before the column existed — see SETTLED_BY_LABEL below. */
+  settledBy: SettledBy | null;
   items: OrderItem[];
   createdAt: string;
   updatedAt: string;
+};
+
+export type SettledBy = "checkout" | "success" | "fail" | "cancel" | "ipn";
+
+/** Phrased for someone who has never heard of an IPN.
+ *
+ *  The distinction it draws is the one that matters operationally: a payment
+ *  confirmed by the browser coming back proves nothing about the notification
+ *  leg, and the notification leg is the only one that fires when a bKash
+ *  customer pays on a phone and never returns to the site. */
+export const SETTLED_BY_LABEL: Record<SettledBy, string> = {
+  success: "Customer's browser returned",
+  ipn: "Gateway notified us directly",
+  fail: "Gateway reported it failed",
+  cancel: "Customer cancelled at the gateway",
+  checkout: "Never reached the gateway",
 };
 
 // blog -----------------------------------------------------------------------

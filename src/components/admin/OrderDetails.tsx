@@ -6,7 +6,7 @@ import { Badge, ConfirmDelete, DetailRow, Modal } from "./ui";
 import { CopyIcon, DownloadIcon, MailIcon } from "./Icons";
 import { useAdmin, useArtistMap, useArtworkMap } from "@/lib/admin/store";
 import { formatBDT, formatDateTime } from "@/lib/admin/slug";
-import { paymentMethod, type Order } from "@/lib/admin/types";
+import { paymentMethod, SETTLED_BY_LABEL, type Order } from "@/lib/admin/types";
 
 // `cancelled` is carried here even though types.ts still types PaymentStatus
 // as the original three. The payments migration added it to the database, and
@@ -253,6 +253,13 @@ export default function OrderDetails({ order, onClose }: { order: Order; onClose
           {method.issuer && <span className="a-rowSub"> · {method.issuer}</span>}
         </DetailRow>
         <DetailRow label="Gateway">SSLCommerz</DetailRow>
+        <DetailRow label="Confirmed by">
+          {order.settledBy ? (
+            SETTLED_BY_LABEL[order.settledBy]
+          ) : (
+            <span style={{ color: "var(--a-muted)" }}>Not recorded</span>
+          )}
+        </DetailRow>
         <DetailRow label="Transaction ID" mono>
           <Ref value={order.tranId ?? ""} />
         </DetailRow>

@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 
 async function handle(request: Request) {
   const fields = await readCallback(request);
-  const result = await settlePayment(fields);
+  const result = await settlePayment(fields, "success");
 
   if (result.reason) {
     console.error(`[sslcommerz:success] ${result.outcome} — ${result.reason}`);

@@ -140,6 +140,8 @@ function rowToOrder(r: Row): Order {
     paymentStatus: (str(r.payment_status) || "pending") as Order["paymentStatus"],
     fulfillmentStatus: (str(r.fulfillment_status) || "pending") as Order["fulfillmentStatus"],
     tranId: (r.tran_id as string) ?? null,
+    settledBy: (r.settled_by as Order["settledBy"]) ?? null,
+
     // The receipt is read from the columns, not from sslcommerz_response.
     //
     // The raw gateway body is still kept in that column for dispute evidence,

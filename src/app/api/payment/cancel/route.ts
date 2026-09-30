@@ -13,7 +13,9 @@ async function handle(request: Request) {
   const fields = await readCallback(request);
   const tranId = fields.tran_id?.trim();
 
-  const orderNumber = tranId ? await markUnpaid(tranId, "cancelled", { callback: fields }) : null;
+  const orderNumber = tranId
+    ? await markUnpaid(tranId, "cancelled", "cancel", { callback: fields })
+    : null;
 
   const url = new URL("/checkout/result", siteUrl());
   url.searchParams.set("status", "cancelled");
