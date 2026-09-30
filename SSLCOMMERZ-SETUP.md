@@ -86,7 +86,7 @@ Already stubbed out for you. Fill in the two blanks:
 SSLCOMMERZ_STORE_ID=
 SSLCOMMERZ_STORE_PASSWORD=
 SSLCOMMERZ_IS_LIVE=false
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_SITE_URL=http://localhost:3000
 ```
 
 ### Vercel — Settings → Environment Variables
@@ -101,13 +101,13 @@ Every one of these has to be added by hand. Vercel cannot see `.env.local`.
 | `SSLCOMMERZ_STORE_ID` | store id | all |
 | `SSLCOMMERZ_STORE_PASSWORD` | store password | all |
 | `SSLCOMMERZ_IS_LIVE` | `false` on preview, `true` on production | per-environment |
-| `NEXT_PUBLIC_SITE_URL` | `https://www.galleryhamiduzzaman.com` | production |
+| `NEXT_SITE_URL` | `https://www.galleryhamiduzzaman.com` | production |
 
 Two things that will bite otherwise:
 
 - **The three Supabase keys are probably still missing on Vercel.** They only
   exist locally right now, and the build has already broken once over it.
-- `NEXT_PUBLIC_SITE_URL` must have **no trailing slash** and must be the real
+- `NEXT_SITE_URL` must have **no trailing slash** and must be the real
   public origin. It is what the customer is redirected back to after paying;
   a stale value sends paying customers to the wrong host.
 
@@ -146,7 +146,7 @@ npx cloudflared tunnel --url http://localhost:3000
 
 Take the `https://…` URL it prints and:
 
-1. set `NEXT_PUBLIC_SITE_URL` to it in `.env.local`
+1. set `NEXT_SITE_URL` to it in `.env.local`
 2. set the IPN URL in the sandbox panel to `<that URL>/api/payment/ipn`
 3. restart `npm run dev` (env vars are read at boot)
 
@@ -185,7 +185,7 @@ right message, and the basket should still be intact.
 - [ ] Live store approved, credentials in hand
 - [ ] `SSLCOMMERZ_IS_LIVE=true` on Vercel **production only**
 - [ ] `SSLCOMMERZ_STORE_ID` / `SSLCOMMERZ_STORE_PASSWORD` swapped to the live pair
-- [ ] `NEXT_PUBLIC_SITE_URL` = the real domain
+- [ ] `NEXT_SITE_URL` = the real domain
 - [ ] IPN URL set in the **live** panel (it is a separate panel — the sandbox
       setting does not carry over)
 - [ ] Redeployed after changing env vars
