@@ -232,5 +232,11 @@ export function paymentMethod(order: Order): { label: string; issuer: string } {
   const [scheme, ...rest] = raw.split("-");
   const key = scheme.trim().toUpperCase();
   const label = SCHEME_LABEL[key] ?? key.charAt(0) + key.slice(1).toLowerCase();
-  return { label, issuer: rest.join("-").trim() };
+
+  // Wallets come back with the brand repeated on both sides — "BKASH-BKash",
+  // "NAGAD-Nagad" — so echoing the suffix renders "bKash · bKash", which
+  // reads like a fault. Cards put the actual bank there instead
+  // ("VISA-Dutch Bangla"), and that is the half worth showing.
+  const issuer = rest.join("-").trim();
+  return { label, issuer: issuer.toUpperCase() === key ? "" : issuer };
 }

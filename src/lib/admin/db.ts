@@ -129,9 +129,6 @@ export function rowToEnquiry(r: Row): Enquiry {
 }
 
 function rowToOrder(r: Row): Order {
-  // The gateway body is kept whole in sslcommerz_response for dispute evidence;
-  // only the handful of fields the screen reads are lifted out here.
-  const g = (r.sslcommerz_response ?? null) as Row | null;
   return {
     id: str(r.id),
     orderNumber: str(r.order_number),
@@ -143,16 +140,32 @@ function rowToOrder(r: Row): Order {
     paymentStatus: (str(r.payment_status) || "pending") as Order["paymentStatus"],
     fulfillmentStatus: (str(r.fulfillment_status) || "pending") as Order["fulfillmentStatus"],
     tranId: (r.tran_id as string) ?? null,
-    gateway: g
+    // The receipt is read from the columns, not from sslcommerz_response.
+    //
+    // The raw gateway body is still kept in that column for dispute evidence,
+    // but it is stored as { callback, validation } — two levels deep — so
+    // reading card_type off it directly yielded undefined for every order,
+    // and the panel showed a paid order as "Awaiting payment" with a blank
+    // bank reference. The payments migration promoted these out to real
+    // columns precisely so no screen has to parse JSON to render a receipt.
+    //
+    // Keyed off val_id rather than the blob being non-null: a FAILED order
+    // has a stored body too, and treating that as a receipt printed an empty
+    // gateway block instead of the "customer left the gateway" note. val_id
+    // only exists once SSLCommerz's validator has confirmed the money.
+    gateway: r.val_id
       ? {
-          cardType: str(g.card_type),
-          cardIssuer: str(g.card_issuer),
-          bankTranId: str(g.bank_tran_id),
-          valId: str(g.val_id),
-          currency: str(g.currency) || "BDT",
-          storeAmount: num(g.store_amount),
-          riskLevel: str(g.risk_level),
-          paidAt: (g.tran_date as string) ?? null,
+          cardType: str(r.card_type),
+          cardIssuer: str(r.card_issuer),
+          bankTranId: str(r.bank_tran_id),
+          valId: str(r.val_id),
+          currency: str(r.currency) || "BDT",
+          storeAmount: num(r.store_amount),
+          riskLevel: str(r.risk_level),
+          // paid_at is a real timestamptz. tran_date, which this used to read,
+          // is the gateway's own "2026-09-30 20:50:44" — Dhaka local time with
+          // no zone marker, which Date() would have read six hours early.
+          paidAt: (r.paid_at as string) ?? null,
         }
       : null,
     items: Array.isArray(r.order_items)
