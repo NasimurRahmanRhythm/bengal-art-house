@@ -50,6 +50,18 @@
   border-bottom: 1px solid var(--stone-line);
 }
 
+.cardPhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.9s var(--ease-out);
+}
+
+.card:hover .cardPhoto {
+  transform: scale(1.04);
+}
+
 .status {
   position: absolute;
   top: 12px;
@@ -237,6 +249,14 @@
   margin-bottom: 8px;
 }
 
+.rowTitle a {
+  transition: color 0.3s ease;
+}
+
+.rowTitle a:hover {
+  color: var(--oxide);
+}
+
 .rowVenue {
   font-size: 14.5px;
   color: var(--text-muted);
@@ -275,7 +295,75 @@
   background: var(--stone);
 }
 
+.detail {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: clamp(32px, 6vw, 76px);
+  align-items: start;
+}
+
+.detailCover {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--marble-dim);
+  border: 1px solid var(--stone-line);
+}
+
+.detailPhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.detailBlurb {
+  color: var(--text-muted);
+  font-size: 16px;
+  max-width: 62ch;
+  margin-top: 28px;
+}
+
+.detailFacts {
+  display: grid;
+  gap: 20px;
+}
+
+.detailFact {
+  border-top: 1px solid var(--stone-line);
+  padding-top: 12px;
+}
+
+.detailLabel {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 6px;
+}
+
+.detailValue {
+  font-size: 15px;
+}
+
+.detailGallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+  margin-top: clamp(32px, 5vw, 56px);
+}
+
+.detailGallery .detailCover {
+  aspect-ratio: 1 / 1;
+}
+
 @media (max-width: 900px) {
+  .detail {
+    grid-template-columns: 1fr;
+  }
   .row {
     grid-template-columns: 1fr;
     gap: 10px;

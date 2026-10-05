@@ -124,7 +124,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [hydrated, prune]);
 
   const add = useCallback((artwork: Artwork) => {
-    if (artwork.status === "sold") return;
+    // No price means "on request" — there is nothing for checkout to charge.
+    if (artwork.status === "sold" || !(artwork.price > 0)) return;
     setLines((prev) => {
       if (prev.some((l) => l.id === artwork.id)) return prev;
       return [

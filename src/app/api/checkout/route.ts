@@ -102,8 +102,21 @@ export async function POST(request: Request) {
     );
   }
 
+  // Price is optional in the admin panel and an empty one is stored as 0. Each
+  // line is checked, not just the total — otherwise an unpriced piece would
+  // ride through for free alongside a priced one.
+  const unpriced = found.filter((w) => !(Number(w.price) > 0));
+  if (unpriced.length > 0) {
+    return bad(
+      `${unpriced.map((w) => w.title).join(", ")} ${
+        unpriced.length === 1 ? "is" : "are"
+      } priced on request and cannot be bought online. Please remove ${
+        unpriced.length === 1 ? "it" : "them"
+      } and contact the gallery.`,
+    );
+  }
+
   const total = found.reduce((sum, w) => sum + Number(w.price), 0);
-  if (!(total > 0)) return bad("That selection has no price to charge.");
 
   // ---- the order row -------------------------------------------------------
   const tranId = newTranId();

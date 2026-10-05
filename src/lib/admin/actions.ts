@@ -216,6 +216,7 @@ export async function saveExhibition(e: Exhibition): Promise<Exhibition> {
 
   if (error) throw new Error(error.message);
   revalidatePublic(["/", "/exhibitions"]);
+  revalidatePath("/exhibitions/[slug]", "page");
   return rowToExhibition(data);
 }
 
@@ -223,6 +224,7 @@ export async function deleteExhibition(id: string): Promise<void> {
   const { error } = await db().from("exhibitions").delete().eq("id", id);
   if (error) throw new Error(error.message);
   revalidatePublic(["/", "/exhibitions"]);
+  revalidatePath("/exhibitions/[slug]", "page");
 }
 
 // --- governing body --------------------------------------------------------

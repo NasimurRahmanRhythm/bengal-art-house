@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap, prefersReducedMotion } from "@/lib/gsap";
 import { revealOnce } from "@/lib/motion";
@@ -57,7 +58,9 @@ export default function ExhibitionTimeline({ exhibitions }: { exhibitions: Exhib
             <span className={styles.node} aria-hidden="true" />
           </div>
           <div>
-            <h3 className={styles.rowTitle}>{ex.title}</h3>
+            <h3 className={styles.rowTitle}>
+              <Link href={`/exhibitions/${ex.id}`}>{ex.title}</Link>
+            </h3>
             <p className={styles.rowVenue}>{ex.venue}</p>
             <p className={styles.rowBlurb}>{ex.blurb}</p>
           </div>

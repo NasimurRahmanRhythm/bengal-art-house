@@ -70,6 +70,7 @@ export default function QuickView({ artwork, onClose }: Props) {
 
   const sold = artwork?.status === "sold";
   const inCart = artwork ? has(artwork.id) : false;
+  const priced = (artwork?.price ?? 0) > 0;
 
   return (
     <div ref={root} className={styles.qvRoot} aria-hidden={!open}>
@@ -155,22 +156,24 @@ export default function QuickView({ artwork, onClose }: Props) {
 
               <div className={styles.qvFoot} data-qv-line>
                 <span className={`${styles.qvPrice} ${sold ? styles.priceSold : ""}`}>
-                  {formatBDT(artwork.price)}
+                  {priced ? formatBDT(artwork.price) : "Price on request"}
                 </span>
-                <button
-                  type="button"
-                  className={styles.qvAdd}
-                  disabled={sold}
-                  onClick={() => {
-                    if (sold) return;
-                    if (!inCart) add(artwork);
-                    onClose();
-                    openCart();
-                  }}
-                  tabIndex={open ? 0 : -1}
-                >
-                  {sold ? "Sold" : inCart ? "In your selection" : <>Add to selection <PlusIcon size={13} /></>}
-                </button>
+                {(priced || sold) && (
+                  <button
+                    type="button"
+                    className={styles.qvAdd}
+                    disabled={sold}
+                    onClick={() => {
+                      if (sold) return;
+                      if (!inCart) add(artwork);
+                      onClose();
+                      openCart();
+                    }}
+                    tabIndex={open ? 0 : -1}
+                  >
+                    {sold ? "Sold" : inCart ? "In your selection" : <>Add to selection <PlusIcon size={13} /></>}
+                  </button>
+                )}
               </div>
             </div>
           </>

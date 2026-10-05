@@ -38,7 +38,7 @@ export async function POST(request: Request) {
 
   const { data, error } = await db
     .from("artworks")
-    .select("slug, status, published")
+    .select("slug, status, published, price")
     .in("slug", slugs);
 
   if (error) {
@@ -48,10 +48,13 @@ export async function POST(request: Request) {
   }
 
   const purchasable = new Set(
-    (data ?? []).filter((w) => w.published && w.status === "available").map((w) => w.slug),
+    (data ?? [])
+      .filter((w) => w.published && w.status === "available" && Number(w.price) > 0)
+      .map((w) => w.slug),
   );
 
-  // Anything sold, reserved, unpublished or gone from the catalogue entirely.
+  // Anything sold, reserved, unpublished, left without a price, or gone from
+  // the catalogue entirely.
   // 'reserved' is included because /api/checkout refuses it too — leaving one
   // in the basket only buys the customer a rejection at the last step.
   return NextResponse.json({

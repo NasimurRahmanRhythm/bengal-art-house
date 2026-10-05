@@ -59,6 +59,9 @@ export type Exhibition = {
   plate: number;
   blurb: string;
   photo?: string;
+  photos?: string[];
+  entry?: string;
+  hours?: string;
 };
 
 export const EXHIBITIONS: Exhibition[] = [

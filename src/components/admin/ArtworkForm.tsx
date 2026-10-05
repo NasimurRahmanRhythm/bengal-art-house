@@ -38,7 +38,8 @@ export default function ArtworkForm({ artwork }: { artwork?: Artwork }) {
   const [year, setYear] = useState(artwork?.year ?? "");
   const [dimensions, setDimensions] = useState(artwork?.dimensions ?? "");
   const [photos, setPhotos] = useState<string[]>(artwork?.photos ?? []);
-  const [price, setPrice] = useState(artwork ? String(artwork.price) : "");
+  // No price is stored as 0, and shown here as an empty box rather than "0".
+  const [price, setPrice] = useState(artwork?.price ? String(artwork.price) : "");
   const [status, setStatus] = useState<ArtworkStatus>(artwork?.status ?? "available");
   const [touched, setTouched] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -62,11 +63,9 @@ export default function ArtworkForm({ artwork }: { artwork?: Artwork }) {
   const errors = {
     title: !title.trim() ? "A title is required." : "",
     artistId: !artistId ? "Pick the artist." : "",
-    price: !price.trim()
-      ? "A price is required."
-      : Number.isNaN(priceNum) || priceNum < 0
-        ? "Enter a number."
-        : "",
+    // Left empty, the piece is shown as "Price on request" and cannot be
+    // bought online.
+    price: price.trim() && (Number.isNaN(priceNum) || priceNum < 0) ? "Enter a number." : "",
     year:
       !year.trim() || (Number.isInteger(yearNum) && yearNum >= YEAR_MIN && yearNum <= YEAR_MAX)
         ? ""
@@ -185,8 +184,9 @@ export default function ArtworkForm({ artwork }: { artwork?: Artwork }) {
               <div className="a-grid" data-cols="2">
                 <Field
                   label="Price"
+                  optional
                   error={touched ? errors.price : ""}
-                  hint={priceNum > 0 ? formatBDT(priceNum) : "Numbers only"}
+                  hint={priceNum > 0 ? formatBDT(priceNum) : "Leave empty for “Price on request”"}
                 >
                   <div className="a-prefixed">
                     <span className="a-prefix">BDT</span>

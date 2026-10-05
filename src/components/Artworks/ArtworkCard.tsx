@@ -21,6 +21,7 @@ export default function ArtworkCard({ artwork, onQuickView }: Props) {
 
   const sold = artwork.status === "sold";
   const inCart = has(artwork.id);
+  const priced = artwork.price > 0;
 
   useGSAP(
     () => {
@@ -51,7 +52,7 @@ export default function ArtworkCard({ artwork, onQuickView }: Props) {
   );
 
   const handleAdd = () => {
-    if (sold || inCart) return;
+    if (sold || inCart || !priced) return;
     add(artwork);
     if (!prefersReducedMotion() && card.current) {
       gsap.fromTo(
@@ -99,20 +100,24 @@ export default function ArtworkCard({ artwork, onQuickView }: Props) {
 
         <div className={styles.foot}>
           <span className={`${styles.price} ${sold ? styles.priceSold : ""}`}>
-            {formatBDT(artwork.price)}
+            {priced ? formatBDT(artwork.price) : "Price on request"}
           </span>
-          <button
-            type="button"
-            className={`${styles.addBtn} ${inCart ? styles.addBtnDone : ""}`}
-            onClick={handleAdd}
-            disabled={sold}
-            data-cursor="link"
-            aria-label={
-              sold ? `${artwork.title} is sold` : `Add ${artwork.title} to your selection`
-            }
-          >
-            {sold ? "Sold" : inCart ? "Added ✓" : <>Add <PlusIcon size={13} /></>}
-          </button>
+          {/* A piece with no price cannot go through checkout, so it gets no
+              Add button — unless it is sold, where the button is only a label. */}
+          {(priced || sold) && (
+            <button
+              type="button"
+              className={`${styles.addBtn} ${inCart ? styles.addBtnDone : ""}`}
+              onClick={handleAdd}
+              disabled={sold}
+              data-cursor="link"
+              aria-label={
+                sold ? `${artwork.title} is sold` : `Add ${artwork.title} to your selection`
+              }
+            >
+              {sold ? "Sold" : inCart ? "Added ✓" : <>Add <PlusIcon size={13} /></>}
+            </button>
+          )}
         </div>
       </div>
     </article>

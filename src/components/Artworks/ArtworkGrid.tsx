@@ -42,12 +42,18 @@ export default function ArtworkGrid({ artworks, limit, showFilters = false, arti
 
   const inCategory = (a: Artwork, key: string) => key === "all" || a.category === key;
 
+  // A piece with no price ("on request") has nothing to compare, so it drops
+  // out as soon as either end of the range is filled in.
+  const ranged = minPrice.trim() !== "" || maxPrice.trim() !== "";
+
   const visible = useMemo(() => {
     const list = byArtist.filter(
-      (a) => inCategory(a, category) && (rangeInverted || (a.price >= min && a.price <= max))
+      (a) =>
+        inCategory(a, category) &&
+        (rangeInverted || !ranged || (a.price > 0 && a.price >= min && a.price <= max))
     );
     return typeof limit === "number" ? list.slice(0, limit) : list;
-  }, [category, min, max, rangeInverted, limit, byArtist]);
+  }, [category, min, max, ranged, rangeInverted, limit, byArtist]);
 
   useGSAP(
     () => {

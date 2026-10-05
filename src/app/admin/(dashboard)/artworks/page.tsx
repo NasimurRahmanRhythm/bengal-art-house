@@ -136,7 +136,7 @@ export default function ArtworksList() {
                         <td>
                           <span className="a-rowSub">{artist?.name ?? "—"}</span>
                         </td>
-                        <td className="a-num">{formatBDT(w.price)}</td>
+                        <td className="a-num">{w.price > 0 ? formatBDT(w.price) : "—"}</td>
                         <td>
                           <Badge tone={STATUS_TONE[w.status]} dot={w.status === "available"}>
                             {w.status[0].toUpperCase() + w.status.slice(1)}

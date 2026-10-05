@@ -123,6 +123,7 @@ export async function getExhibitions(): Promise<Exhibition[]> {
   return data.map((r, i) => {
     const start = str(r.date_start);
     const end = str(r.date_end) || start;
+    const photos = strs(r.photos);
     // Derived, never stored — a saved status silently goes stale the day a
     // show closes.
     const status: Exhibition["status"] = !start
@@ -143,7 +144,10 @@ export async function getExhibitions(): Promise<Exhibition[]> {
       status,
       plate: Number(r.plate ?? i),
       blurb: str(r.blurb),
-      photo: strs(r.photos)[0],
+      photo: photos[0],
+      photos,
+      entry: str(r.ticket_info),
+      hours: str(r.opening_hours),
     } satisfies Exhibition;
   });
 }

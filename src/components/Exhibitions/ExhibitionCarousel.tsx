@@ -116,9 +116,14 @@ export default function ExhibitionCarousel({ exhibitions }: { exhibitions: Exhib
       <div ref={rail} className={styles.rail} tabIndex={0} aria-label="Exhibitions carousel">
         {exhibitions.map((ex) => (
           <article key={ex.id} className={`${styles.card} plateHost`}>
-            <Link href="/exhibitions" className={styles.cardLink} data-cursor="View">
+            <Link href={`/exhibitions/${ex.id}`} className={styles.cardLink} data-cursor="View">
               <span className={styles.cardPlate}>
-                <ArtPlate variant={ex.plate} />
+                {ex.photo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={ex.photo} alt="" className={styles.cardPhoto} draggable={false} />
+                ) : (
+                  <ArtPlate variant={ex.plate} />
+                )}
                 <span className={`${styles.status} ${styles[ex.status]}`}>
                   {STATUS_LABEL[ex.status]}
                 </span>
