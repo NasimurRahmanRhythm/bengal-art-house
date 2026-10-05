@@ -74,7 +74,14 @@ export default function Footer() {
             <a href={`tel:${SITE.phoneHref}`} className={styles.colLink}>
               {SITE.phone}
             </a>
-            <p className={styles.colText}>{SITE.address}</p>
+            <a
+              href={SITE.mapUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.colLink}
+            >
+              {SITE.address}
+            </a>
             <div className={styles.socials}>
               {SOCIALS.map((s) => {
                 const Icon = SOCIAL_ICONS[s.icon];

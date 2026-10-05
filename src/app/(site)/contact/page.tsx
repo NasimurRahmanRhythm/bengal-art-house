@@ -7,12 +7,14 @@ import ContactBlock from "@/components/sections/ContactBlock";
 import ChiselRule from "@/components/motion/ChiselRule";
 import Parallax from "@/components/motion/Parallax";
 import Reveal from "@/components/motion/Reveal";
+import { ArrowIcon } from "@/components/Icons";
+import { SITE } from "@/data/site";
 import styles from "./contact.module.css";
 
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Visit Gallery Hamiduzzaman in Dhanmondi, Dhaka, or arrange a private viewing of the collection.",
+    "Visit Gallery Hamiduzzaman in Gulshan, Dhaka, or arrange a private viewing of the collection.",
 };
 
 export default function ContactPage() {
@@ -28,7 +30,7 @@ export default function ContactPage() {
         lede="Gallery Hamiduzzaman hosts exhibitions and private cultural events, with proceeds supporting continued documentation of Bangladesh's public sculpture."
         crumbs={[{ label: "Home", href: "/" }]}
         meta={[
-          { label: "District", value: "Dhanmondi" },
+          { label: "District", value: "Gulshan" },
           { label: "Open", value: "Tue–Sat" },
           { label: "Hours", value: "11–19" },
         ]}
@@ -53,6 +55,48 @@ export default function ContactPage() {
 
       <ChiselRule />
 
+      <section className="section" id="visit">
+        <div className="wrap">
+          <SectionHead
+            kicker="Find Us"
+            title={
+              <>
+                In the heart of
+                <br />
+                <span className="em">Gulshan.</span>
+              </>
+            }
+            body="Open Tuesday to Saturday, 11:00 – 19:00. Private viewings outside these hours are arranged by appointment."
+          />
+          <Reveal variant="wipe">
+            <figure className={styles.mapFigure}>
+              <iframe
+                src={SITE.mapEmbedUrl}
+                title={`Map showing ${SITE.name}, ${SITE.address}`}
+                className={styles.map}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
+              <figcaption className={styles.mapCaption}>
+                <span>{SITE.address}</span>
+                <a
+                  href={SITE.mapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.mapLink}
+                  data-cursor="link"
+                >
+                  Get directions <ArrowIcon size={13} />
+                </a>
+              </figcaption>
+            </figure>
+          </Reveal>
+        </div>
+      </section>
+
+      <ChiselRule />
+
       <section className="section">
         <div className="wrap">
           <Reveal variant="wipe">
@@ -68,7 +112,7 @@ export default function ContactPage() {
                 />
               </Parallax>
               <figcaption className={styles.roomCaption}>
-                <span>The main hall, Dhanmondi</span>
+                <span>The main hall, Gulshan</span>
                 <span>Open Tuesday to Saturday</span>
               </figcaption>
             </figure>

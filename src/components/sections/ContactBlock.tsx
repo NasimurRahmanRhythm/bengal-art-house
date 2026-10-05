@@ -16,7 +16,7 @@ const SUBJECTS = [
 ];
 
 const DETAILS = [
-  { label: "Gallery", value: SITE.address },
+  { label: "Gallery", value: SITE.address, href: SITE.mapUrl, external: true },
   { label: "Email", value: SITE.email, href: `mailto:${SITE.email}` },
   { label: "Telephone", value: SITE.phone, href: `tel:${SITE.phoneHref}` },
   { label: "Opening hours", value: "Tue – Sat, 11:00 – 19:00" },
@@ -45,7 +45,11 @@ export default function ContactBlock() {
           <div key={d.label} className={styles.detailRow}>
             <span className={styles.detailLabel}>{d.label}</span>
             {d.href ? (
-              <a href={d.href} className={styles.detailValue}>
+              <a
+                href={d.href}
+                className={styles.detailValue}
+                {...(d.external && { target: "_blank", rel: "noopener noreferrer" })}
+              >
                 {d.value}
               </a>
             ) : (

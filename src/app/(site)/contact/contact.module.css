@@ -31,3 +31,49 @@
   text-transform: uppercase;
   color: var(--text-muted);
 }
+
+.mapFigure {
+  border: 1px solid var(--stone-line);
+  background: var(--marble-dim);
+}
+
+/* Desaturated so the map sits with the gallery's stone palette. */
+.map {
+  display: block;
+  width: 100%;
+  height: clamp(320px, 42vw, 480px);
+  border: 0;
+  filter: grayscale(1) contrast(1.05);
+  transition: filter 0.5s var(--ease-out);
+}
+
+.mapFigure:hover .map {
+  filter: grayscale(0);
+}
+
+.mapCaption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 14px 20px;
+  border-top: 1px solid var(--stone-line);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.mapLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  transition: color 0.3s var(--ease-out);
+}
+
+.mapLink:hover {
+  color: var(--oxide);
+}

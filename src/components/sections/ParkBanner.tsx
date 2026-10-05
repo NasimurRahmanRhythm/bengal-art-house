@@ -51,7 +51,7 @@ export default function ParkBanner() {
         </Reveal>
         <Reveal delay={0.25}>
           <Magnetic>
-            <Link href="/contact" className={styles.parkBtn} data-cursor="link">
+            <Link href="/contact#visit" className={styles.parkBtn} data-cursor="link">
               Plan a visit <ArrowIcon size={15} />
             </Link>
           </Magnetic>

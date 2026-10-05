@@ -3,9 +3,13 @@ export const SITE = {
   shortName: "GH",
   tagline: "Representing Bangladeshi sculpture, drawing & public art",
   email: "info@galleryhamiduzzaman.example",
-  phone: "+880 0000 000000",
-  phoneHref: "+8800000000000",
-  address: "Dhanmondi, Dhaka, Bangladesh",
+  phone: "+880 1817-030100",
+  phoneHref: "+8801817030100",
+  address: "House 02, Rd 104, Gulshan 2, Dhaka 1212",
+  // The gallery's Google Maps listing, opened by every "Get directions" link.
+  mapUrl: "https://maps.google.com/?ftid=0x3755c700229ff71f:0xa2ffeb2be3e73883",
+  mapEmbedUrl:
+    "https://maps.google.com/maps?q=House%2002%2C%20Road%20104%2C%20Gulshan%202%2C%20Dhaka%201212&z=16&output=embed",
   established: "Dhaka, Bangladesh — Est. 2026",
 } as const;
 
