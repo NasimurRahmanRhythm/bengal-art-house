@@ -113,7 +113,7 @@ export function renderInvoice(order: InvoiceOrder): Buffer {
   y += 14;
   doc.text(SITE.address, MARGIN, at(y + 8), { size: 8.5, gray: 0.42 });
   y += 12;
-  doc.text(`${SITE.email}  ·  ${SITE.phone}`.replace("·", "|"), MARGIN, at(y + 8), {
+  doc.text(SITE.phone, MARGIN, at(y + 8), {
     size: 8.5,
     gray: 0.42,
   });

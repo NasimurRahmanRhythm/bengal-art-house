@@ -266,7 +266,6 @@ export default function Navbar() {
                   <Link href="/signup">Sign up</Link>
                 </div>
               ))}
-            <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
             <a href={`tel:${SITE.phoneHref}`}>{SITE.phone}</a>
             <div className={styles.panelSocials}>
               {SOCIALS.map((s) => {

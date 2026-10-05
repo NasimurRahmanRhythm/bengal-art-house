@@ -2,7 +2,6 @@ export const SITE = {
   name: "Gallery Hamiduzzaman",
   shortName: "GH",
   tagline: "Representing Bangladeshi sculpture, drawing & public art",
-  email: "info@galleryhamiduzzaman.example",
   phone: "+880 1817-030100",
   phoneHref: "+8801817030100",
   address: "House 02, Rd 104, Gulshan 2, Dhaka 1212",

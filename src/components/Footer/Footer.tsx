@@ -68,9 +68,6 @@ export default function Footer() {
 
           <Reveal className={styles.col} stagger={0.08}>
             <span className={styles.colLabel}>Contact</span>
-            <a href={`mailto:${SITE.email}`} className={styles.colLink}>
-              {SITE.email}
-            </a>
             <a href={`tel:${SITE.phoneHref}`} className={styles.colLink}>
               {SITE.phone}
             </a>

@@ -17,7 +17,6 @@ const SUBJECTS = [
 
 const DETAILS = [
   { label: "Gallery", value: SITE.address, href: SITE.mapUrl, external: true },
-  { label: "Email", value: SITE.email, href: `mailto:${SITE.email}` },
   { label: "Telephone", value: SITE.phone, href: `tel:${SITE.phoneHref}` },
   { label: "Opening hours", value: "Tue – Sat, 11:00 – 19:00" },
 ];
