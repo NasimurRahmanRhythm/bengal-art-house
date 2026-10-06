@@ -30,7 +30,7 @@
   --text-muted-light: #b7b0a2;
 
   --font-display: var(--font-fraunces), "Fraunces", Georgia, serif;
-  --font-body: var(--font-work-sans), "Work Sans", system-ui, sans-serif;
+  --font-body: var(--font-dm-sans), "DM Sans", "Kalpurush", sans-serif;
   --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
 
   --wrap: 1240px;

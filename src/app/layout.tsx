@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, IBM_Plex_Mono, Work_Sans } from "next/font/google";
+import { DM_Sans, Fraunces, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -10,10 +10,10 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
-const workSans = Work_Sans({
+const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
-  variable: "--font-work-sans",
+  variable: "--font-dm-sans",
   display: "swap",
 });
 
@@ -56,7 +56,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${workSans.variable} ${plexMono.variable}`}
+      className={`${fraunces.variable} ${dmSans.variable} ${plexMono.variable}`}
       suppressHydrationWarning
     >
       <body>{children}</body>
