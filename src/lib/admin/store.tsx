@@ -12,6 +12,7 @@ import type {
   GoverningMember,
   Order,
   PressRelease,
+  Refund,
 } from "./types";
 
 // The dashboard's data layer.
@@ -46,6 +47,7 @@ type Ctx = {
   deleteEnquiry: (id: string) => Promise<void>;
   setPaymentStatus: (id: string, status: Order["paymentStatus"]) => Promise<void>;
   setFulfillmentStatus: (id: string, status: Order["fulfillmentStatus"]) => Promise<void>;
+  recordRefund: (order: Order, refund: Omit<Refund, "at">, relist: boolean) => Promise<void>;
   deleteOrder: (id: string) => Promise<void>;
   savePost: (p: BlogPost) => Promise<void>;
   deletePost: (id: string) => Promise<void>;
@@ -199,6 +201,26 @@ export function AdminStoreProvider({ children }: { children: React.ReactNode }) 
           () => patch("orders", id, { fulfillmentStatus: s, updatedAt: new Date().toISOString() }),
           () => api.setFulfillmentStatus(id, s),
         ),
+      recordRefund: (order, refund, relist) =>
+        commit(
+          () => {
+            const now = new Date().toISOString();
+            patch("orders", order.id, {
+              paymentStatus: "refunded",
+              refund: { ...refund, at: now },
+              updatedAt: now,
+            });
+            if (relist) {
+              for (const item of order.items) {
+                patch("artworks", item.artworkId, { status: "available" });
+              }
+            }
+          },
+          async () => {
+            const saved = await api.recordRefund(order.id, refund, relist);
+            patch("orders", order.id, { refund: saved });
+          },
+        ),
       deleteOrder: (id) => commit(() => drop("orders", id), () => api.deleteOrder(id)),
 
       savePost: (p) => upsert("posts", p, api.savePost),
@@ -247,9 +269,17 @@ export function useCounts() {
       toFulfil: data.orders.filter(
         (o) => o.paymentStatus === "paid" && o.fulfillmentStatus !== "completed",
       ).length,
-      revenue: data.orders
-        .filter((o) => o.paymentStatus === "paid")
-        .reduce((sum, o) => sum + o.totalAmount, 0),
+      // Net of refunds: a partly refunded order still counts for what the
+      // gallery kept after the Return Policy deductions.
+      revenue: data.orders.reduce(
+        (sum, o) =>
+          o.paymentStatus === "paid"
+            ? sum + o.totalAmount
+            : o.paymentStatus === "refunded"
+              ? sum + o.totalAmount - (o.refund?.amount ?? o.totalAmount)
+              : sum,
+        0,
+      ),
       posts: data.posts.length,
       drafts: data.posts.filter((p) => !p.published).length,
       press: data.pressReleases.length,

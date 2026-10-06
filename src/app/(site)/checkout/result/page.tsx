@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-type Status = "success" | "failed" | "cancelled" | "pending";
+type Status = "success" | "failed" | "cancelled" | "pending" | "refunded";
 
 const COPY: Record<
   Status,
@@ -34,6 +34,11 @@ const COPY: Record<
     lead: "You left the gateway before paying, and nothing has been charged. Your selection is still waiting whenever you want to come back to it.",
     tone: "neutral",
   },
+  refunded: {
+    title: "This order was refunded",
+    lead: "The gallery has refunded this order through SSLCommerz. The details are in your profile; depending on your bank or wallet, the money can take a few working days to appear.",
+    tone: "neutral",
+  },
   pending: {
     title: "Confirming your payment",
     lead: "We have not had final word from the gateway yet. If money has left your account the order will settle on its own within a few minutes — this page is safe to leave, and your profile will show the result.",
@@ -45,6 +50,7 @@ function readStatus(raw: string | undefined): Status {
   if (raw === "success" || raw === "paid") return "success";
   if (raw === "failed") return "failed";
   if (raw === "cancelled") return "cancelled";
+  if (raw === "refunded") return "refunded";
   return "pending";
 }
 

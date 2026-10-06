@@ -22,6 +22,7 @@ import type {
   GoverningMember,
   Order,
   PressRelease,
+  Refund,
 } from "./types";
 
 // Every write in the dashboard goes through this file.
@@ -279,6 +280,74 @@ export async function setFulfillmentStatus(
 ): Promise<void> {
   const { error } = await db().from("orders").update({ fulfillment_status: s }).eq("id", id);
   if (error) throw new Error(error.message);
+}
+
+/** Records a refund already made in the SSLCommerz merchant panel.
+ *
+ *  Only a paid order can be refunded, and only once — the update is
+ *  conditioned on payment_status still being 'paid', so a second click (or a
+ *  second admin) finds nothing to change rather than overwriting the first
+ *  record. `relist` puts the order's works back on sale; it is a choice
+ *  because a piece that came back broken should not go straight back up. */
+export async function recordRefund(
+  id: string,
+  refund: Omit<Refund, "at">,
+  relist: boolean,
+): Promise<Refund> {
+  const client = db();
+
+  const { data: order, error: readError } = await client
+    .from("orders")
+    .select("total_amount, payment_status, order_items(artwork_id)")
+    .eq("id", id)
+    .maybeSingle();
+  if (readError) throw new Error(readError.message);
+  if (!order) throw new Error("That order no longer exists.");
+  if (order.payment_status !== "paid") throw new Error("Only a paid order can be refunded.");
+
+  const amount = Math.round(refund.amount * 100) / 100;
+  if (!(amount > 0) || amount > Number(order.total_amount)) {
+    throw new Error("The refund must be more than zero and no more than the order total.");
+  }
+
+  const at = new Date().toISOString();
+  const { data: updated, error } = await client
+    .from("orders")
+    .update({
+      payment_status: "refunded",
+      refund_amount: amount,
+      refund_reason: refund.reason.trim() || null,
+      refund_ref: refund.ref.trim() || null,
+      refunded_at: at,
+    })
+    .eq("id", id)
+    .eq("payment_status", "paid")
+    .select("id");
+  if (error) throw new Error(error.message);
+  if (!updated?.length) throw new Error("This order was changed by someone else. Reload and check.");
+
+  if (relist) {
+    const ids = ((order.order_items ?? []) as { artwork_id: string | null }[])
+      .map((i) => i.artwork_id)
+      .filter((v): v is string => Boolean(v));
+    if (ids.length) {
+      const { error: relistError } = await client
+        .from("artworks")
+        .update({ status: "available" })
+        .in("id", ids);
+      // The refund is recorded either way; a piece left marked sold is for the
+      // admin to fix on the Artworks screen, not a reason to lose the record.
+      if (relistError) throw new Error(`Refund recorded, but the works could not be relisted: ${relistError.message}`);
+      revalidatePublic(["/", "/artworks"]);
+    }
+  }
+
+  return {
+    amount,
+    reason: refund.reason.trim(),
+    ref: refund.ref.trim(),
+    at,
+  };
 }
 
 export async function deleteOrder(id: string): Promise<void> {

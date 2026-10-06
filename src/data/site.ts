@@ -71,6 +71,12 @@ export const FOOTER_EXPLORE = [
   { label: "About the Gallery", href: "/about" },
 ];
 
+export const FOOTER_LEGAL = [
+  { label: "Terms & Conditions", href: "/terms" },
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Return Policy", href: "/refund-policy" },
+];
+
 export const MATERIALS = [
   "Bronze",
   "Granite",

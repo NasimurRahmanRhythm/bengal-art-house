@@ -141,6 +141,14 @@ function rowToOrder(r: Row): Order {
     fulfillmentStatus: (str(r.fulfillment_status) || "pending") as Order["fulfillmentStatus"],
     tranId: (r.tran_id as string) ?? null,
     settledBy: (r.settled_by as Order["settledBy"]) ?? null,
+    refund: r.refunded_at
+      ? {
+          amount: num(r.refund_amount),
+          reason: str(r.refund_reason),
+          ref: str(r.refund_ref),
+          at: str(r.refunded_at),
+        }
+      : null,
 
     // The receipt is read from the columns, not from sslcommerz_response.
     //

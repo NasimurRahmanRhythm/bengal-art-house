@@ -48,7 +48,17 @@ export default async function AccountPage() {
   ]);
 
   const paid = orders.filter((o) => o.paymentStatus === "paid");
-  const spent = paid.reduce((sum, o) => sum + o.totalAmount, 0);
+  // What the customer is actually out of pocket: a partly refunded order
+  // still counts for the part the gallery kept.
+  const spent = orders.reduce(
+    (sum, o) =>
+      o.paymentStatus === "paid"
+        ? sum + o.totalAmount
+        : o.paymentStatus === "refunded"
+          ? sum + o.totalAmount - (o.refundAmount ?? o.totalAmount)
+          : sum,
+    0,
+  );
   const works = paid.reduce((sum, o) => sum + o.items.length, 0);
 
   return (

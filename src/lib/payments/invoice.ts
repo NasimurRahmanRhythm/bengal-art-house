@@ -30,6 +30,8 @@ export type InvoiceOrder = {
   valId: string | null;
   cardType: string | null;
   cardIssuer: string | null;
+  refundAmount: number | null;
+  refundedAt: string | null;
   items: InvoiceItem[];
 };
 
@@ -62,6 +64,7 @@ const STATUS_LABEL: Record<string, string> = {
   pending: "AWAITING PAYMENT",
   failed: "PAYMENT FAILED",
   cancelled: "CANCELLED",
+  refunded: "REFUNDED",
 };
 
 /** Narrows an order row down to just what the invoice prints.
@@ -89,6 +92,8 @@ export function invoiceFromOrder(order: CustomerOrder): InvoiceOrder {
     valId: order.valId,
     cardType: order.cardType,
     cardIssuer: order.cardIssuer,
+    refundAmount: order.refundAmount,
+    refundedAt: order.refundedAt,
     items: order.items.map((i) => ({ title: i.title, artist: i.artist, price: i.price })),
   };
 }
@@ -151,7 +156,10 @@ export function renderInvoice(order: InvoiceOrder): Buffer {
     ["Transaction", order.tranId ?? "-"],
   ];
   if (order.bankTranId) right.push(["Bank ref", order.bankTranId]);
-  if (order.paidAt && order.paymentStatus === "paid") right.push(["Paid on", stamp(order.paidAt)]);
+  if (order.paidAt && (order.paymentStatus === "paid" || order.paymentStatus === "refunded"))
+    right.push(["Paid on", stamp(order.paidAt)]);
+  if (order.paymentStatus === "refunded" && order.refundedAt)
+    right.push(["Refunded on", stamp(order.refundedAt)]);
 
   const rows = Math.max(left.length, right.length);
   for (let i = 0; i < rows; i++) {
@@ -210,11 +218,25 @@ export function renderInvoice(order: InvoiceOrder): Buffer {
   y += 12;
   doc.line(RIGHT - 150, at(y), RIGHT, at(y), 0.3, 1);
 
+  if (order.paymentStatus === "refunded" && order.refundAmount != null) {
+    y += 20;
+    doc.textRight("REFUNDED", RIGHT - 150, at(y + 2), { size: 8.5, font: "bold", gray: 0.45 });
+    doc.textRight(`- ${money(order.refundAmount, order.currency)}`, RIGHT, at(y), { size: 10.5 });
+    y += 18;
+    doc.textRight("NET PAID", RIGHT - 150, at(y + 2), { size: 8.5, font: "bold", gray: 0.45 });
+    doc.textRight(money(order.totalAmount - order.refundAmount, order.currency), RIGHT, at(y), {
+      size: 10.5,
+      font: "bold",
+    });
+  }
+
   y += 34;
   doc.text(
     order.paymentStatus === "paid"
       ? "Payment received in full. Thank you."
-      : "This invoice is not yet settled.",
+      : order.paymentStatus === "refunded"
+        ? "This order has been refunded through SSLCommerz."
+        : "This invoice is not yet settled.",
     MARGIN,
     at(y),
     { size: 9.5, gray: 0.3 },
@@ -226,13 +248,15 @@ export function renderInvoice(order: InvoiceOrder): Buffer {
     at(y),
     { size: 8.5, gray: 0.5 },
   );
-  y += 12;
-  doc.text(
-    "The gallery will be in touch about delivery or collection of the work.",
-    MARGIN,
-    at(y),
-    { size: 8.5, gray: 0.5 },
-  );
+  if (order.paymentStatus !== "refunded") {
+    y += 12;
+    doc.text(
+      "The gallery will be in touch about delivery or collection of the work.",
+      MARGIN,
+      at(y),
+      { size: 8.5, gray: 0.5 },
+    );
+  }
 
   // ---- footer, pinned to the bottom ---------------------------------------
   doc.line(MARGIN, at(H - 62), RIGHT, at(H - 62), 0.88);
@@ -255,7 +279,11 @@ export function renderInvoice(order: InvoiceOrder): Buffer {
 /** SSLCommerz reports the instrument as one hyphenated string, e.g.
     "BKASH-bKash" or "VISA-Dutch Bangla Bank". The invoice wants it readable. */
 function methodLabel(order: InvoiceOrder): string {
-  if (!order.cardType) return order.paymentStatus === "paid" ? "Online payment" : "Not taken";
+  if (!order.cardType) {
+    return order.paymentStatus === "paid" || order.paymentStatus === "refunded"
+      ? "Online payment"
+      : "Not taken";
+  }
   const [scheme, ...rest] = order.cardType.split("-");
   const issuer = order.cardIssuer || rest.join("-");
   const brand = scheme.trim();

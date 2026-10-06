@@ -15,7 +15,7 @@ export type Category = (typeof CATEGORIES)[number];
 export const YEAR_MAX = new Date().getFullYear();
 export const YEAR_MIN = YEAR_MAX - 300;
 export type EnquiryStatus = "new" | "read";
-export type PaymentStatus = "pending" | "paid" | "failed";
+export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
 export type FulfillmentStatus = "pending" | "shipped" | "completed";
 
 export type Fact = { label: string; value: string };
@@ -110,6 +110,15 @@ export type GatewayReceipt = {
   paidAt: string | null;
 };
 
+/** The gallery's record of money sent back. The refund itself is made in the
+    SSLCommerz merchant panel; this is only what the admin wrote down after. */
+export type Refund = {
+  amount: number; // may be under the order total — Return Policy deductions
+  reason: string;
+  ref: string; // SSLCommerz's refund reference, when one was given
+  at: string;
+};
+
 export type Order = {
   id: string;
   orderNumber: string;
@@ -125,6 +134,7 @@ export type Order = {
   /** Which route last moved this order off pending. Null for orders written
       before the column existed — see SETTLED_BY_LABEL below. */
   settledBy: SettledBy | null;
+  refund: Refund | null;
   items: OrderItem[];
   createdAt: string;
   updatedAt: string;

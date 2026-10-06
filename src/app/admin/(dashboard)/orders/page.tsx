@@ -18,6 +18,7 @@ const FILTERS: { value: PaymentStatus | "all"; label: string }[] = [
   { value: "paid", label: "Paid" },
   { value: "pending", label: "Awaiting payment" },
   { value: "failed", label: "Failed" },
+  { value: "refunded", label: "Refunded" },
 ];
 
 export default function Orders() {
@@ -48,6 +49,7 @@ export default function Orders() {
       paid: data.orders.filter((o) => o.paymentStatus === "paid").length,
       pending: data.orders.filter((o) => o.paymentStatus === "pending").length,
       failed: data.orders.filter((o) => o.paymentStatus === "failed").length,
+      refunded: data.orders.filter((o) => o.paymentStatus === "refunded").length,
     }),
     [data.orders],
   );
@@ -67,7 +69,10 @@ export default function Orders() {
             <span className="a-statValue" style={{ fontSize: 21 }}>
               {formatBDT(c.revenue)}
             </span>
-            <span className="a-statNote">{counts.paid} paid orders</span>
+            <span className="a-statNote">
+              {counts.paid} paid orders
+              {counts.refunded > 0 && `, net of ${counts.refunded} refunded`}
+            </span>
           </div>
           <div className="a-stat">
             <span className="a-statLabel">To send out</span>
@@ -204,7 +209,8 @@ export default function Orders() {
 
         <p className="a-hint">
           Orders are created by the gateway, never by hand — the only things editable here are the
-          gallery&apos;s own steps: marking a paid order shipped or completed.
+          gallery&apos;s own steps: marking a paid order shipped or completed, and recording a refund
+          once it has been sent from the SSLCommerz merchant panel.
         </p>
       </div>
 

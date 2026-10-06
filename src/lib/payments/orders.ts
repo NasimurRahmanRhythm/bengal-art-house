@@ -22,7 +22,7 @@ export type CustomerOrder = {
   orderNumber: string;
   createdAt: string;
   paidAt: string | null;
-  paymentStatus: "pending" | "paid" | "failed" | "cancelled";
+  paymentStatus: "pending" | "paid" | "failed" | "cancelled" | "refunded";
   fulfillmentStatus: "pending" | "shipped" | "completed";
   customerName: string;
   email: string;
@@ -38,6 +38,8 @@ export type CustomerOrder = {
   valId: string | null;
   cardType: string | null;
   cardIssuer: string | null;
+  refundAmount: number | null;
+  refundedAt: string | null;
   items: OrderLine[];
 };
 
@@ -45,6 +47,7 @@ const ORDER_COLUMNS = `
   id, order_number, created_at, paid_at, payment_status, fulfillment_status,
   customer_name, email, phone, address, city, postcode, country,
   total_amount, currency, tran_id, bank_tran_id, val_id, card_type, card_issuer,
+  refund_amount, refunded_at,
   order_items (
     id, price_at_purchase, title_at_purchase, artist_at_purchase,
     artworks ( title, photo_url, medium, year, artists ( name ) )
@@ -109,6 +112,8 @@ function shape(row: RawOrder): CustomerOrder {
     valId: (row.val_id as string) ?? null,
     cardType: (row.card_type as string) ?? null,
     cardIssuer: (row.card_issuer as string) ?? null,
+    refundAmount: row.refund_amount == null ? null : Number(row.refund_amount),
+    refundedAt: (row.refunded_at as string) ?? null,
     items,
   };
 }
@@ -183,6 +188,7 @@ export const PAYMENT_LABEL: Record<CustomerOrder["paymentStatus"], string> = {
   pending: "Awaiting payment",
   failed: "Payment failed",
   cancelled: "Cancelled",
+  refunded: "Refunded",
 };
 
 export const FULFILLMENT_LABEL: Record<CustomerOrder["fulfillmentStatus"], string> = {

@@ -4,7 +4,7 @@ import { useRef } from "react";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap, prefersReducedMotion } from "@/lib/gsap";
-import { FOOTER_EXPLORE, SITE, SOCIALS } from "@/data/site";
+import { FOOTER_EXPLORE, FOOTER_LEGAL, SITE, SOCIALS } from "@/data/site";
 import { SOCIAL_ICONS, ArrowIcon } from "@/components/Icons";
 import Reveal from "@/components/motion/Reveal";
 import SplitHeading from "@/components/motion/SplitHeading";
@@ -123,6 +123,13 @@ export default function Footer() {
           <span>
             © {new Date().getFullYear()} {SITE.name}
           </span>
+          <nav className={styles.legal} aria-label="Legal">
+            {FOOTER_LEGAL.map((l) => (
+              <Link key={l.href} href={l.href}>
+                {l.label}
+              </Link>
+            ))}
+          </nav>
           <span>{SITE.tagline}</span>
         </div>
       </div>

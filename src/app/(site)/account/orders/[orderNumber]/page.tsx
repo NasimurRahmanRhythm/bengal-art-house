@@ -137,6 +137,15 @@ export default async function OrderPage({
                 <dt>Gateway</dt>
                 <dd>SSLCommerz</dd>
               </div>
+              {order.paymentStatus === "refunded" && order.refundAmount != null && (
+                <div className={styles.summaryRow}>
+                  <dt>Refunded</dt>
+                  <dd>
+                    {formatBDT(order.refundAmount)}
+                    {order.refundedAt && <> · {dateTime(order.refundedAt)}</>}
+                  </dd>
+                </div>
+              )}
               {order.tranId && (
                 <div className={styles.summaryRow}>
                   <dt>Transaction</dt>
@@ -171,6 +180,13 @@ export default async function OrderPage({
                 {place || <em className={styles.detailEmpty}>Collection from the gallery</em>}
               </span>
             </div>
+
+            {order.paymentStatus === "refunded" && (
+              <p className={styles.pendingNote}>
+                This order has been refunded through SSLCommerz. Depending on your bank or wallet,
+                it can take a few working days for the money to appear in your account.
+              </p>
+            )}
 
             {order.paymentStatus === "pending" && (
               <p className={styles.pendingNote}>
@@ -211,7 +227,10 @@ export default async function OrderPage({
             </ul>
 
             <div className={styles.grandRow}>
-              <span>Total {order.paymentStatus === "paid" ? "paid" : "due"}</span>
+              <span>
+                Total{" "}
+                {order.paymentStatus === "paid" || order.paymentStatus === "refunded" ? "paid" : "due"}
+              </span>
               <strong>{formatBDT(order.totalAmount)}</strong>
             </div>
           </div>

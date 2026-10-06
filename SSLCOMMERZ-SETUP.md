@@ -264,6 +264,11 @@ the work, and the second sees the order already paid and does nothing.
    is already configured for auth codes, so this is a small addition when you
    want it.
 
-4. **No refund flow.** SSLCommerz supports refunds through their API; nothing
-   in the app calls it. Refunds are done from the merchant panel by hand for
-   now, and the order row will still read `paid` afterwards.
+4. **Refunds are sent by hand.** SSLCommerz supports refunds through their API;
+   nothing in the app calls it. Send the money back from the merchant panel,
+   then open the order in the admin panel and use **Record refund** — enter the
+   amount sent back (it can be less than the total, for the Return Policy
+   deductions), the SSLCommerz refund reference, and whether to put the works
+   back on sale. The order then reads `refunded` in the admin panel, in the
+   customer's profile and on the invoice. Run
+   `supabase/migrations/20261006000000_refunds.sql` first.

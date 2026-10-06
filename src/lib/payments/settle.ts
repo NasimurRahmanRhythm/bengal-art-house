@@ -80,7 +80,11 @@ export async function settlePayment(
     return { outcome: "unknown", orderNumber: null, reason: `no order for tran_id ${tranId}` };
   }
 
-  if (order.payment_status === "paid") {
+  // A refunded order is finished too. Without this a late or replayed
+  // callback would sail through validation (SSLCommerz still says VALIDATED),
+  // fail to update the row, and then mark the works sold again — undoing an
+  // admin's choice to put them back on sale.
+  if (order.payment_status === "paid" || order.payment_status === "refunded") {
     return { outcome: "already-paid", orderNumber: order.order_number };
   }
 

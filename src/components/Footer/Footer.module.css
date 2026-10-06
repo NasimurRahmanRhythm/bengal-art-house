@@ -177,6 +177,21 @@
   color: var(--stone);
 }
 
+.legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+}
+
+.legal a {
+  color: inherit;
+  transition: color 0.3s var(--ease-out);
+}
+
+.legal a:hover {
+  color: var(--marble);
+}
+
 @media (max-width: 900px) {
   .top {
     grid-template-columns: 1fr 1fr;

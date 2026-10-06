@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Badge, ConfirmDelete, DetailRow, Modal } from "./ui";
+import { Badge, ConfirmDelete, DetailRow, Field, Modal, Switch } from "./ui";
 import { CopyIcon, DownloadIcon, MailIcon } from "./Icons";
 import { useAdmin, useArtistMap, useArtworkMap } from "@/lib/admin/store";
 import { formatBDT, formatDateTime } from "@/lib/admin/slug";
@@ -20,6 +20,7 @@ export const PAYMENT_TONE = {
   pending: "warn",
   failed: "muted",
   cancelled: "muted",
+  refunded: "muted",
 } as const;
 
 export const PAYMENT_LABEL = {
@@ -27,6 +28,7 @@ export const PAYMENT_LABEL = {
   pending: "Awaiting payment",
   failed: "Failed",
   cancelled: "Cancelled",
+  refunded: "Refunded",
 } as const;
 
 export const FULFILLMENT_LABEL = {
@@ -64,12 +66,118 @@ function Ref({ value }: { value: string }) {
   );
 }
 
+/** The gallery's note of a refund already sent from the SSLCommerz merchant
+    panel. Nothing here moves money — the hint says so, so nobody presses it
+    expecting the customer to be paid back. */
+function RefundForm({ order, onDone }: { order: Order; onDone: () => void }) {
+  const { recordRefund } = useAdmin();
+  const [amount, setAmount] = useState(String(order.totalAmount));
+  const [ref, setRef] = useState("");
+  const [reason, setReason] = useState("");
+  const [relist, setRelist] = useState(false);
+  const [touched, setTouched] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const value = Number(amount.replace(/,/g, ""));
+  const amountError =
+    !amount.trim() || !Number.isFinite(value) || value <= 0
+      ? "Enter the amount sent back."
+      : value > order.totalAmount
+        ? `No more than the ${formatBDT(order.totalAmount)} charged.`
+        : "";
+
+  const kept = !amountError && value < order.totalAmount ? order.totalAmount - value : 0;
+
+  async function submit() {
+    setTouched(true);
+    if (amountError) return;
+    setSaving(true);
+    await recordRefund(order, { amount: value, ref, reason }, relist);
+    setSaving(false);
+    onDone();
+  }
+
+  return (
+    <section className="a-detailBlock">
+      <h3 className="a-detailHead">Record a refund</h3>
+      <p className="a-hint" style={{ marginBottom: 14 }}>
+        Send the money back from the SSLCommerz merchant panel first. This only records it here,
+        so the order, the customer&apos;s profile and the invoice show it as refunded.
+      </p>
+
+      <div className="a-grid">
+        <div className="a-grid" data-cols="2">
+          <Field
+            label="Amount refunded"
+            error={touched ? amountError : ""}
+            hint={
+              kept
+                ? `${formatBDT(kept)} kept under the Return Policy deductions.`
+                : "The full amount charged."
+            }
+          >
+            <div className="a-prefixed">
+              <span className="a-prefix">BDT</span>
+              <input
+                className="a-input"
+                inputMode="decimal"
+                value={amount}
+                aria-invalid={touched && !!amountError}
+                onChange={(e) => setAmount(e.target.value)}
+              />
+            </div>
+          </Field>
+          <Field label="SSLCommerz refund reference" optional>
+            <input className="a-input" value={ref} onChange={(e) => setRef(e.target.value)} />
+          </Field>
+        </div>
+
+        <Field label="Reason" optional hint="For the gallery's records. The customer does not see it.">
+          <textarea
+            className="a-textarea"
+            rows={2}
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+          />
+        </Field>
+
+        <Switch
+          checked={relist}
+          onChange={setRelist}
+          label={
+            order.items.length === 1
+              ? "Put the work back on sale"
+              : `Put all ${order.items.length} works back on sale`
+          }
+        />
+
+        <div style={{ display: "flex", gap: 8 }}>
+          <button
+            type="button"
+            className="a-btn"
+            data-size="sm"
+            data-variant="danger"
+            disabled={saving}
+            onClick={submit}
+          >
+            {saving ? "Saving…" : "Mark as refunded"}
+          </button>
+          <button type="button" className="a-btn" data-size="sm" disabled={saving} onClick={onDone}>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function OrderDetails({ order, onClose }: { order: Order; onClose: () => void }) {
   const { setPaymentStatus, setFulfillmentStatus, deleteOrder } = useAdmin();
   const artworks = useArtworkMap();
   const artists = useArtistMap();
   const method = paymentMethod(order);
   const g = order.gateway;
+  const [refunding, setRefunding] = useState(false);
 
   // Fulfillment only ever moves forward, so one button is enough — it always
   // offers the next step rather than a status picker to think about.
@@ -106,7 +214,9 @@ export default function OrderDetails({ order, onClose }: { order: Order; onClose
               gallery sends when someone asks to pay by other means, and the
               PDF prints AWAITING PAYMENT across it so it cannot be mistaken
               for a receipt. */}
-          {(order.paymentStatus === "paid" || order.paymentStatus === "pending") && (
+          {(order.paymentStatus === "paid" ||
+            order.paymentStatus === "pending" ||
+            order.paymentStatus === "refunded") && (
             <a
               className="a-btn"
               data-size="sm"
@@ -126,6 +236,12 @@ export default function OrderDetails({ order, onClose }: { order: Order; onClose
               onClick={() => setFulfillmentStatus(order.id, nextStep.value)}
             >
               {nextStep.label}
+            </button>
+          )}
+
+          {order.paymentStatus === "paid" && !refunding && (
+            <button type="button" className="a-btn" data-size="sm" onClick={() => setRefunding(true)}>
+              Record refund
             </button>
           )}
 
@@ -165,6 +281,32 @@ export default function OrderDetails({ order, onClose }: { order: Order; onClose
           {formatBDT(order.totalAmount)}
         </span>
       </div>
+
+      {refunding && order.paymentStatus === "paid" && (
+        <RefundForm order={order} onDone={() => setRefunding(false)} />
+      )}
+
+      {order.refund && (
+        <section className="a-detailBlock">
+          <h3 className="a-detailHead">Refund</h3>
+          <DetailRow label="Refunded" mono>
+            {formatBDT(order.refund.amount)}
+            {order.refund.amount < order.totalAmount && (
+              <span className="a-rowSub">
+                {" "}
+                · {formatBDT(order.totalAmount - order.refund.amount)} kept
+              </span>
+            )}
+          </DetailRow>
+          <DetailRow label="Recorded">{formatDateTime(order.refund.at)}</DetailRow>
+          <DetailRow label="SSLCommerz ref" mono>
+            <Ref value={order.refund.ref} />
+          </DetailRow>
+          <DetailRow label="Reason">
+            {order.refund.reason || <span style={{ color: "var(--a-muted)" }}>—</span>}
+          </DetailRow>
+        </section>
+      )}
 
       <section className="a-detailBlock">
         <h3 className="a-detailHead">Customer</h3>
