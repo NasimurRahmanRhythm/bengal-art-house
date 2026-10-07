@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
@@ -14,6 +14,13 @@ const itemDelay = (i: number) => ({ "--i": i }) as CSSProperties;
 export default function CartDrawer() {
   const { lines, count, total, isOpen, closeCart, remove, clear, removed, dismissRemoved } =
     useCart();
+  // SSLCommerz requires the customer to agree to the terms before an order
+  // can be placed, with a box they tick themselves. It is asked here, in the
+  // cart, as well as on the checkout page: the cart needs no account, so the
+  // agreement is visible to anyone who adds a work — not only to someone who
+  // has signed up and signed in.
+  const [agreed, setAgreed] = useState(false);
+  const [needsAgreement, setNeedsAgreement] = useState(false);
 
   return (
     <div className={`${styles.root} ${isOpen ? styles.open : ""}`} inert={!isOpen}>
@@ -116,7 +123,50 @@ export default function CartDrawer() {
               Payment is taken securely by SSLCommerz — card, bKash, Nagad or net banking. Every
               acquisition is backed by the gallery&apos;s provenance and authentication service.
             </p>
-            <Link href="/checkout" className={styles.enquire} onClick={closeCart}>
+            <label className={styles.agree}>
+              <input
+                type="checkbox"
+                checked={agreed}
+                onChange={(e) => {
+                  setAgreed(e.target.checked);
+                  if (e.target.checked) setNeedsAgreement(false);
+                }}
+              />
+              <span>
+                I have read and agree to the{" "}
+                <Link href="/terms" target="_blank" rel="noopener">
+                  Terms &amp; Conditions
+                </Link>
+                ,{" "}
+                <Link href="/privacy-policy" target="_blank" rel="noopener">
+                  Privacy Policy
+                </Link>{" "}
+                and{" "}
+                <Link href="/refund-policy" target="_blank" rel="noopener">
+                  Return &amp; Refund Policy
+                </Link>
+                .
+              </span>
+            </label>
+            {needsAgreement && (
+              <p className={styles.agreeError} role="alert">
+                Please tick the box to agree before continuing.
+              </p>
+            )}
+            <Link
+              href="/checkout"
+              className={styles.enquire}
+              aria-disabled={!agreed}
+              data-disabled={!agreed || undefined}
+              onClick={(e) => {
+                if (!agreed) {
+                  e.preventDefault();
+                  setNeedsAgreement(true);
+                  return;
+                }
+                closeCart();
+              }}
+            >
               Proceed to checkout <ArrowIcon size={15} />
             </Link>
             {/* Kept alongside, not replaced: a collector deciding on a
