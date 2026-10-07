@@ -1,0 +1,79 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: clamp(28px, 5vw, 72px);
+  margin-top: clamp(28px, 4vw, 44px);
+}
+
+.list {
+  margin: 0;
+  border-top: 1px solid var(--stone-line);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--stone-line);
+}
+
+.row dt,
+.label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding-top: 3px;
+}
+
+.row dd {
+  margin: 0;
+  font-size: 15.5px;
+  color: var(--ink);
+}
+
+.label {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.members {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.name {
+  display: block;
+  font-size: 15.5px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.role {
+  display: block;
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.more {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--oxide);
+}
+
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

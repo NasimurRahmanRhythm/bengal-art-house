@@ -131,6 +131,31 @@
   line-height: 1.55;
 }
 
+.agree {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.agree input {
+  flex: none;
+  width: 17px;
+  height: 17px;
+  margin-top: 2px;
+  accent-color: var(--ink);
+  cursor: pointer;
+}
+
+.agree a {
+  color: var(--oxide);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .error {
   background: rgba(168, 57, 28, 0.07);
   border-left: 2px solid var(--oxide);

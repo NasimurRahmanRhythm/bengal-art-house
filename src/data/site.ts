@@ -10,6 +10,9 @@ export const SITE = {
   mapEmbedUrl:
     "https://maps.google.com/maps?q=House%2002%2C%20Road%20104%2C%20Gulshan%202%2C%20Dhaka%201212&z=16&output=embed",
   established: "Dhaka, Bangladesh — Est. 2026",
+  // SSLCommerz requires the trade licence number in the footer or on the
+  // About page. Shown in both places once it is filled in.
+  tradeLicense: "" as string,
 } as const;
 
 export type NavItem = {
@@ -68,7 +71,8 @@ export const FOOTER_EXPLORE = [
   { label: "Sculptures", href: "/about#sculptures" },
   { label: "Exhibitions", href: "/exhibitions" },
   { label: "Sculpture Park", href: "/#park" },
-  { label: "About the Gallery", href: "/about" },
+  { label: "About Us", href: "/about" },
+  { label: "Governing Body", href: "/governing-body" },
 ];
 
 export const FOOTER_LEGAL = [

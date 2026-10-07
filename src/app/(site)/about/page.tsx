@@ -4,13 +4,14 @@ import Link from "next/link";
 import PageHero from "@/components/sections/PageHero";
 import SectionHead from "@/components/sections/SectionHead";
 import FoundingLegacy from "@/components/sections/FoundingLegacy";
+import CompanyDetails from "@/components/sections/CompanyDetails";
 import WorksGrid from "@/components/sections/WorksGrid";
 import ParkBanner from "@/components/sections/ParkBanner";
 import Marquee from "@/components/Marquee/Marquee";
 import ChiselRule from "@/components/motion/ChiselRule";
 import Reveal from "@/components/motion/Reveal";
 import { MATERIALS } from "@/data/site";
-import { getWorks } from "@/lib/site-data";
+import { getGoverningBody, getWorks } from "@/lib/site-data";
 
 export const metadata: Metadata = {
   title: "About",
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const works = await getWorks();
+  const [works, members] = await Promise.all([getWorks(), getGoverningBody()]);
 
   return (
     <>
@@ -63,6 +64,20 @@ export default async function AboutPage() {
               </Reveal>
             }
           />
+        </div>
+      </section>
+
+      <section className="section" id="company">
+        <div className="wrap">
+          <SectionHead
+            kicker="Company Details"
+            title={
+              <>
+                Who runs <span className="em">the gallery.</span>
+              </>
+            }
+          />
+          <CompanyDetails members={members} />
         </div>
       </section>
 

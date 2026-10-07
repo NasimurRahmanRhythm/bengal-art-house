@@ -25,6 +25,9 @@ export default function CheckoutPage() {
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [postcode, setPostcode] = useState("");
+  // SSLCommerz requires this box, unticked by default and ticked by the
+  // customer themselves, before an order can be placed.
+  const [agreed, setAgreed] = useState(false);
 
   const [prefilled, setPrefilled] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -56,6 +59,10 @@ export default function CheckoutPage() {
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
+    if (!agreed) {
+      setError("Please read and agree to the terms and policies before paying.");
+      return;
+    }
     setSubmitting(true);
 
     try {
@@ -69,6 +76,7 @@ export default function CheckoutPage() {
           address,
           city,
           postcode,
+          agreed,
         }),
       });
 
@@ -241,6 +249,33 @@ export default function CheckoutPage() {
                 Your name and phone number are saved to your profile so the gallery can reach you
                 about delivery. Large sculpture is delivered and installed by arrangement.
               </p>
+
+              {/* The policy links open in a new tab so reading them does not
+                  throw away what has been typed into the form. */}
+              <label className={styles.agree}>
+                <input
+                  type="checkbox"
+                  required
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  disabled={submitting}
+                />
+                <span>
+                  I have read and agree to the{" "}
+                  <Link href="/terms" target="_blank" rel="noopener">
+                    Terms &amp; Conditions
+                  </Link>
+                  ,{" "}
+                  <Link href="/privacy-policy" target="_blank" rel="noopener">
+                    Privacy Policy
+                  </Link>{" "}
+                  and{" "}
+                  <Link href="/refund-policy" target="_blank" rel="noopener">
+                    Return &amp; Refund Policy
+                  </Link>
+                  .
+                </span>
+              </label>
 
               {error && (
                 <p className={styles.error} role="alert">

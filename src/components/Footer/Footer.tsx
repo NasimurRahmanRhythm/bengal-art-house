@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap, prefersReducedMotion } from "@/lib/gsap";
@@ -79,6 +80,9 @@ export default function Footer() {
             >
               {SITE.address}
             </a>
+            {SITE.tradeLicense && (
+              <span className={styles.colText}>Trade Licence No. {SITE.tradeLicense}</span>
+            )}
             <div className={styles.socials}>
               {SOCIALS.map((s) => {
                 const Icon = SOCIAL_ICONS[s.icon];
@@ -106,6 +110,23 @@ export default function Footer() {
               </Link>
             ))}
           </Reveal>
+        </div>
+
+        {/* SSLCommerz asks for its payment banner in the footer of every
+            merchant site. It is their artwork, on a white ground, so it sits
+            on a white panel rather than straight on the dark footer; on a
+            phone the strip scrolls sideways instead of shrinking the logos
+            past legibility. */}
+        <div className={styles.payments}>
+          <div className={styles.paymentsScroll}>
+            <Image
+              src="/images/sslcommerz-payment-banner.jpg"
+              alt="Pay with Visa, Mastercard, American Express, bKash, Nagad, Rocket, Upay and other methods — verified by SSLCommerz"
+              width={1308}
+              height={146}
+              className={styles.paymentsImg}
+            />
+          </div>
         </div>
 
         <div className={styles.markRow} aria-hidden="true">

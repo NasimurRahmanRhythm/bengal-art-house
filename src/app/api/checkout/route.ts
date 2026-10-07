@@ -13,6 +13,7 @@ type Body = {
   address?: unknown;
   city?: unknown;
   postcode?: unknown;
+  agreed?: unknown;
 };
 
 const str = (v: unknown): string => (typeof v === "string" ? v.trim() : "");
@@ -54,6 +55,11 @@ export async function POST(request: Request) {
   const city = str(body.city);
   const postcode = str(body.postcode);
 
+  // The checkout form will not submit without the box ticked; this holds the
+  // same line for anything that posts here directly.
+  if (body.agreed !== true) {
+    return bad("Please agree to the Terms & Conditions, Privacy Policy and Return & Refund Policy.");
+  }
   if (!name) return bad("A name is required.");
   if (!phone) return bad("A phone number is required.");
 

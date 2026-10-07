@@ -119,6 +119,25 @@
   transform: translateY(-3px);
 }
 
+.payments {
+  background: #fff;
+  border-radius: 4px;
+  margin-bottom: clamp(32px, 5vw, 56px);
+  overflow: hidden;
+}
+
+.paymentsScroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.paymentsImg {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-width: 860px;
+}
+
 .markRow {
   border-top: 1px solid var(--light-line);
   padding-top: 26px;

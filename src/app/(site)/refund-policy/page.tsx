@@ -34,8 +34,8 @@ export default function RefundPolicyPage() {
         You may cancel or amend your order within 24 hours of physically receiving the artwork. We
         are committed to you and want you to be happy. Just return the artwork to us undamaged
         within 7 days if you are residing in Bangladesh, or within 20 days if you are an
-        international buyer. We will refund you within 10 working days after we receive the
-        artwork.
+        international buyer. We will refund you within 7 to 10 working days after we receive
+        the artwork.
       </p>
       <p>
         You may return the artwork and receive a refund of its price after deduction of customs
