@@ -1,18 +1,13 @@
 import type { Metadata } from "next";
-import { DM_Sans, Fraunces, IBM_Plex_Mono } from "next/font/google";
+import { DM_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "900"],
-  style: ["normal", "italic"],
-  variable: "--font-fraunces",
-  display: "swap",
-});
-
+// One family for body and headings. Loaded as the variable font, so every
+// weight the stylesheets ask for (300 body through 900 display) is real, and
+// with its italics, which the .em accent in headings uses.
 const dmSans = DM_Sans({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  style: ["normal", "italic"],
   variable: "--font-dm-sans",
   display: "swap",
 });
@@ -56,7 +51,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${dmSans.variable} ${plexMono.variable}`}
+      className={`${dmSans.variable} ${plexMono.variable}`}
       suppressHydrationWarning
     >
       <body>{children}</body>

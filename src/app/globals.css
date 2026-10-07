@@ -29,7 +29,7 @@
   --text-muted: #56514a;
   --text-muted-light: #b7b0a2;
 
-  --font-display: var(--font-fraunces), "Fraunces", Georgia, serif;
+  --font-display: var(--font-dm-sans), "DM Sans", "Kalpurush", sans-serif;
   --font-body: var(--font-dm-sans), "DM Sans", "Kalpurush", sans-serif;
   --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
 
@@ -163,6 +163,17 @@ select {
   font-size: 15.5px;
   max-width: 44ch;
   padding-bottom: 6px;
+}
+
+/* SplitText's reveal wraps each heading line in a box with overflow: clip,
+   sized to the line-height. Headings run at ~1.1, which is shorter than the
+   glyphs, so the tails of g, y, p and q were cut off. The padding grows the
+   clip box downward to take in the descenders; the negative margin gives the
+   space back so the lines keep their spacing. */
+.splitLine-mask,
+.heroLine-mask {
+  padding-bottom: 0.2em;
+  margin-bottom: -0.2em;
 }
 
 .em {
