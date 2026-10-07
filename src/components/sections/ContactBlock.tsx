@@ -18,7 +18,7 @@ const SUBJECTS = [
 const DETAILS = [
   { label: "Gallery", value: SITE.address, href: SITE.mapUrl, external: true },
   { label: "Telephone", value: SITE.phone, href: `tel:${SITE.phoneHref}` },
-  { label: "Opening hours", value: "Tue – Sat, 11:00 – 19:00" },
+  { label: "Opening hours", value: "Sun – Thu, 10am – 8pm" },
 ];
 
 const fieldDelay = (i: number) => ({ "--i": i }) as CSSProperties;

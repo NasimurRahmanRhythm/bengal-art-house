@@ -30,9 +30,9 @@ export default function ContactPage() {
         lede="Gallery Hamiduzzaman hosts exhibitions and private cultural events, with proceeds supporting continued documentation of Bangladesh's public sculpture."
         crumbs={[{ label: "Home", href: "/" }]}
         meta={[
-          { label: "District", value: "Gulshan" },
-          { label: "Open", value: "Tue–Sat" },
-          { label: "Hours", value: "11–19" },
+          { label: "Place", value: "Gulshan" },
+          { label: "Open", value: "Sun–Thu" },
+          { label: "Hours", value: "10am–8pm" },
         ]}
       />
 
@@ -66,7 +66,7 @@ export default function ContactPage() {
                 <span className="em">Gulshan.</span>
               </>
             }
-            body="Open Tuesday to Saturday, 11:00 – 19:00. Private viewings outside these hours are arranged by appointment."
+            body="Open Sunday to Thursday, 10am – 8pm. Private viewings outside these hours are arranged by appointment."
           />
           <Reveal variant="wipe">
             <figure className={styles.mapFigure}>
@@ -113,7 +113,7 @@ export default function ContactPage() {
               </Parallax>
               <figcaption className={styles.roomCaption}>
                 <span>The main hall, Gulshan</span>
-                <span>Open Tuesday to Saturday</span>
+                <span>Open Sunday to Thursday</span>
               </figcaption>
             </figure>
           </Reveal>

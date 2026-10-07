@@ -53,7 +53,9 @@
 .cardPhoto {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  /* contain, not cover: posters carry their title and dates in the artwork,
+     and cropping cut them off. */
+  object-fit: contain;
   display: block;
   transition: transform 0.9s var(--ease-out);
 }
@@ -305,17 +307,20 @@
 .detailCover {
   position: relative;
   display: block;
-  aspect-ratio: 4 / 3;
   overflow: hidden;
   background: var(--marble-dim);
   border: 1px solid var(--stone-line);
 }
 
+/* At its own proportions, whole: a portrait poster stays a portrait poster.
+   Very tall images are capped to the screen and centred rather than cropped. */
 .detailPhoto {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  max-height: 85vh;
+  object-fit: contain;
   display: block;
+  margin: 0 auto;
 }
 
 .detailBlurb {
