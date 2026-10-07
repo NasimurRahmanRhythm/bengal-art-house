@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { checkAdmin } from "./auth";
 import {
   dbConfigured,
   fetchAll,
@@ -115,6 +116,58 @@ export async function uploadImage(
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : "Upload failed." };
   }
+}
+
+// --- videos ----------------------------------------------------------------
+
+/** Kept in step with the `videos` bucket's file_size_limit (45 MB). */
+const MAX_VIDEO_BYTES = 45 * 1024 * 1024;
+
+/**
+ * Hands the browser a one-time signed URL to upload a blog video straight to
+ * the `videos` bucket.
+ *
+ * The file does not pass through this server: a server action (and a Vercel
+ * function) accepts a few megabytes at most, far below a 45 MB video. The
+ * browser compresses the video, asks here for a URL, and PUTs the bytes to
+ * Storage itself.
+ *
+ * Unlike the other actions in this file, this one checks the caller is a
+ * signed-in admin: a signed upload URL is a write capability on a public
+ * bucket, and must not be handed to anyone who can call the action.
+ */
+export async function createVideoUpload(
+  contentType: string,
+  size: number,
+): Promise<
+  { ok: true; signedUrl: string; publicUrl: string } | { ok: false; error: string }
+> {
+  if (!dbConfigured()) return { ok: false, error: "There is no database connection." };
+
+  const admin = await checkAdmin();
+  if (!admin.ok) return { ok: false, error: "Your admin session has ended. Sign in again." };
+
+  const ext = contentType === "video/webm" ? "webm" : contentType === "video/mp4" ? "mp4" : null;
+  if (!ext) return { ok: false, error: "Only MP4 and WebM videos can be uploaded." };
+  if (!(size > 0) || size > MAX_VIDEO_BYTES) {
+    return { ok: false, error: "The video must be smaller than 45 MB." };
+  }
+
+  const path = `${new Date().getFullYear()}/${crypto.randomUUID()}.${ext}`;
+  const { data, error } = await db().storage.from("videos").createSignedUploadUrl(path);
+
+  if (error || !data) {
+    const missing = /bucket not found/i.test(error?.message ?? "");
+    return {
+      ok: false,
+      error: missing
+        ? "The 'videos' storage bucket does not exist yet — run the latest migration."
+        : (error?.message ?? "Could not prepare the upload."),
+    };
+  }
+
+  const { data: pub } = db().storage.from("videos").getPublicUrl(path);
+  return { ok: true, signedUrl: data.signedUrl, publicUrl: pub.publicUrl };
 }
 
 // --- artists ---------------------------------------------------------------
@@ -375,10 +428,11 @@ function writingRow(p: BlogPost | PressRelease) {
 }
 
 export async function savePost(p: BlogPost): Promise<BlogPost> {
+  const row = { ...writingRow(p), video_url: p.videoUrl };
   const q = db().from("posts");
   const { data, error } = p.id
-    ? await q.update(writingRow(p)).eq("id", p.id).select().single()
-    : await q.insert(writingRow(p)).select().single();
+    ? await q.update(row).eq("id", p.id).select().single()
+    : await q.insert(row).select().single();
 
   if (error) throw new Error(error.message);
   revalidatePublic(["/blog", `/blog/${p.slug}`]);

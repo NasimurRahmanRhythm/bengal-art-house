@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Topbar } from "./AdminShell";
 import RichTextEditor from "./RichTextEditor";
+import VideoUpload from "./VideoUpload";
 import { ConfirmDelete, Field } from "./ui";
 import { useAdmin } from "@/lib/admin/store";
 import { uniqueSlug } from "@/lib/admin/slug";
@@ -38,9 +39,15 @@ export default function PostForm({ post }: { post?: BlogPost }) {
   const [title, setTitle] = useState(post?.title ?? "");
   const [author, setAuthor] = useState(post?.authorName ?? "");
   const [html, setHtml] = useState(post?.html ?? "");
+  const [videoUrl, setVideoUrl] = useState<string | null>(post?.videoUrl ?? null);
+  const [videoBusy, setVideoBusy] = useState(false);
   const [error, setError] = useState("");
 
   function save(publish: boolean) {
+    if (videoBusy) {
+      setError("Wait for the video to finish uploading before saving.");
+      return;
+    }
     if (!title.trim()) {
       setError("Please give the post a title.");
       return;
@@ -66,6 +73,7 @@ export default function PostForm({ post }: { post?: BlogPost }) {
       // fight the caret, and the editor's paste handler already filters the
       // one route stray markup arrives by.
       html: sanitizeHtml(html),
+      videoUrl,
       published: publish,
       // Stamped the first time it goes live and then left alone, so editing an
       // old post does not shuffle it back to the top of the blog.
@@ -136,6 +144,15 @@ export default function PostForm({ post }: { post?: BlogPost }) {
             <RichTextEditor value={html} onChange={setHtml} placeholder="Start writing here…" />
           </section>
 
+          <section className="a-section">
+            <div className="a-editorHead">
+              <h2 className="a-sectionTitle">
+                Video <span className="a-optional">optional</span>
+              </h2>
+            </div>
+            <VideoUpload value={videoUrl} onChange={setVideoUrl} onBusy={setVideoBusy} />
+          </section>
+
           {error && <p className="a-formError">{error}</p>}
 
           <div className="a-formBar" data-end>
@@ -145,19 +162,31 @@ export default function PostForm({ post }: { post?: BlogPost }) {
 
             {post?.published ? (
               <>
-                <button type="button" className="a-btn" onClick={() => save(false)}>
+                <button type="button" className="a-btn" disabled={videoBusy} onClick={() => save(false)}>
                   Move to drafts
                 </button>
-                <button type="button" className="a-btn" data-variant="primary" onClick={() => save(true)}>
+                <button
+                  type="button"
+                  className="a-btn"
+                  data-variant="primary"
+                  disabled={videoBusy}
+                  onClick={() => save(true)}
+                >
                   Save changes
                 </button>
               </>
             ) : (
               <>
-                <button type="button" className="a-btn" onClick={() => save(false)}>
+                <button type="button" className="a-btn" disabled={videoBusy} onClick={() => save(false)}>
                   Save as draft
                 </button>
-                <button type="button" className="a-btn" data-variant="primary" onClick={() => save(true)}>
+                <button
+                  type="button"
+                  className="a-btn"
+                  data-variant="primary"
+                  disabled={videoBusy}
+                  onClick={() => save(true)}
+                >
                   Publish
                 </button>
               </>

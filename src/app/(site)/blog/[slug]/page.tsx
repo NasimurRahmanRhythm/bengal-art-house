@@ -7,6 +7,7 @@ import ChiselRule from "@/components/motion/ChiselRule";
 import ParkBanner from "@/components/sections/ParkBanner";
 import { getPosts } from "@/lib/site-data";
 import { formatLongDate } from "@/lib/content";
+import styles from "@/components/sections/PostBody.module.css";
 
 type Params = Promise<{ slug: string }>;
 
@@ -47,6 +48,11 @@ export default async function BlogPostPage({ params }: { params: Params }) {
 
       <section className="section">
         <div className="wrap">
+          {post.videoUrl && (
+            <div className={styles.video}>
+              <video src={post.videoUrl} controls preload="metadata" playsInline />
+            </div>
+          )}
           <PostBody html={post.html} />
         </div>
       </section>

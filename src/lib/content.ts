@@ -24,4 +24,6 @@ export type ContentItem = {
   html: string;
   authorName: string;
   publishedAt: string;
+  /** Blog only: an optional video shown above the post. */
+  videoUrl?: string | null;
 };

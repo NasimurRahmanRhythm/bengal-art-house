@@ -211,6 +211,7 @@ function toContent(r: Row): ContentItem {
     html: str(r.body_html),
     authorName: str(r.author_name),
     publishedAt: str(r.published_at),
+    videoUrl: str(r.video_url) || null,
   };
 }
 

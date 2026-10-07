@@ -169,6 +169,8 @@ export type BlogPost = {
   html: string;
   tag: string;
   authorName: string;
+  /** Optional video shown with the post, in the `videos` storage bucket. */
+  videoUrl: string | null;
   published: boolean;
   publishedAt: string | null;
   createdAt: string;

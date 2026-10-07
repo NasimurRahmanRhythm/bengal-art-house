@@ -108,7 +108,10 @@ function rowToWriting(r: Row) {
   };
 }
 
-export const rowToPost = (r: Row): BlogPost => rowToWriting(r);
+export const rowToPost = (r: Row): BlogPost => ({
+  ...rowToWriting(r),
+  videoUrl: (r.video_url as string) || null,
+});
 
 export const rowToRelease = (r: Row): PressRelease => ({
   ...rowToWriting(r),
