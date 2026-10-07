@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { requestCode, verifyCode } from "./actions";
 import { ADMIN_SESSION_DAYS } from "@/lib/admin/session";
+import OtpInput from "@/components/auth/OtpInput";
 
 const RESEND_COOLDOWN = 45;
 
@@ -17,6 +18,7 @@ export default function AdminLoginPage() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [cooldown, setCooldown] = useState(0);
+
 
   // Whether the visitor arrived here because their week ran out, rather than by
   // signing out — worth saying, because otherwise being thrown back to a login
@@ -50,9 +52,16 @@ export default function AdminLoginPage() {
 
   async function verify(e: FormEvent) {
     e.preventDefault();
+    await submitCode(code);
+  }
+
+  // Takes the code as an argument: the auto-submit from the last box runs
+  // before setCode() has re-rendered, so `code` would be one digit short.
+  async function submitCode(token: string) {
+    if (busy) return;
     setError("");
     setBusy(true);
-    const res = await verifyCode(email, code);
+    const res = await verifyCode(email, token);
 
     if (!res.ok) {
       setBusy(false);
@@ -114,19 +123,18 @@ export default function AdminLoginPage() {
             <h1 className="a-loginTitle">Enter the code</h1>
             <p className="a-loginLede">{notice}</p>
 
-            <label className="a-label" htmlFor="admin-code">
-              Six-digit code
-            </label>
-            <input
-              id="admin-code"
-              className="a-input a-codeInput"
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              autoFocus
-              maxLength={6}
+            <span className="a-label">Six-digit code</span>
+            <OtpInput
+              className="a-otp"
               value={code}
-              onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-              placeholder="000000"
+              onChange={(v) => {
+                setCode(v);
+                setError("");
+              }}
+              onComplete={submitCode}
+              disabled={busy}
+              invalid={!!error}
+              autoFocus
             />
 
             {error && <p className="a-formError">{error}</p>}

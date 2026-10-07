@@ -12,7 +12,7 @@ export const SITE = {
   established: "Dhaka, Bangladesh — Est. 2026",
   // SSLCommerz requires the trade licence number in the footer or on the
   // About page. Shown in both places once it is filled in.
-  tradeLicense: "" as string,
+  tradeLicense: "TRAD/DSCC/016682/2023" as string,
 } as const;
 
 export type NavItem = {

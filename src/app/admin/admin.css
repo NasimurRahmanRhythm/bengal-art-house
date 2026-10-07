@@ -600,11 +600,16 @@ a.a-stat:hover {
   justify-content: center;
 }
 
-.a-codeInput {
-  font-family: var(--a-mono, ui-monospace, monospace);
-  font-size: 22px;
-  letter-spacing: 0.4em;
-  text-align: center;
+/* The shared OTP boxes, recoloured for the dashboard. Doubled class so it
+   outranks the component's own defaults whatever order the CSS loads in. */
+.a-otp.a-otp {
+  --otp-bg: var(--a-surface);
+  --otp-line: var(--a-line);
+  --otp-focus: var(--a-accent);
+  --otp-text: var(--a-text);
+  --otp-error: var(--a-danger);
+  --otp-radius: 8px;
+  margin-bottom: 14px;
 }
 
 .a-loginFoot {

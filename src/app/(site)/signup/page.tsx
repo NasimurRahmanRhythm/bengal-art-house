@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ArrowIcon, EyeIcon } from "@/components/Icons";
+import OtpInput from "@/components/auth/OtpInput";
 import styles from "@/components/auth/AuthCard.module.css";
 
 const RESEND_COOLDOWN = 30;
@@ -73,14 +74,17 @@ export default function SignUpPage() {
     setCooldown(RESEND_COOLDOWN);
   };
 
-  const onSubmitCode = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // Takes the code as an argument rather than reading state: when the last
+  // box auto-submits, setCode() has not re-rendered yet and `code` would
+  // still be five digits long.
+  const confirmCode = async (token: string) => {
+    if (submitting) return;
     setError(null);
     setSubmitting(true);
 
     const { error: verifyError } = await supabase.auth.verifyOtp({
       email,
-      token: code,
+      token,
       type: "signup",
     });
 
@@ -93,6 +97,11 @@ export default function SignUpPage() {
 
     router.push(nextPath());
     router.refresh();
+  };
+
+  const onSubmitCode = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    confirmCode(code);
   };
 
   const resendCode = async () => {
@@ -195,21 +204,22 @@ export default function SignUpPage() {
               </div>
 
               <form className={styles.form} onSubmit={onSubmitCode}>
-                <label className={styles.field}>
+                <div className={styles.field}>
                   <span>Verification code</span>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    placeholder="000000"
-                    maxLength={6}
-                    required
-                    className={styles.otpInput}
+                  <OtpInput
                     value={code}
-                    onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                    onChange={(v) => {
+                      setCode(v);
+                      setError(null);
+                    }}
+                    // The last digit submits, the way OTP fields usually do;
+                    // the button stays for anyone who prefers to press it.
+                    onComplete={confirmCode}
                     disabled={submitting}
+                    invalid={!!error}
+                    autoFocus
                   />
-                </label>
+                </div>
 
                 {error && (
                   <p className={styles.error} role="alert">

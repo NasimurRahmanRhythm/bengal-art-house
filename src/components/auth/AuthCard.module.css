@@ -95,18 +95,6 @@
   color: var(--ink);
 }
 
-.otpInput {
-  font-family: var(--font-mono);
-  font-size: 22px;
-  letter-spacing: 0.5em;
-  text-align: center;
-}
-
-.otpInput::placeholder {
-  letter-spacing: normal;
-  font-size: 15px;
-}
-
 .submit {
   display: inline-flex;
   align-items: center;
