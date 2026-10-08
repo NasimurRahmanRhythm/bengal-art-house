@@ -146,7 +146,7 @@ export default function AdminOverview() {
           </div>
           <div style={{ padding: "14px 16px" }}>
             <p className="a-hint" style={{ maxWidth: "72ch" }}>
-              Services, collaborations and the list of public installations stay in code for now —
+              Services and the list of public installations stay in code for now —
               they change once a year at most, so a CRUD screen for them would be upkeep without
               payoff. Say the word if you&apos;d rather manage any of them here.
             </p>

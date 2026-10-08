@@ -9,22 +9,7 @@ import ImageUpload from "./ImageUpload";
 import { useAdmin } from "@/lib/admin/store";
 import { nextPlate, uniqueSlug } from "@/lib/admin/slug";
 import { exhibitionPhase, type Exhibition } from "@/lib/admin/types";
-
-/** "14 August — 4 September 2025", collapsing whatever the two dates share. */
-function formatRange(start: string, end: string): string {
-  if (!start) return "";
-  const s = new Date(start);
-  const e = end ? new Date(end) : s;
-  const day = (d: Date) => d.getDate();
-  const month = (d: Date) => d.toLocaleDateString("en-GB", { month: "long" });
-  const year = (d: Date) => d.getFullYear();
-
-  if (start === end || !end) return `${day(s)} ${month(s)} ${year(s)}`;
-  if (year(s) === year(e) && month(s) === month(e))
-    return `${day(s)}–${day(e)} ${month(e)} ${year(e)}`;
-  if (year(s) === year(e)) return `${day(s)} ${month(s)} — ${day(e)} ${month(e)} ${year(e)}`;
-  return `${day(s)} ${month(s)} ${year(s)} — ${day(e)} ${month(e)} ${year(e)}`;
-}
+import { formatRange } from "@/lib/admin/dates";
 
 export default function ExhibitionForm({ exhibition }: { exhibition?: Exhibition }) {
   const router = useRouter();

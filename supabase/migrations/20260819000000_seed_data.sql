@@ -7,7 +7,7 @@
 -- Re-running: artists / artworks / exhibitions upsert on their slug, so edits
 -- made here are refreshed and nothing duplicates.
 --
--- WARNING: collaborations, services and works have no natural unique key, so
+-- WARNING: services and works have no natural unique key, so
 -- they are cleared and reinserted. If those are ever edited through the admin
 -- panel, re-running this file DISCARDS those edits. The other three tables are
 -- safe to re-run at any time.
@@ -224,27 +224,15 @@ on conflict (slug) do update set
 
 
 -- ---------------------------------------------------------------------------
--- collaborations / services / works
+-- services / works
 --
--- No natural unique key on these three, so they are replaced wholesale.
+-- No natural unique key on these two, so they are replaced wholesale.
 -- See the warning at the top of this file.
 -- ---------------------------------------------------------------------------
 
-delete from public.collaborations;
-insert into public.collaborations (place, title, body, years, order_index)
-values
-  ('Baroda, India', 'M.S. University of Baroda',
-   $txt$Completed his master's degree in 1976 under master artists, deepening his command of form and material.$txt$,
-   '1974–1976', 1),
-  ('Seoul, Korea', 'Seoul Olympic Park',
-   $txt$His abstract stone work "Steps" was installed permanently in the Olympic Park, bringing his practice to an international audience.$txt$,
-   '1988', 2),
-  ('United States & Europe', 'Study of Public & Abstract Sculpture',
-   $txt$A formative visit exposed him to abstract form and its relationship to public space and the urban landscape.$txt$,
-   'Early 1980s', 3),
-  ('Middle East & North Africa', 'Stone Carving Exchange',
-   $txt$Travelled to learn traditional stone-carving techniques, later folded into his own treatment of granite and marble.$txt$,
-   '1980s', 4);
+-- Collaborations are no longer seeded: since 20261008000000_collaborations.sql
+-- they are real content, managed from the admin panel, and a re-run of this
+-- file must not wipe them.
 
 delete from public.services;
 insert into public.services (title, body, icon, order_index)

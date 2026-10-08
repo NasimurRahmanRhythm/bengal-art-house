@@ -11,6 +11,7 @@ import {
   ExternalIcon,
   FrameIcon,
   GaugeIcon,
+  GlobeIcon,
   MailIcon,
   NewsIcon,
   PenIcon,
@@ -26,6 +27,12 @@ const NAV = [
     label: "Exhibitions",
     icon: CalendarIcon,
     count: "exhibitions" as const,
+  },
+  {
+    href: "/admin/collaborations",
+    label: "Collaborations",
+    icon: GlobeIcon,
+    count: "collaborations" as const,
   },
   {
     href: "/admin/governing-body",

@@ -453,13 +453,15 @@
   border-top: 1px solid var(--stone-line);
 }
 
+/* One partner project per row: its picture, then what it was, who took part,
+   when, the opening lines and a link through to its own page. */
 .collabRow {
   position: relative;
   display: grid;
-  grid-template-columns: 190px 1fr 140px;
-  gap: 28px;
-  align-items: start;
-  padding: 34px 0;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(22px, 4vw, 52px);
+  align-items: center;
+  padding: clamp(28px, 4vw, 44px) 0;
   opacity: 0;
   transform: translateY(34px);
   transition:
@@ -488,30 +490,89 @@
   transform: scaleX(1);
 }
 
-.collabPlace {
-  font-family: var(--font-display);
-  font-size: 21px;
-  font-style: italic;
-  color: var(--patina);
+.collabPlate {
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--marble-dim);
+  border: 1px solid var(--stone-line);
+}
+
+/* contain: a poster or an installation shot is never cropped to fit. */
+.collabPhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.9s var(--ease-out);
+}
+
+.collabPlate:hover .collabPhoto {
+  transform: scale(1.03);
 }
 
 .collabTitle {
-  font-size: 21px;
-  margin-bottom: 10px;
+  font-size: clamp(24px, 2.6vw, 32px);
+  line-height: 1.15;
+  margin-bottom: 6px;
+}
+
+.collabTitle a {
+  color: inherit;
+}
+
+.collabSubtitle {
+  font-size: 16px;
+  font-style: italic;
+  color: var(--oxide);
+  margin-bottom: 14px;
+}
+
+.collabArtists {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.collabDate {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--stone);
 }
 
 .collabBody {
-  font-size: 14.5px;
+  margin-top: 16px;
+  font-size: 15px;
   color: var(--text-muted);
   max-width: 62ch;
 }
 
-.collabYear {
+.collabMore {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--oxide);
   font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.09em;
-  color: var(--stone);
-  text-align: right;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.collabMore:hover {
+  color: var(--oxide);
+}
+
+.collabEmpty {
+  padding: 48px 0;
+  color: var(--text-muted);
 }
 
 .gridReveal > * {
@@ -1066,10 +1127,7 @@ a.detailValue:hover {
   }
   .collabRow {
     grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .collabYear {
-    text-align: left;
+    gap: 18px;
   }
 }
 

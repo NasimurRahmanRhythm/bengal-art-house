@@ -330,6 +330,12 @@
   margin-top: 28px;
 }
 
+/* A collaboration's write-up runs to several paragraphs; only the first
+   needs the gap below the cover picture. */
+.detailBlurb + .detailBlurb {
+  margin-top: 14px;
+}
+
 .detailFacts {
   display: grid;
   gap: 20px;

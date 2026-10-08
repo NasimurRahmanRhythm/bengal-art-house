@@ -4,6 +4,7 @@ import type {
   Artist,
   Artwork,
   BlogPost,
+  Collaboration,
   Enquiry,
   Exhibition,
   GoverningMember,
@@ -75,6 +76,23 @@ export function rowToExhibition(r: Row): Exhibition {
     blurb: str(r.blurb),
     photos: strs(r.photos),
     plate: num(r.plate),
+  };
+}
+
+export function rowToCollaboration(r: Row): Collaboration {
+  return {
+    id: str(r.id),
+    slug: str(r.slug),
+    title: str(r.title),
+    subtitle: str(r.subtitle),
+    artists: str(r.artists),
+    place: str(r.place),
+    dateStart: (r.date_start as string) ?? null,
+    dateEnd: (r.date_end as string) ?? null,
+    dateLabel: str(r.date_label),
+    year: str(r.year),
+    body: str(r.body),
+    photos: strs(r.photos),
   };
 }
 
@@ -197,12 +215,16 @@ function rowToOrder(r: Row): Order {
 export async function fetchAll(): Promise<{ data: AdminData; failed: string[] }> {
   const db = createAdminClient();
 
-  const [artists, artworks, exhibitions, governing, enquiries, orders, posts, press] =
+  const [artists, artworks, exhibitions, collaborations, governing, enquiries, orders, posts, press] =
     await Promise.all([
       db.from("artists").select("*").order("name"),
       db.from("artworks").select("*").order("created_at", { ascending: false }),
       db
         .from("exhibitions")
+        .select("*")
+        .order("date_start", { ascending: false, nullsFirst: false }),
+      db
+        .from("collaborations")
         .select("*")
         .order("date_start", { ascending: false, nullsFirst: false }),
       db.from("governing_body").select("*").order("order_index"),
@@ -221,6 +243,7 @@ export async function fetchAll(): Promise<{ data: AdminData; failed: string[] }>
       ["artists", artists],
       ["artworks", artworks],
       ["exhibitions", exhibitions],
+      ["collaborations", collaborations],
       ["governing body", governing],
       ["enquiries", enquiries],
       ["orders", orders],
@@ -236,6 +259,7 @@ export async function fetchAll(): Promise<{ data: AdminData; failed: string[] }>
       artists: (artists.data ?? []).map(rowToArtist),
       artworks: (artworks.data ?? []).map(rowToArtwork),
       exhibitions: (exhibitions.data ?? []).map(rowToExhibition),
+      collaborations: (collaborations.data ?? []).map(rowToCollaboration),
       governingBody: (governing.data ?? []).map(rowToMember),
       enquiries: (enquiries.data ?? []).map(rowToEnquiry),
       orders: (orders.data ?? []).map(rowToOrder),

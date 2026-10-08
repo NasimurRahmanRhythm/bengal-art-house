@@ -42,7 +42,7 @@ delete from public.enquiries;
 delete from public.artworks;
 delete from public.artists;
 delete from public.exhibitions;
-delete from public.collaborations;
+-- collaborations: not demo content any more — managed from the admin panel.
 delete from public.services;
 delete from public.works;
 delete from public.posts;

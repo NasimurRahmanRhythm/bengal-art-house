@@ -164,39 +164,21 @@ export const GOVERNING_BODY: GoverningMember[] = [
   },
 ];
 
+// A partner exhibition or project, as the public pages show it. There is no
+// placeholder list: collaborations only ever come from the admin panel, and
+// the page says so when there are none yet.
 export type Collaboration = {
-  place: string;
+  slug: string;
   title: string;
+  subtitle: string;
+  artists: string;
+  place: string;
+  /** Display dates: "28 April — 6 May 2017", or just the year. */
+  date: string;
+  /** The write-up, paragraphs separated by a blank line. */
   body: string;
-  years: string;
+  photos: string[];
 };
-
-export const COLLABORATIONS: Collaboration[] = [
-  {
-    place: "Baroda, India",
-    title: "M.S. University of Baroda",
-    body: "Completed his master's degree in 1976 under master artists, deepening his command of form and material.",
-    years: "1974–1976",
-  },
-  {
-    place: "Seoul, Korea",
-    title: "Seoul Olympic Park",
-    body: 'His abstract stone work "Steps" was installed permanently in the Olympic Park, bringing his practice to an international audience.',
-    years: "1988",
-  },
-  {
-    place: "United States & Europe",
-    title: "Study of Public & Abstract Sculpture",
-    body: "A formative visit exposed him to abstract form and its relationship to public space and the urban landscape.",
-    years: "Early 1980s",
-  },
-  {
-    place: "Middle East & North Africa",
-    title: "Stone Carving Exchange",
-    body: "Travelled to learn traditional stone-carving techniques, later folded into his own treatment of granite and marble.",
-    years: "1980s",
-  },
-];
 
 export type Service = {
   title: string;

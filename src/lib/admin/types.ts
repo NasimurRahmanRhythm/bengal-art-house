@@ -73,6 +73,28 @@ export type Exhibition = {
   plate: number;
 };
 
+// A partner exhibition or project the gallery took part in. Same shape as an
+// exhibition where they overlap (dates, pictures); the differences are the
+// artists line, a subtitle, and a full write-up rather than a one-line blurb.
+export type Collaboration = {
+  id: string;
+  slug: string;
+  title: string;
+  /** One line under the title: "A solo art exhibition", a tagline. */
+  subtitle: string;
+  /** Who took part, as it should read: "Sumon Yusuf & Salvador Arellano". */
+  artists: string;
+  /** Where it was held. Optional. */
+  place: string;
+  dateStart: string | null; // ISO yyyy-mm-dd
+  dateEnd: string | null;
+  dateLabel: string;
+  year: string;
+  /** The full write-up. Paragraphs are separated by a blank line. */
+  body: string;
+  photos: string[];
+};
+
 export type Enquiry = {
   id: string;
   name: string;
@@ -214,6 +236,7 @@ export type AdminData = {
   artists: Artist[];
   artworks: Artwork[];
   exhibitions: Exhibition[];
+  collaborations: Collaboration[];
   governingBody: GoverningMember[];
   enquiries: Enquiry[];
   orders: Order[];

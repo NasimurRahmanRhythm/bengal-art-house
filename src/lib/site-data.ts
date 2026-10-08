@@ -3,7 +3,6 @@ import { createClient } from "@supabase/supabase-js";
 import { ARTWORKS, type Artwork } from "@/data/artworks";
 import {
   ARTISTS,
-  COLLABORATIONS,
   EXHIBITIONS,
   GOVERNING_BODY,
   SERVICES,
@@ -165,16 +164,31 @@ export async function getGoverningBody(): Promise<GoverningMember[]> {
   }));
 }
 
+/** Newest first. Unlike the other content types there is no placeholder
+    fallback — the old placeholder list described the founding artist's
+    travels, not partner projects, and an empty page is more honest. Rows
+    without a slug (left over from before collaborations had pages) are
+    skipped, since there is nowhere to link them to. */
 export async function getCollaborations(): Promise<Collaboration[]> {
-  const data = await rows("collaborations", "*", "order_index", true);
-  if (!data) return COLLABORATIONS;
+  const data = await rows("collaborations", "*", "date_start");
+  if (!data) return [];
 
-  return data.map((r) => ({
-    place: str(r.place),
-    title: str(r.title),
-    body: str(r.body),
-    years: str(r.years),
-  }));
+  // Sorted here rather than by the query: year-only entries have no
+  // date_start, and must still fall among the dated ones by their year.
+  const key = (r: Row) => str(r.date_start) || str(r.year);
+  return data
+    .filter((r) => str(r.slug))
+    .sort((a, b) => key(b).localeCompare(key(a)))
+    .map((r) => ({
+      slug: str(r.slug),
+      title: str(r.title),
+      subtitle: str(r.subtitle),
+      artists: str(r.artists),
+      place: str(r.place),
+      date: str(r.date_label) || str(r.year),
+      body: str(r.body),
+      photos: strs(r.photos),
+    }));
 }
 
 export async function getServices(): Promise<Service[]> {

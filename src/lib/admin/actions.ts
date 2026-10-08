@@ -8,6 +8,7 @@ import {
   fetchAll,
   rowToArtist,
   rowToArtwork,
+  rowToCollaboration,
   rowToExhibition,
   rowToMember,
   rowToPost,
@@ -18,6 +19,7 @@ import type {
   Artist,
   Artwork,
   BlogPost,
+  Collaboration,
   Enquiry,
   Exhibition,
   GoverningMember,
@@ -279,6 +281,42 @@ export async function deleteExhibition(id: string): Promise<void> {
   if (error) throw new Error(error.message);
   revalidatePublic(["/", "/exhibitions"]);
   revalidatePath("/exhibitions/[slug]", "page");
+}
+
+// --- collaborations --------------------------------------------------------
+
+export async function saveCollaboration(c: Collaboration): Promise<Collaboration> {
+  const row = {
+    slug: c.slug,
+    title: c.title,
+    subtitle: c.subtitle || null,
+    artists: c.artists || null,
+    place: c.place || null,
+    date_start: c.dateStart,
+    date_end: c.dateEnd,
+    date_label: c.dateLabel,
+    year: c.year,
+    body: c.body,
+    photos: c.photos,
+    published: true,
+  };
+
+  const q = db().from("collaborations");
+  const { data, error } = c.id
+    ? await q.update(row).eq("id", c.id).select().single()
+    : await q.insert(row).select().single();
+
+  if (error) throw new Error(error.message);
+  revalidatePublic(["/collaborations"]);
+  revalidatePath("/collaborations/[slug]", "page");
+  return rowToCollaboration(data);
+}
+
+export async function deleteCollaboration(id: string): Promise<void> {
+  const { error } = await db().from("collaborations").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidatePublic(["/collaborations"]);
+  revalidatePath("/collaborations/[slug]", "page");
 }
 
 // --- governing body --------------------------------------------------------

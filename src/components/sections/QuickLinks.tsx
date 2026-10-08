@@ -8,7 +8,7 @@ import styles from "./Sections.module.css";
 const LINKS = [
   { kicker: "Shop", title: "Explore Art", href: "/artworks", note: "Sculpture, editions & drawings" },
   { kicker: "On View", title: "Exhibitions", href: "/exhibitions", note: "Current, upcoming & archive" },
-  { kicker: "Abroad", title: "Collaborations", href: "/collaborations", note: "Baroda, Seoul, Europe" },
+  { kicker: "Partners", title: "Collaborations", href: "/collaborations", note: "Exhibitions & projects with partners" },
   { kicker: "Support", title: "Services", href: "/services", note: "Advisory, conservation, valuation" },
 ];
 

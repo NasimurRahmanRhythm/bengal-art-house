@@ -7,6 +7,7 @@ import type {
   Artist,
   Artwork,
   BlogPost,
+  Collaboration,
   Enquiry,
   Exhibition,
   GoverningMember,
@@ -41,6 +42,8 @@ type Ctx = {
   setArtworkStatus: (id: string, status: Artwork["status"]) => Promise<void>;
   saveExhibition: (e: Exhibition) => Promise<void>;
   deleteExhibition: (id: string) => Promise<void>;
+  saveCollaboration: (c: Collaboration) => Promise<void>;
+  deleteCollaboration: (id: string) => Promise<void>;
   saveMember: (m: GoverningMember) => Promise<void>;
   deleteMember: (id: string) => Promise<void>;
   setEnquiryStatus: (id: string, status: Enquiry["status"]) => Promise<void>;
@@ -64,6 +67,7 @@ const EMPTY: AdminData = {
   artists: [],
   artworks: [],
   exhibitions: [],
+  collaborations: [],
   governingBody: [],
   enquiries: [],
   orders: [],
@@ -181,6 +185,10 @@ export function AdminStoreProvider({ children }: { children: React.ReactNode }) 
       deleteExhibition: (id) =>
         commit(() => drop("exhibitions", id), () => api.deleteExhibition(id)),
 
+      saveCollaboration: (c) => upsert("collaborations", c, api.saveCollaboration),
+      deleteCollaboration: (id) =>
+        commit(() => drop("collaborations", id), () => api.deleteCollaboration(id)),
+
       saveMember: (m) => upsert("governingBody", m, api.saveMember),
       deleteMember: (id) => commit(() => drop("governingBody", id), () => api.deleteMember(id)),
 
@@ -261,6 +269,7 @@ export function useCounts() {
       sold: data.artworks.filter((w) => w.status === "sold").length,
       reserved: data.artworks.filter((w) => w.status === "reserved").length,
       exhibitions: data.exhibitions.length,
+      collaborations: data.collaborations.length,
       governingBody: data.governingBody.length,
       unread: data.enquiries.filter((e) => e.status === "new").length,
       orders: data.orders.length,
