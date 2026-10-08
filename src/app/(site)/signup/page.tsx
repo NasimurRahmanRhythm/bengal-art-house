@@ -27,6 +27,9 @@ export default function SignUpPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  // Unticked by default and ticked by the person signing up — the same
+  // agreement SSLCommerz requires at the cart and at checkout.
+  const [agreed, setAgreed] = useState(false);
   const [code, setCode] = useState("");
 
   const [submitting, setSubmitting] = useState(false);
@@ -50,6 +53,10 @@ export default function SignUpPage() {
     }
     if (password !== confirmPassword) {
       setError("Passwords don't match.");
+      return;
+    }
+    if (!agreed) {
+      setError("Please agree to the terms and policies to create an account.");
       return;
     }
 
@@ -178,6 +185,36 @@ export default function SignUpPage() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     disabled={submitting}
                   />
+                </label>
+
+                {/* The links open in a new tab so reading them does not lose
+                    what has been typed into the form. */}
+                <label className={styles.agree}>
+                  <input
+                    type="checkbox"
+                    required
+                    checked={agreed}
+                    onChange={(e) => {
+                      setAgreed(e.target.checked);
+                      if (e.target.checked) setError(null);
+                    }}
+                    disabled={submitting}
+                  />
+                  <span>
+                    I agree to the{" "}
+                    <Link href="/terms" target="_blank" rel="noopener">
+                      Terms &amp; Conditions
+                    </Link>
+                    ,{" "}
+                    <Link href="/privacy-policy" target="_blank" rel="noopener">
+                      Privacy Policy
+                    </Link>{" "}
+                    and{" "}
+                    <Link href="/refund-policy" target="_blank" rel="noopener">
+                      Return &amp; Refund Policy
+                    </Link>
+                    .
+                  </span>
                 </label>
 
                 {error && (

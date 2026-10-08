@@ -141,7 +141,7 @@
 
 .detailEmpty {
   color: var(--text-muted);
-  font-style: italic;
+  font-style: normal;
   font-size: 14px;
 }
 

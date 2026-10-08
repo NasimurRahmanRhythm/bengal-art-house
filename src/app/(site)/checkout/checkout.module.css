@@ -94,6 +94,7 @@
 
 .req {
   color: var(--oxide);
+  font-style: normal;
 }
 
 .field input,

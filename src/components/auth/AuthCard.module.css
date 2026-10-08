@@ -95,6 +95,31 @@
   color: var(--ink);
 }
 
+.agree {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.agree input {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: var(--ink);
+  cursor: pointer;
+}
+
+.agree a {
+  color: var(--oxide);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .submit {
   display: inline-flex;
   align-items: center;

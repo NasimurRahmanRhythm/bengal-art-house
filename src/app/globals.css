@@ -176,8 +176,10 @@ select {
   margin-bottom: -0.2em;
 }
 
+/* The accent word in a heading: set apart by colour and a lighter weight,
+   not italics. */
 .em {
-  font-style: italic;
+  font-style: normal;
   font-weight: 400;
   color: var(--oxide);
 }
