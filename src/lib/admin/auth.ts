@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminSessionClient } from "@/lib/supabase/server";
 import { ADMIN_SESSION_COOKIE, sessionIsFresh } from "./session";
 
 export type AdminCheck =
@@ -16,7 +16,7 @@ export type AdminCheck =
  * whenever their token happens to expire.
  */
 export async function checkAdmin(): Promise<AdminCheck> {
-  const supabase = await createClient();
+  const supabase = await createAdminSessionClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

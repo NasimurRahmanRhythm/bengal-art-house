@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminSessionClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { ADMIN_SESSION_COOKIE, adminCookieOptions } from "@/lib/admin/session";
 
@@ -41,7 +41,7 @@ export async function requestCode(email: string): Promise<Result> {
   // what stops this form from creating accounts for strangers.
   if (!allowed) return { ok: true, message: NEUTRAL };
 
-  const supabase = await createClient();
+  const supabase = await createAdminSessionClient();
   const { error: otpError } = await supabase.auth.signInWithOtp({
     email: address,
     // First-time admins have no account yet; the allowlist has already decided
@@ -59,7 +59,7 @@ export async function verifyCode(email: string, token: string): Promise<Result> 
   const code = token.replace(/\D/g, "");
   if (code.length !== 6) return { ok: false, message: "Enter the six-digit code." };
 
-  const supabase = await createClient();
+  const supabase = await createAdminSessionClient();
   const { data, error } = await supabase.auth.verifyOtp({
     email: address,
     token: code,
@@ -87,7 +87,7 @@ export async function verifyCode(email: string, token: string): Promise<Result> 
     .single();
 
   if (profile?.role !== "admin") {
-    await supabase.auth.signOut();
+    await supabase.auth.signOut({ scope: "local" });
     return { ok: false, message: "That account does not have admin access." };
   }
 
@@ -98,7 +98,9 @@ export async function verifyCode(email: string, token: string): Promise<Result> 
 }
 
 export async function signOutAdmin(): Promise<void> {
-  const supabase = await createClient();
-  await supabase.auth.signOut();
+  const supabase = await createAdminSessionClient();
+  // "local": ends this dashboard session only, not every session the account
+  // has open elsewhere.
+  await supabase.auth.signOut({ scope: "local" });
   (await cookies()).delete(ADMIN_SESSION_COOKIE);
 }

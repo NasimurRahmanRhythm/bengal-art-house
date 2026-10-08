@@ -14,6 +14,15 @@
 // Every number and every line of copy that mentions the window reads from here,
 // so changing it is a one-line change.
 export const ADMIN_SESSION_DAYS = 14;
+
+/** The admin panel's own Supabase session cookie.
+ *
+ *  The public site keeps Supabase's default cookie (sb-<project>-auth-token);
+ *  the admin panel stores its session under this name instead. Two cookies,
+ *  two independent sign-ins: signing in to the dashboard does not sign anyone
+ *  in on the shop, and a customer's session on the shop is never read by the
+ *  dashboard — even when both happen in the same browser. */
+export const ADMIN_AUTH_COOKIE = "gh-admin-auth";
 export const ADMIN_SESSION_COOKIE = "gh_admin_since";
 export const ADMIN_SESSION_MAX_AGE = ADMIN_SESSION_DAYS * 24 * 60 * 60;
 
