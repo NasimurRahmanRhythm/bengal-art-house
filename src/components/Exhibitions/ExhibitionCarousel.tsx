@@ -15,7 +15,15 @@ const STATUS_LABEL = {
   past: "Archive",
 } as const;
 
-export default function ExhibitionCarousel({ exhibitions }: { exhibitions: Exhibition[] }) {
+export default function ExhibitionCarousel({
+  exhibitions,
+  moreHref,
+}: {
+  exhibitions: Exhibition[];
+  /** When set, the rail ends with a card linking here — the landing page
+      shows only the latest few and points to the full list. */
+  moreHref?: string;
+}) {
   const rail = useRef<HTMLDivElement>(null);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
@@ -140,6 +148,18 @@ export default function ExhibitionCarousel({ exhibitions }: { exhibitions: Exhib
             </Link>
           </article>
         ))}
+
+        {moreHref && (
+          <article className={`${styles.card} ${styles.moreCard}`}>
+            <Link href={moreHref} className={styles.moreLink} data-cursor="View">
+              <span className={styles.moreKicker}>All exhibitions</span>
+              <span className={styles.moreTitle}>See more</span>
+              <span className={styles.moreArrow} aria-hidden="true">
+                <ArrowIcon size={20} />
+              </span>
+            </Link>
+          </article>
+        )}
       </div>
 
       <div className={styles.controls}>

@@ -16,6 +16,11 @@ import { MATERIALS } from "@/data/site";
 import { getArtists, getArtworks, getExhibitions } from "@/lib/site-data";
 import styles from "./page.module.css";
 
+/** How many of each the landing page shows before pointing to the full page. */
+const HOME_ARTISTS = 6;
+const HOME_ARTWORKS = 6;
+const HOME_EXHIBITIONS = 5;
+
 export default async function Home() {
   const [artworks, artists, exhibitions] = await Promise.all([
     getArtworks(),
@@ -49,7 +54,12 @@ export default async function Home() {
               </Reveal>
             }
           />
-          <ArtistGrid artists={artists} />
+          <ArtistGrid artists={artists.slice(0, HOME_ARTISTS)} />
+          <div className={styles.seeMoreRow}>
+            <Link href="/artists" className={styles.seeMore}>
+              See more <ArrowIcon size={15} />
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -81,7 +91,11 @@ export default async function Home() {
           />
         </div>
         <div className="wrap">
-          <ExhibitionCarousel exhibitions={exhibitions} />
+          {/* Newest first, as getExhibitions orders them. */}
+          <ExhibitionCarousel
+            exhibitions={exhibitions.slice(0, HOME_EXHIBITIONS)}
+            moreHref="/exhibitions"
+          />
         </div>
       </section>
 
@@ -107,7 +121,12 @@ export default async function Home() {
               </Reveal>
             }
           />
-          <ArtworkGrid artworks={artworks} limit={6} />
+          <ArtworkGrid artworks={artworks} limit={HOME_ARTWORKS} />
+          <div className={styles.seeMoreRow}>
+            <Link href="/artworks" className={styles.seeMore}>
+              See more <ArrowIcon size={15} />
+            </Link>
+          </div>
         </div>
       </section>
 

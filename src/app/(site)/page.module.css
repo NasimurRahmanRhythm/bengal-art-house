@@ -22,3 +22,30 @@
   color: var(--oxide);
   gap: 16px;
 }
+
+/* "See more" under a section the landing page shows only part of. */
+.seeMoreRow {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(32px, 4vw, 48px);
+}
+
+.seeMore {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 30px;
+  border: 1px solid var(--ink);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  transition: background 0.3s ease, color 0.3s ease, gap 0.4s var(--ease-out);
+}
+
+.seeMore:hover {
+  background: var(--ink);
+  color: var(--marble);
+  gap: 18px;
+}

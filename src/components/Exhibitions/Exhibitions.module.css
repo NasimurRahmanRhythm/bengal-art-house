@@ -41,6 +41,54 @@
   height: 100%;
 }
 
+/* The closing slide on the landing page: same footprint as an exhibition
+   card, so the rail keeps its rhythm, but plain — a way through to the rest. */
+.moreCard {
+  background: var(--marble-dim);
+}
+
+.moreLink {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+  height: 100%;
+  min-height: 320px;
+  padding: 32px 28px;
+}
+
+.moreKicker {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--oxide);
+}
+
+.moreTitle {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 36px);
+  line-height: 1.1;
+}
+
+.moreArrow {
+  display: inline-grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-top: 8px;
+  border: 1px solid var(--stone-line-strong);
+  border-radius: 50%;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.moreCard:hover .moreArrow {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--marble);
+}
+
 .cardPlate {
   position: relative;
   display: block;
