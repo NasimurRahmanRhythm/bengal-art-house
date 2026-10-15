@@ -6,47 +6,6 @@ export type Work = {
   location: string;
 };
 
-export const WORKS: Work[] = [
-  {
-    index: "01",
-    title: "Shangshaptok",
-    medium: "Concrete & steel",
-    location: "Jahangirnagar University — spirit of the Liberation War",
-  },
-  {
-    index: "02",
-    title: "Remembrance '71",
-    medium: "Bronze",
-    location: "First cast 1976 — reworked across three decades",
-  },
-  {
-    index: "03",
-    title: "Steps",
-    medium: "Stone, abstract form",
-    location: "Seoul Olympic Park, South Korea — 1988",
-  },
-  {
-    index: "04",
-    title: "Shantir Payra (Peace Bird)",
-    medium: "Stainless steel",
-    location: "TSC, University of Dhaka",
-  },
-  { index: "05", title: "Jagroto Bangla", medium: "Mixed metal", location: "Brahmanbaria" },
-  {
-    index: "06",
-    title: "Waiting Mother",
-    medium: "Rusted mild steel",
-    location: "A mother awaiting her son's return from 1971",
-  },
-  {
-    index: "07",
-    title: "Mukta Bangla",
-    medium: "Stainless steel — 2011",
-    location: "Patuakhali Science & Technology University",
-  },
-  { index: "08", title: "Freedom", medium: "Stone", location: "Krishibid Institute, Dhaka" },
-  { index: "09", title: "Flying Bird", medium: "Steel", location: "World Bank Dhaka Office" },
-];
 
 export type Exhibition = {
   id: string;
@@ -64,71 +23,8 @@ export type Exhibition = {
   hours?: string;
 };
 
-export const EXHIBITIONS: Exhibition[] = [
-  {
-    id: "retrospective",
-    year: "2025",
-    date: "14 August — 4 September 2025",
-    title: "Hamiduzzaman Khan Retrospective",
-    venue: "Nalinikanta Bhattashali Gallery, Bangladesh National Museum",
-    tag: "Sculpture · Painting · Print",
-    status: "current",
-    plate: 1,
-    blurb:
-      "Five decades gathered in one room — the maquettes, the drawings, and the prints that stood behind the monuments.",
-  },
-  {
-    id: "artistic-journey",
-    year: "2025",
-    date: "12 September — 3 October 2025",
-    title: "An Artistic Journey",
-    venue: "Bengal Shilpalay, Dhanmondi, Dhaka",
-    tag: "Sculpture & Sketches",
-    status: "upcoming",
-    plate: 6,
-    blurb:
-      "Sculpture shown alongside the sketchbooks, tracing how a line on paper becomes a form in steel.",
-  },
-  {
-    id: "birth-anniversary",
-    year: "2016",
-    date: "21 December 2016",
-    title: "70th Birth Anniversary Exhibition",
-    venue: "Galleri Kaya, Dhaka",
-    tag: "Solo Sculpture",
-    status: "past",
-    plate: 3,
-    blurb:
-      "A solo survey mounted for his seventieth year, drawn largely from the artist's own collection.",
-  },
-  {
-    id: "first-national",
-    year: "1976",
-    date: "1976",
-    title: "First National Sculpture Exhibition",
-    venue: "Bangladesh Shilpakala Academy — Best Award",
-    tag: "Group · Award",
-    status: "past",
-    plate: 7,
-    blurb:
-      "The exhibition that announced sculpture as a national practice — and took the Best Award home.",
-  },
-  {
-    id: "riverine",
-    year: "1991",
-    date: "1991",
-    title: "Riverine: Watercolours",
-    venue: "Shilpakala Academy, Dhaka",
-    tag: "Works on Paper",
-    status: "past",
-    plate: 2,
-    blurb:
-      "The watercolours made on the rivers of Kishoreganj, shown together for the first and only time.",
-  },
-];
 
-// The people who run the gallery. Placeholder rows, same as everything else
-// here: the moment governing_body has one row in it, this list stops being used.
+// The people who run the gallery, from the governing_body table.
 export type GoverningMember = {
   id: string;
   name: string;
@@ -137,36 +33,9 @@ export type GoverningMember = {
   photo?: string;
 };
 
-export const GOVERNING_BODY: GoverningMember[] = [
-  {
-    id: "chair",
-    name: "Ivy Zaman",
-    role: "Chairperson",
-    bio: "Sculptor and custodian of the studio archive, overseeing the gallery's collection and its programme of exhibitions.",
-  },
-  {
-    id: "director",
-    name: "Zubair Khan",
-    role: "Director",
-    bio: "Leads acquisitions and the gallery's work with public institutions commissioning sculpture.",
-  },
-  {
-    id: "secretary",
-    name: "Farhana Rahman",
-    role: "Secretary",
-    bio: "Responsible for records, provenance and the gallery's correspondence with collectors.",
-  },
-  {
-    id: "treasurer",
-    name: "Imran Chowdhury",
-    role: "Treasurer",
-    bio: "Oversees the gallery's accounts and the financing of its restoration work.",
-  },
-];
 
-// A partner exhibition or project, as the public pages show it. There is no
-// placeholder list: collaborations only ever come from the admin panel, and
-// the page says so when there are none yet.
+// A partner exhibition or project, as the public pages show it — from the
+// collaborations table, added in the admin panel.
 export type Collaboration = {
   slug: string;
   title: string;
@@ -186,38 +55,6 @@ export type Service = {
   icon: "advisory" | "catalog" | "restore" | "provenance" | "public" | "valuation";
 };
 
-export const SERVICES: Service[] = [
-  {
-    title: "Art Advisory",
-    body: "Guidance for patrons and institutions collecting or investing in sculpture and works on paper.",
-    icon: "advisory",
-  },
-  {
-    title: "Cataloging & Documentation",
-    body: "High-quality imaging, titling and archival records for public and private collections of his work.",
-    icon: "catalog",
-  },
-  {
-    title: "Restoration & Conservation",
-    body: "Care for stone, bronze and steel works exposed to years of open-air installation and weather.",
-    icon: "restore",
-  },
-  {
-    title: "Provenance & Authentication",
-    body: "Verification support for works attributed to the artist, addressing a real concern across the region.",
-    icon: "provenance",
-  },
-  {
-    title: "Public Art Consultation",
-    body: "Advice for institutions and campuses commissioning or siting monumental sculpture in public space.",
-    icon: "public",
-  },
-  {
-    title: "Valuation",
-    body: "Assessment of current market valuation for sculpture and works on paper, with a written report.",
-    icon: "valuation",
-  },
-];
 
 export const FACTS = [
   { label: "Born", value: "16 March 1946, Kishoreganj" },
@@ -243,59 +80,7 @@ export type Artist = {
   facts: ArtistFact[];
   works: string;
   plate: number;
-  // Absent throughout the placeholder data below — the gallery has supplied no
-  // portraits yet, so those cards fall back to the generated plate.
+  // Optional: an artist without a portrait gets the generated plate instead.
   photo?: string;
 };
 
-export const ARTISTS: Artist[] = [
-  {
-    slug: "hamiduzzaman-khan",
-    initials: "HK",
-    name: "Hamiduzzaman Khan",
-    role: "Founder · Sculptor, 1946–2025",
-    body: "Founding figure of modern sculpture in Bangladesh, working across bronze, stone and steel for five decades.",
-    bio: BIO,
-    facts: FACTS,
-    works: "6 works in the gallery",
-    plate: 0,
-  },
-  {
-    slug: "ivy-zaman",
-    initials: "IZ",
-    name: "Ivy Zaman",
-    role: "Sculptor",
-    body: "Sculptor in her own right, with works shown in Bangladesh, Korea and India alongside her husband's practice.",
-    bio: [
-      "Ivy Zaman studied sculpture alongside Hamiduzzaman Khan, developing her own practice in marble and granite even as she supported his public commissions. Where his work reached for monumental, public scale, hers has stayed closer to the studio — compact seated and reclining forms carved directly from stone, finished by hand.",
-      "Her work has been shown in Bangladesh, South Korea and India. She continues to carve from the family studio in Dhaka, and has taken an increasing role in advising the gallery's collectors on stone and marble acquisitions.",
-    ],
-    facts: [
-      { label: "Practice", value: "Marble & granite, direct carving" },
-      { label: "Based in", value: "Dhaka, Bangladesh" },
-      { label: "Exhibited", value: "Bangladesh, South Korea, India" },
-      { label: "Role", value: "Sculptor & advisory" },
-    ],
-    works: "1 work in the gallery",
-    plate: 4,
-  },
-  {
-    slug: "zubair-khan",
-    initials: "ZK",
-    name: "Zubair Khan",
-    role: "Studio & Archive",
-    body: "Continuing the documentation and stewardship of his father's public works, alongside his own studio practice.",
-    bio: [
-      "Zubair Khan grew up around his father's studio and, together with his brother Zarif, now leads the work of cataloguing, conserving and exhibiting Hamiduzzaman Khan's public sculptures — the archive that underpins the gallery's authentication and restoration services.",
-      "His own practice extends the studio's material language into smaller, contemporary bronze forms, often finished in the same green patina used across the sculpture park's outdoor works.",
-    ],
-    facts: [
-      { label: "Practice", value: "Bronze, cast on granite" },
-      { label: "Based in", value: "Dhaka, Bangladesh" },
-      { label: "Focus", value: "Documentation & conservation" },
-      { label: "Role", value: "Studio & archive" },
-    ],
-    works: "1 work in the gallery",
-    plate: 8,
-  },
-];

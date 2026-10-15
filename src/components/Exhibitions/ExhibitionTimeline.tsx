@@ -43,6 +43,10 @@ export default function ExhibitionTimeline({ exhibitions }: { exhibitions: Exhib
     { scope: root }
   );
 
+  if (exhibitions.length === 0) {
+    return <p className={styles.emptyNote}>Exhibitions will be listed here soon.</p>;
+  }
+
   return (
     <div ref={root} className={styles.timeline}>
       <span className={styles.spine} aria-hidden="true" />

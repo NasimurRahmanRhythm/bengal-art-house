@@ -13,9 +13,7 @@ export function formatLongDate(iso: string): string {
 // independent of the admin dashboard's types. The public site and the admin
 // panel deploy separately, so a page under (site) can never import from
 // src/lib/admin/*: that directory is excluded from the public build, and
-// doing so breaks compilation the moment it isn't checked out. src/data/*.ts
-// is the one source both sides are allowed to read — the admin's seed data
-// maps over it the same way it already does for ARTISTS and ARTWORKS.
+// doing so breaks compilation the moment it isn't checked out.
 export type ContentItem = {
   slug: string;
   title: string;

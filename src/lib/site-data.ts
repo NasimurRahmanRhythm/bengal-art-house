@@ -1,28 +1,27 @@
 import { createClient } from "@supabase/supabase-js";
 
-import { ARTWORKS, type Artwork } from "@/data/artworks";
-import {
-  ARTISTS,
-  EXHIBITIONS,
-  GOVERNING_BODY,
-  SERVICES,
-  WORKS,
-  type Artist,
-  type Collaboration,
-  type Exhibition,
-  type GoverningMember,
-  type Service,
-  type Work,
+import type { Artwork } from "@/data/artworks";
+import type {
+  Artist,
+  Collaboration,
+  Exhibition,
+  GoverningMember,
+  Service,
+  Work,
 } from "@/data/gallery";
-import { POSTS } from "@/data/posts";
 import type { ContentItem } from "@/lib/content";
 
 // What the public site reads.
 //
-// The rule, for every content type below: if the database holds even one row,
-// the database is the site. Otherwise the placeholder content in src/data/*.ts
-// is shown, so a fresh checkout — or a gallery that has not filled anything in
-// yet — still renders a complete website instead of empty pages.
+// The database is the only source. There is no placeholder content to fall
+// back on: an empty table, or one that cannot be read, gives an empty list and
+// the page shows its own "nothing here yet" state — never invented artists,
+// works or press coverage presented as real.
+//
+// Freshness: pages under (site) are regenerated at most a minute apart (see
+// `revalidate` in (site)/layout.tsx), so a row added from Supabase directly or
+// by a migration appears without a redeploy. Saves from the admin panel
+// refresh the affected pages immediately.
 //
 // Reads go through the anon key, under the same Row Level Security a visitor
 // gets, so an unpublished draft can never leak out this way. Writes never
@@ -42,29 +41,31 @@ const strs = (v: unknown): string[] =>
   Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
 
 /**
- * Run a query and hand back the rows, or null to mean "use the placeholders".
- * Null covers three cases that all want the same answer: no credentials, the
- * query failed (most often a migration that has not been run), and the table
- * is empty.
+ * Run a query and hand back the rows — an empty list when there are none,
+ * when there are no credentials, or when the query fails. A failure is
+ * logged, since it usually means a migration that has not been run yet.
  */
-async function rows(table: string, select: string, order: string, asc = false) {
+async function rows(table: string, select: string, order: string, asc = false): Promise<Row[]> {
   const db = publicClient();
-  if (!db) return null;
+  if (!db) return [];
   try {
     const { data, error } = await db
       .from(table)
       .select(select)
       .order(order, { ascending: asc, nullsFirst: false });
-    if (error || !data || data.length === 0) return null;
-    return data as unknown as Row[];
-  } catch {
-    return null;
+    if (error) {
+      console.error(`[site-data] could not read ${table}: ${error.message}`);
+      return [];
+    }
+    return (data ?? []) as unknown as Row[];
+  } catch (e) {
+    console.error(`[site-data] could not read ${table}:`, e);
+    return [];
   }
 }
 
 export async function getArtworks(): Promise<Artwork[]> {
   const data = await rows("artworks", "*, artists(name)", "created_at");
-  if (!data) return ARTWORKS;
 
   return data.map((r, i) => {
     const artist = (r.artists ?? null) as Row | null;
@@ -89,7 +90,6 @@ export async function getArtworks(): Promise<Artwork[]> {
 
 export async function getArtists(): Promise<Artist[]> {
   const data = await rows("artists", "*, artworks(id)", "name", true);
-  if (!data) return ARTISTS;
 
   return data.map((r, i) => {
     const bio = strs(r.bio);
@@ -114,7 +114,6 @@ export async function getArtists(): Promise<Artist[]> {
 
 export async function getExhibitions(): Promise<Exhibition[]> {
   const data = await rows("exhibitions", "*", "date_start");
-  if (!data) return EXHIBITIONS;
 
   const today = new Date().toISOString().slice(0, 10);
 
@@ -152,7 +151,6 @@ export async function getExhibitions(): Promise<Exhibition[]> {
 
 export async function getGoverningBody(): Promise<GoverningMember[]> {
   const data = await rows("governing_body", "*", "order_index", true);
-  if (!data) return GOVERNING_BODY;
 
   return data.map((r) => ({
     id: str(r.id),
@@ -163,14 +161,10 @@ export async function getGoverningBody(): Promise<GoverningMember[]> {
   }));
 }
 
-/** Newest first. Unlike the other content types there is no placeholder
-    fallback — the old placeholder list described the founding artist's
-    travels, not partner projects, and an empty page is more honest. Rows
-    without a slug (left over from before collaborations had pages) are
-    skipped, since there is nowhere to link them to. */
+/** Newest first. Rows without a slug (left over from before collaborations
+    had pages) are skipped, since there is nowhere to link them to. */
 export async function getCollaborations(): Promise<Collaboration[]> {
   const data = await rows("collaborations", "*", "date_start");
-  if (!data) return [];
 
   // Sorted here rather than by the query: year-only entries have no
   // date_start, and must still fall among the dated ones by their year.
@@ -192,7 +186,6 @@ export async function getCollaborations(): Promise<Collaboration[]> {
 
 export async function getServices(): Promise<Service[]> {
   const data = await rows("services", "*", "order_index", true);
-  if (!data) return SERVICES;
 
   return data.map((r) => ({
     title: str(r.title),
@@ -203,7 +196,6 @@ export async function getServices(): Promise<Service[]> {
 
 export async function getWorks(): Promise<Work[]> {
   const data = await rows("works", "*", "order_index", true);
-  if (!data) return WORKS;
 
   return data.map((r, i) => ({
     // The numbering is positional, not stored — a work's place in the list is
@@ -230,13 +222,10 @@ function toContent(r: Row): ContentItem {
 
 export async function getPosts(): Promise<ContentItem[]> {
   const data = await rows("posts", "*", "published_at");
-  return data ? data.map(toContent) : POSTS;
+  return data.map(toContent);
 }
 
-/** No placeholder fallback: the old placeholder read as real coverage
-    ("featured in The Daily Star") that never happened. Only items added from
-    the admin panel are shown; the page says so when there are none. */
 export async function getPressReleases(): Promise<ContentItem[]> {
   const data = await rows("press_releases", "*", "published_at");
-  return data ? data.map(toContent) : [];
+  return data.map(toContent);
 }

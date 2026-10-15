@@ -22,6 +22,10 @@ export default function ArtistGrid({ artists }: { artists: Artist[] }) {
     );
   }, [artists]);
 
+  if (artists.length === 0) {
+    return <p className={styles.emptyNote}>Artists will be listed here soon.</p>;
+  }
+
   return (
     <div ref={grid} className={`${styles.artistGrid} ${styles.artistReveal}`}>
       {artists.map((a) => (

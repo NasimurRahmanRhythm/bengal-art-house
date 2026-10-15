@@ -119,6 +119,10 @@ export default function ExhibitionCarousel({
     { scope: rail }
   );
 
+  if (exhibitions.length === 0) {
+    return <p className={styles.emptyNote}>Exhibitions will be listed here soon.</p>;
+  }
+
   return (
     <div className={styles.carousel}>
       <div ref={rail} className={styles.rail} tabIndex={0} aria-label="Exhibitions carousel">

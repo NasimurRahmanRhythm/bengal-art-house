@@ -23,6 +23,10 @@ export default function ServiceGrid({ items }: { items: Service[] }) {
     });
   }, []);
 
+  if (items.length === 0) {
+    return <p className={styles.emptyNote}>Services will be listed here soon.</p>;
+  }
+
   return (
     <div ref={grid} className={`${styles.serviceGrid} ${styles.gridReveal}`}>
       {items.map((s, i) => {

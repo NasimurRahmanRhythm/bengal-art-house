@@ -449,3 +449,9 @@
     margin-top: 6px;
   }
 }
+
+/* Shown in place of the slider or timeline while there are no exhibitions. */
+.emptyNote {
+  padding: 48px 0;
+  color: var(--text-muted);
+}

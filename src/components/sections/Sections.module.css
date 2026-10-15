@@ -568,7 +568,8 @@
   color: var(--oxide);
 }
 
-.collabEmpty {
+.collabEmpty,
+.emptyNote {
   padding: 48px 0;
   color: var(--text-muted);
 }
