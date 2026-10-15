@@ -163,7 +163,16 @@
   margin-bottom: 12px;
 }
 
+/* Always four lines tall: longer text is cut with "…", shorter text keeps
+   the space, so every card on the landing-page slider is the same height
+   whatever was written for it. The full text is on the exhibition's page. */
 .cardBlurb {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
+  min-height: calc(4 * 1.55em);
   font-size: 13.5px;
   color: var(--text-muted);
   line-height: 1.55;
