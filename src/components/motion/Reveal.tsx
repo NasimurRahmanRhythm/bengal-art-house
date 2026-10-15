@@ -58,7 +58,15 @@ export default function Reveal({
       className={`${styles.reveal} ${styles[variant]} ${isStaggered ? styles.stagger : ""} ${className ?? ""}`}
       style={style}
     >
-      {children}
+      {/* The wipe clips its content to nothing before it plays — and a fully
+          clipped element never counts as on screen, so clipping the observed
+          element itself meant the reveal could never fire. The clip lives on
+          this inner wrapper instead, and the outer element is the one watched. */}
+      {variant === "wipe" && !isStaggered ? (
+        <div className={styles.wipeInner}>{children}</div>
+      ) : (
+        children
+      )}
     </Tag>
   );
 }

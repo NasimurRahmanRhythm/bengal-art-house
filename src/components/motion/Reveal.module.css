@@ -59,6 +59,21 @@
   filter: blur(0px);
 }
 
+/* Wipe: the clip is applied to the inner wrapper (see Reveal.tsx), never to
+   the observed element, which must stay measurable to trigger the reveal. */
+.reveal.wipe:not(.stagger) {
+  clip-path: none;
+}
+
+.wipeInner {
+  clip-path: var(--reveal-clip);
+  transition: clip-path var(--reveal-duration) var(--ease-out) var(--reveal-delay);
+}
+
+.reveal.visible .wipeInner {
+  clip-path: inset(0% 0% 0% 0%);
+}
+
 .reveal.stagger > * {
   opacity: var(--reveal-opacity);
   transform: translate(var(--reveal-x), var(--reveal-y)) scale(var(--reveal-scale));

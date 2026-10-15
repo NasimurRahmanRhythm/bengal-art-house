@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { revealOnce } from "@/lib/motion";
+import { revealEach } from "@/lib/motion";
 import type { Artist } from "@/data/gallery";
 import ArtPlate from "@/components/ArtPlate/ArtPlate";
 import { ArrowIcon } from "@/components/Icons";
@@ -15,14 +15,12 @@ export default function ArtistGrid({ artists }: { artists: Artist[] }) {
     const el = grid.current;
     if (!el) return;
 
-    Array.from(el.children).forEach((child, i) => {
-      (child as HTMLElement).style.setProperty("--item-delay", `${i * 0.13}s`);
-    });
-
-    return revealOnce(el, () => {
-      Array.from(el.children).forEach((child) => child.classList.add(styles.inView));
-    });
-  }, []);
+    // Card by card, not the grid as a whole: the roster keeps growing, and a
+    // whole-grid trigger stopped firing at all once it outgrew the screen.
+    return revealEach(Array.from(el.children) as HTMLElement[], (card) =>
+      card.classList.add(styles.inView),
+    );
+  }, [artists]);
 
   return (
     <div ref={grid} className={`${styles.artistGrid} ${styles.artistReveal}`}>

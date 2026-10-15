@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap, prefersReducedMotion } from "@/lib/gsap";
-import { revealOnce } from "@/lib/motion";
+import { revealEach } from "@/lib/motion";
 import type { Exhibition } from "@/data/gallery";
 import styles from "./Exhibitions.module.css";
 
@@ -22,14 +22,10 @@ export default function ExhibitionTimeline({ exhibitions }: { exhibitions: Exhib
     const el = root.current;
     if (!el) return;
 
+    // Row by row as each reaches the screen: the archive keeps growing, and a
+    // trigger on the whole list stops firing once it outgrows the screen.
     const rows = Array.from(el.querySelectorAll<HTMLElement>(`.${styles.row}`));
-    rows.forEach((row, i) => row.style.setProperty("--item-delay", `${i * 0.12}s`));
-
-    return revealOnce(
-      el,
-      () => rows.forEach((row) => row.classList.add(styles.rowVisible)),
-      { threshold: 0.1 }
-    );
+    return revealEach(rows, (row) => row.classList.add(styles.rowVisible));
   }, []);
 
   // Spine draw is continuously scroll-scrubbed, not a one-shot reveal — kept on ScrollTrigger.

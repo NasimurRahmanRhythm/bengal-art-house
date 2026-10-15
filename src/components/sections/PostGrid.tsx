@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { revealOnce } from "@/lib/motion";
+import { revealEach } from "@/lib/motion";
 import PostCard from "./PostCard";
 import styles from "./PostGrid.module.css";
 
@@ -29,13 +29,11 @@ export default function PostGrid({
     const el = grid.current;
     if (!el) return;
 
-    Array.from(el.children).forEach((child, i) => {
-      (child as HTMLElement).style.setProperty("--item-delay", `${i * 0.1}s`);
-    });
-
-    return revealOnce(el, () => {
-      Array.from(el.children).forEach((child) => child.classList.add(styles.inView));
-    });
+    // Card by card: the list grows with every post, and a whole-grid trigger
+    // stops firing once the grid is taller than the screen allows.
+    return revealEach(Array.from(el.children) as HTMLElement[], (card) =>
+      card.classList.add(styles.inView),
+    );
   }, [items]);
 
   return (

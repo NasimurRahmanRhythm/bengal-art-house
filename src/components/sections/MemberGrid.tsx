@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gridStaggerDelay, revealOnce } from "@/lib/motion";
+import { revealEach } from "@/lib/motion";
 import type { GoverningMember } from "@/data/gallery";
 import styles from "./Sections.module.css";
 
@@ -22,14 +22,10 @@ export default function MemberGrid({ members }: { members: GoverningMember[] }) 
     const el = grid.current;
     if (!el) return;
 
-    Array.from(el.children).forEach((child, i) => {
-      const delay = gridStaggerDelay(i, 3, 2, 0.07, "start");
-      (child as HTMLElement).style.setProperty("--item-delay", `${delay}s`);
-    });
-
-    return revealOnce(el, () => {
-      Array.from(el.children).forEach((child) => child.classList.add(styles.inView));
-    });
+    // Card by card, so a larger governing body never outgrows the trigger.
+    return revealEach(Array.from(el.children) as HTMLElement[], (card) =>
+      card.classList.add(styles.inView),
+    );
   }, []);
 
   return (
