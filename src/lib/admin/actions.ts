@@ -451,6 +451,9 @@ export async function deleteOrder(id: string): Promise<void> {
 // live and left alone afterwards, so editing an old post does not shuffle it
 // back to the top of the list.
 
+/** The columns posts and press_releases share. `tag` is not one of them —
+    only posts has it — and sending it for a press item made every press save
+    fail with "Could not find the 'tag' column of 'press_releases'". */
 function writingRow(p: BlogPost | PressRelease) {
   return {
     slug: p.slug,
@@ -458,7 +461,6 @@ function writingRow(p: BlogPost | PressRelease) {
     excerpt: p.excerpt,
     cover_url: p.coverUrl,
     body_html: p.html,
-    tag: p.tag,
     author_name: p.authorName,
     published: p.published,
     published_at: p.published ? (p.publishedAt ?? new Date().toISOString()) : null,
@@ -466,7 +468,7 @@ function writingRow(p: BlogPost | PressRelease) {
 }
 
 export async function savePost(p: BlogPost): Promise<BlogPost> {
-  const row = { ...writingRow(p), video_url: p.videoUrl };
+  const row = { ...writingRow(p), tag: p.tag, video_url: p.videoUrl };
   const q = db().from("posts");
   const { data, error } = p.id
     ? await q.update(row).eq("id", p.id).select().single()

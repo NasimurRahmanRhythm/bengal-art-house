@@ -15,7 +15,6 @@ import {
   type Work,
 } from "@/data/gallery";
 import { POSTS } from "@/data/posts";
-import { PRESS_RELEASES } from "@/data/press";
 import type { ContentItem } from "@/lib/content";
 
 // What the public site reads.
@@ -234,7 +233,10 @@ export async function getPosts(): Promise<ContentItem[]> {
   return data ? data.map(toContent) : POSTS;
 }
 
+/** No placeholder fallback: the old placeholder read as real coverage
+    ("featured in The Daily Star") that never happened. Only items added from
+    the admin panel are shown; the page says so when there are none. */
 export async function getPressReleases(): Promise<ContentItem[]> {
   const data = await rows("press_releases", "*", "published_at");
-  return data ? data.map(toContent) : PRESS_RELEASES;
+  return data ? data.map(toContent) : [];
 }
