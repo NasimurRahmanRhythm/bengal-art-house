@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Topbar } from "./AdminShell";
 import RichTextEditor from "./RichTextEditor";
+import ImageUpload from "./ImageUpload";
 import { ConfirmDelete, Field } from "./ui";
 import { useAdmin } from "@/lib/admin/store";
 import { uniqueSlug } from "@/lib/admin/slug";
@@ -25,7 +26,7 @@ function summarise(html: string): string {
   return stop > 90 ? cut.slice(0, stop + 1) : `${cut.trimEnd()}…`;
 }
 
-/** The first picture in the piece doubles as the card image. */
+/** With no cover chosen, the first picture in the piece is the card image. */
 function firstImage(html: string): string | null {
   return /<img[^>]+src="([^"]+)"/i.exec(html)?.[1] ?? null;
 }
@@ -39,6 +40,13 @@ export default function PressForm({ release }: { release?: PressRelease }) {
   const [publication, setPublication] = useState(release?.publication ?? "");
   const [author, setAuthor] = useState(release?.authorName ?? "");
   const [html, setHtml] = useState(release?.html ?? "");
+  // An explicit cover, optional. An existing item's cover is shown here only
+  // when it is not simply the first picture of its text — that one is chosen
+  // automatically, so listing it here would freeze it in place.
+  const [cover, setCover] = useState<string[]>(() => {
+    const url = release?.coverUrl;
+    return url && url !== firstImage(release?.html ?? "") ? [url] : [];
+  });
   const [error, setError] = useState("");
 
   function save(publish: boolean) {
@@ -62,7 +70,7 @@ export default function PressForm({ release }: { release?: PressRelease }) {
       publication: publication.trim(),
       authorName: author.trim(),
       excerpt: summarise(html),
-      coverUrl: firstImage(html),
+      coverUrl: cover[0] ?? firstImage(html),
       tag: "",
       // Cleaned once, here — running the sanitiser on every keystroke would
       // fight the caret, and the editor's paste handler already filters the
@@ -136,6 +144,14 @@ export default function PressForm({ release }: { release?: PressRelease }) {
                 onChange={(e) => setAuthor(e.target.value)}
                 placeholder="Gallery Hamiduzzaman"
               />
+            </Field>
+
+            <Field
+              label="Cover image"
+              optional
+              hint="Shown on the Media & Press page. Leave empty to use the first picture in the text."
+            >
+              <ImageUpload photos={cover} onChange={setCover} max={1} />
             </Field>
           </section>
 
