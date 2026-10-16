@@ -11,6 +11,7 @@ import type {
   Order,
   PressRelease,
 } from "./types";
+import { liveStatus } from "@/lib/payments/hold";
 
 // The one place that knows both shapes: snake_case Postgres columns on one
 // side, the camelCase types the screens use on the other. Everything below runs
@@ -55,7 +56,8 @@ export function rowToArtwork(r: Row): Artwork {
     year: str(r.year),
     dimensions: str(r.dimensions),
     price: num(r.price),
-    status: (str(r.status) || "available") as Artwork["status"],
+    // A checkout hold that has lapsed shows as available, as it is.
+    status: liveStatus(r.status, r.reserved_until) as Artwork["status"],
     photos: strs(r.photos),
     plate: num(r.plate),
   };

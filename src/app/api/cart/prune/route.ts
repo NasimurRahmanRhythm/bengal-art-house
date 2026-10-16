@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { liveStatus } from "@/lib/payments/hold";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -38,7 +39,7 @@ export async function POST(request: Request) {
 
   const { data, error } = await db
     .from("artworks")
-    .select("slug, status, published, price")
+    .select("slug, status, reserved_until, published, price")
     .in("slug", slugs);
 
   if (error) {
@@ -49,7 +50,12 @@ export async function POST(request: Request) {
 
   const purchasable = new Set(
     (data ?? [])
-      .filter((w) => w.published && w.status === "available" && Number(w.price) > 0)
+      .filter(
+        (w) =>
+          w.published &&
+          liveStatus(w.status, w.reserved_until) === "available" &&
+          Number(w.price) > 0,
+      )
       .map((w) => w.slug),
   );
 

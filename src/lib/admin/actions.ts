@@ -2,6 +2,7 @@
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { checkAdmin } from "./auth";
+import { NO_HOLD } from "@/lib/payments/hold";
 import {
   dbConfigured,
   fetchAll,
@@ -29,12 +30,11 @@ import type {
 
 // Every write in the dashboard goes through this file.
 //
-// It runs with the service_role key, not the visitor's session, because the
-// admin panel has no login yet and the RLS policies on these tables all require
-// is_admin(). That is safe only while the panel itself is unreachable in
-// production — the gate lives in src/app/admin/layout.tsx, and this file must
-// not be imported from anywhere outside /admin. When /admin/login lands, swap
-// createAdminClient() for the session client here and RLS enforces the rest.
+// It runs with the service_role key, past Row Level Security. A server action
+// is a public endpoint — anyone who finds its id can POST to it from any page,
+// not just from /admin — so the middleware's /admin guard is not enough on
+// its own. Every action here checks the caller itself, through checkAdmin():
+// a live admin session, the admin role read fresh, and a recent sign-in.
 
 function db() {
   if (!dbConfigured()) {
@@ -45,10 +45,25 @@ function db() {
   return createAdminClient();
 }
 
+function deniedMessage(reason: "signed-out" | "expired" | "not-admin"): string {
+  return reason === "not-admin"
+    ? "Only an admin can do this."
+    : "Your admin session has ended. Sign in again.";
+}
+
+/** Throws unless the caller is a signed-in admin. The first line of every
+    action below that changes or reveals anything. */
+async function requireAdmin(): Promise<void> {
+  const admin = await checkAdmin();
+  if (!admin.ok) throw new Error(deniedMessage(admin.reason));
+}
+
 export async function loadAll(): Promise<
   { ok: true; data: AdminData; warning: string } | { ok: false; error: string }
 > {
   if (!dbConfigured()) return { ok: false, error: "not-configured" };
+  const admin = await checkAdmin();
+  if (!admin.ok) return { ok: false, error: deniedMessage(admin.reason) };
   try {
     const { data, failed } = await fetchAll();
     return {
@@ -77,6 +92,8 @@ export async function uploadImage(
   // Signalled rather than thrown: the caller falls back to keeping the picture
   // on the row itself so the panel still works without credentials.
   if (!dbConfigured()) return { ok: false, error: "not-configured" };
+  const admin = await checkAdmin();
+  if (!admin.ok) return { ok: false, error: deniedMessage(admin.reason) };
 
   const file = form.get("file");
   if (!(file instanceof File) || file.size === 0) {
@@ -127,10 +144,7 @@ const MAX_VIDEO_BYTES = 45 * 1024 * 1024;
  * function) accepts a few megabytes at most, far below a 45 MB video. The
  * browser compresses the video, asks here for a URL, and PUTs the bytes to
  * Storage itself.
- *
- * Unlike the other actions in this file, this one checks the caller is a
- * signed-in admin: a signed upload URL is a write capability on a public
- * bucket, and must not be handed to anyone who can call the action.
+
  */
 export async function createVideoUpload(
   contentType: string,
@@ -141,7 +155,7 @@ export async function createVideoUpload(
   if (!dbConfigured()) return { ok: false, error: "There is no database connection." };
 
   const admin = await checkAdmin();
-  if (!admin.ok) return { ok: false, error: "Your admin session has ended. Sign in again." };
+  if (!admin.ok) return { ok: false, error: deniedMessage(admin.reason) };
 
   const ext = contentType === "video/webm" ? "webm" : contentType === "video/mp4" ? "mp4" : null;
   if (!ext) return { ok: false, error: "Only MP4 and WebM videos can be uploaded." };
@@ -169,6 +183,7 @@ export async function createVideoUpload(
 // --- artists ---------------------------------------------------------------
 
 export async function saveArtist(a: Artist): Promise<Artist> {
+  await requireAdmin();
   const row = {
     slug: a.slug,
     name: a.name,
@@ -190,6 +205,7 @@ export async function saveArtist(a: Artist): Promise<Artist> {
 }
 
 export async function deleteArtist(id: string): Promise<void> {
+  await requireAdmin();
   const { error } = await db().from("artists").delete().eq("id", id);
   if (error) throw new Error(error.message);
 }
@@ -197,6 +213,7 @@ export async function deleteArtist(id: string): Promise<void> {
 // --- artworks --------------------------------------------------------------
 
 export async function saveArtwork(w: Artwork): Promise<Artwork> {
+  await requireAdmin();
   const row = {
     slug: w.slug,
     artist_id: w.artistId,
@@ -210,6 +227,9 @@ export async function saveArtwork(w: Artwork): Promise<Artwork> {
     dimensions: w.dimensions,
     price: w.price,
     status: w.status,
+    // Any status but 'reserved' ends a checkout hold; 'reserved' keeps
+    // whatever hold there is (none, when set by hand).
+    ...(w.status === "reserved" ? {} : NO_HOLD),
     photos: w.photos,
     photo_url: w.photos[0] ?? null,
     plate: w.plate,
@@ -226,18 +246,24 @@ export async function saveArtwork(w: Artwork): Promise<Artwork> {
 }
 
 export async function deleteArtwork(id: string): Promise<void> {
+  await requireAdmin();
   const { error } = await db().from("artworks").delete().eq("id", id);
   if (error) throw new Error(error.message);
 }
 
 export async function setArtworkStatus(id: string, status: Artwork["status"]): Promise<void> {
-  const { error } = await db().from("artworks").update({ status }).eq("id", id);
+  await requireAdmin();
+  const { error } = await db()
+    .from("artworks")
+    .update({ status, ...(status === "reserved" ? {} : NO_HOLD) })
+    .eq("id", id);
   if (error) throw new Error(error.message);
 }
 
 // --- exhibitions -----------------------------------------------------------
 
 export async function saveExhibition(e: Exhibition): Promise<Exhibition> {
+  await requireAdmin();
   const row = {
     slug: e.slug,
     title: e.title,
@@ -264,6 +290,7 @@ export async function saveExhibition(e: Exhibition): Promise<Exhibition> {
 }
 
 export async function deleteExhibition(id: string): Promise<void> {
+  await requireAdmin();
   const { error } = await db().from("exhibitions").delete().eq("id", id);
   if (error) throw new Error(error.message);
 }
@@ -271,6 +298,7 @@ export async function deleteExhibition(id: string): Promise<void> {
 // --- collaborations --------------------------------------------------------
 
 export async function saveCollaboration(c: Collaboration): Promise<Collaboration> {
+  await requireAdmin();
   const row = {
     slug: c.slug,
     title: c.title,
@@ -296,6 +324,7 @@ export async function saveCollaboration(c: Collaboration): Promise<Collaboration
 }
 
 export async function deleteCollaboration(id: string): Promise<void> {
+  await requireAdmin();
   const { error } = await db().from("collaborations").delete().eq("id", id);
   if (error) throw new Error(error.message);
 }
@@ -303,6 +332,7 @@ export async function deleteCollaboration(id: string): Promise<void> {
 // --- governing body --------------------------------------------------------
 
 export async function saveMember(m: GoverningMember): Promise<GoverningMember> {
+  await requireAdmin();
   const row = {
     name: m.name,
     role: m.role,
@@ -322,6 +352,7 @@ export async function saveMember(m: GoverningMember): Promise<GoverningMember> {
 }
 
 export async function deleteMember(id: string): Promise<void> {
+  await requireAdmin();
   const { error } = await db().from("governing_body").delete().eq("id", id);
   if (error) throw new Error(error.message);
 }
@@ -330,16 +361,19 @@ export async function deleteMember(id: string): Promise<void> {
 // Neither is authored here; the site writes them. Only their status moves.
 
 export async function setEnquiryStatus(id: string, status: Enquiry["status"]): Promise<void> {
+  await requireAdmin();
   const { error } = await db().from("enquiries").update({ status }).eq("id", id);
   if (error) throw new Error(error.message);
 }
 
 export async function deleteEnquiry(id: string): Promise<void> {
+  await requireAdmin();
   const { error } = await db().from("enquiries").delete().eq("id", id);
   if (error) throw new Error(error.message);
 }
 
 export async function setPaymentStatus(id: string, s: Order["paymentStatus"]): Promise<void> {
+  await requireAdmin();
   const { error } = await db().from("orders").update({ payment_status: s }).eq("id", id);
   if (error) throw new Error(error.message);
 }
@@ -348,6 +382,7 @@ export async function setFulfillmentStatus(
   id: string,
   s: Order["fulfillmentStatus"],
 ): Promise<void> {
+  await requireAdmin();
   const { error } = await db().from("orders").update({ fulfillment_status: s }).eq("id", id);
   if (error) throw new Error(error.message);
 }
@@ -364,6 +399,7 @@ export async function recordRefund(
   refund: Omit<Refund, "at">,
   relist: boolean,
 ): Promise<Refund> {
+  await requireAdmin();
   const client = db();
 
   const { data: order, error: readError } = await client
@@ -403,7 +439,7 @@ export async function recordRefund(
     if (ids.length) {
       const { error: relistError } = await client
         .from("artworks")
-        .update({ status: "available" })
+        .update({ status: "available", ...NO_HOLD })
         .in("id", ids);
       // The refund is recorded either way; a piece left marked sold is for the
       // admin to fix on the Artworks screen, not a reason to lose the record.
@@ -420,6 +456,7 @@ export async function recordRefund(
 }
 
 export async function deleteOrder(id: string): Promise<void> {
+  await requireAdmin();
   const { error } = await db().from("orders").delete().eq("id", id);
   if (error) throw new Error(error.message);
 }
@@ -446,6 +483,7 @@ function writingRow(p: BlogPost | PressRelease) {
 }
 
 export async function savePost(p: BlogPost): Promise<BlogPost> {
+  await requireAdmin();
   const row = { ...writingRow(p), tag: p.tag, video_url: p.videoUrl };
   const q = db().from("posts");
   const { data, error } = p.id
@@ -457,11 +495,13 @@ export async function savePost(p: BlogPost): Promise<BlogPost> {
 }
 
 export async function deletePost(id: string): Promise<void> {
+  await requireAdmin();
   const { error } = await db().from("posts").delete().eq("id", id);
   if (error) throw new Error(error.message);
 }
 
 export async function saveRelease(p: PressRelease): Promise<PressRelease> {
+  await requireAdmin();
   const row = { ...writingRow(p), publication: p.publication };
   const q = db().from("press_releases");
   const { data, error } = p.id
@@ -473,6 +513,7 @@ export async function saveRelease(p: PressRelease): Promise<PressRelease> {
 }
 
 export async function deleteRelease(id: string): Promise<void> {
+  await requireAdmin();
   const { error } = await db().from("press_releases").delete().eq("id", id);
   if (error) throw new Error(error.message);
 }

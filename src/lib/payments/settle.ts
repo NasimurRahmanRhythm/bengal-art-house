@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isPaidStatus, validateTransaction, verifySignature } from "./sslcommerz";
+import { NO_HOLD } from "./hold";
 
 // Everything that decides what a gateway callback means to an order lives
 // here, so the four callback routes (success, fail, cancel, ipn) stay
@@ -80,6 +81,11 @@ export async function settlePayment(
     return { outcome: "unknown", orderNumber: null, reason: `no order for tran_id ${tranId}` };
   }
 
+  // A 'failed' or 'cancelled' order is NOT finished: the fail and cancel legs
+  // carry no proof of anything (anyone holding the tran_id can call them), and
+  // the gateway can send one for a first attempt that the customer then
+  // retries and pays. The validator below decides, whatever those said.
+  //
   // A refunded order is finished too. Without this a late or replayed
   // callback would sail through validation (SSLCommerz still says VALIDATED),
   // fail to update the row, and then mark the works sold again — undoing an
@@ -156,7 +162,7 @@ export async function settlePayment(
     };
   }
 
-  const { error: updateError } = await db
+  const { data: settled, error: updateError } = await db
     .from("orders")
     .update({
       payment_status: "paid",
@@ -172,7 +178,10 @@ export async function settlePayment(
       sslcommerz_response: { callback: fields, validation },
     })
     .eq("id", order.id)
-    .eq("payment_status", "pending"); // loses the race harmlessly rather than double-writing
+    // Never over a paid or refunded order: loses the race with the other leg
+    // harmlessly rather than double-writing.
+    .in("payment_status", ["pending", "failed", "cancelled"])
+    .select("id");
 
   if (updateError) {
     console.error("[sslcommerz] could not mark order paid", updateError);
@@ -183,6 +192,25 @@ export async function settlePayment(
     };
   }
 
+  // No row changed: the other leg got there first (fine), or something else
+  // moved the order. Either way this call confirmed nothing, so it must not
+  // report 'paid' or touch the works.
+  if (!settled?.length) {
+    const { data: now } = await db
+      .from("orders")
+      .select("payment_status")
+      .eq("id", order.id)
+      .maybeSingle();
+    if (now?.payment_status === "paid" || now?.payment_status === "refunded") {
+      return { outcome: "already-paid", orderNumber: order.order_number };
+    }
+    return {
+      outcome: "unknown",
+      orderNumber: order.order_number,
+      reason: `order is ${now?.payment_status ?? "gone"}; payment ${valId} was not recorded`,
+    };
+  }
+
   await markItemsSold(order.id);
 
   return { outcome: "paid", orderNumber: order.order_number };
@@ -190,7 +218,8 @@ export async function settlePayment(
 
 /** Records a payment that did not happen. Never downgrades an order that is
     already paid — the fail and cancel legs can arrive after a successful
-    retry on the same tran_id. */
+    retry on the same tran_id. Only a pending order moves, and a failed or
+    cancelled one can still become paid later through settlePayment(). */
 export async function markUnpaid(
   tranId: string,
   status: "failed" | "cancelled",
@@ -208,10 +237,15 @@ export async function markUnpaid(
     })
     .eq("tran_id", tranId)
     .eq("payment_status", "pending")
-    .select("order_number")
+    .select("id, order_number")
     .maybeSingle();
 
-  if (data) return data.order_number;
+  if (data) {
+    // The buyer is not paying (this time), so the works go straight back on
+    // sale rather than waiting for the hold to lapse.
+    await releaseHolds(data.id);
+    return data.order_number;
+  }
 
   // Nothing was updated: either the tran_id is unknown or the order had
   // already moved on. Read the number back so the customer still lands on a
@@ -238,7 +272,10 @@ async function markItemsSold(orderId: string): Promise<void> {
   const ids = (items ?? []).map((i) => i.artwork_id).filter(Boolean);
   if (ids.length === 0) return;
 
-  const { error } = await db.from("artworks").update({ status: "sold" }).in("id", ids);
+  const { error } = await db
+    .from("artworks")
+    .update({ status: "sold", ...NO_HOLD })
+    .in("id", ids);
 
   // Deliberately not fatal: the money is already taken and the order is paid.
   // A piece left showing as available is a catalogue problem for the admin to
@@ -252,4 +289,17 @@ function parseTranDate(raw: string | undefined): string {
   if (!raw) return new Date().toISOString();
   const parsed = new Date(raw.replace(" ", "T") + "+06:00");
   return Number.isNaN(parsed.getTime()) ? new Date().toISOString() : parsed.toISOString();
+}
+
+/** Puts back on sale the works held for this order at checkout — only those
+    still held for it, so a hold that lapsed and was taken by another buyer is
+    left with them. */
+export async function releaseHolds(orderId: string): Promise<void> {
+  const db = createAdminClient();
+  const { error } = await db
+    .from("artworks")
+    .update({ status: "available", ...NO_HOLD })
+    .eq("reserved_for_order", orderId)
+    .eq("status", "reserved");
+  if (error) console.error("[checkout] could not release held works", error);
 }

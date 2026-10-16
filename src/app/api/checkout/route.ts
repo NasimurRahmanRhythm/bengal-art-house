@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { initSession, newTranId } from "@/lib/payments/sslcommerz";
+import { HOLD_MINUTES, liveStatus } from "@/lib/payments/hold";
+import { releaseHolds } from "@/lib/payments/settle";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -81,7 +83,7 @@ export async function POST(request: Request) {
 
   const { data: works, error: worksError } = await db
     .from("artworks")
-    .select("id, slug, title, price, status, artists ( name )")
+    .select("id, slug, title, price, status, reserved_until, artists ( name )")
     .in("slug", slugs);
 
   if (worksError) {
@@ -99,12 +101,14 @@ export async function POST(request: Request) {
     return bad("Some works in your selection are no longer listed. Please refresh and retry.");
   }
 
-  const unavailable = found.filter((w) => w.status !== "available");
+  // A quick, friendly check first. It is not what stops two buyers getting the
+  // same piece — reserve_artworks() below is — but it names the work.
+  const unavailable = found.filter((w) => liveStatus(w.status, w.reserved_until) !== "available");
   if (unavailable.length > 0) {
     return bad(
       `${unavailable.map((w) => w.title).join(", ")} ${
-        unavailable.length === 1 ? "has" : "have"
-      } already been sold. Please remove ${unavailable.length === 1 ? "it" : "them"} and try again.`,
+        unavailable.length === 1 ? "is" : "are"
+      } no longer available. Please remove ${unavailable.length === 1 ? "it" : "them"} and try again.`,
     );
   }
 
@@ -151,6 +155,27 @@ export async function POST(request: Request) {
     return bad("Could not start the order. Please try again.", 500);
   }
 
+  // ---- hold the works -------------------------------------------------------
+  // All of them for this order, or none. Two buyers pressing Pay at the same
+  // moment both pass the check above; only one gets past this.
+  const { error: holdError } = await db.rpc("reserve_artworks", {
+    p_order: order.id,
+    p_ids: found.map((w) => w.id),
+    p_minutes: HOLD_MINUTES,
+  });
+
+  if (holdError) {
+    await db.from("orders").delete().eq("id", order.id);
+    if (/artwork_unavailable/.test(holdError.message)) {
+      return bad(
+        "Another buyer is paying for a work in your selection right now. Please refresh and try again.",
+        409,
+      );
+    }
+    console.error("[checkout] could not hold the works", holdError);
+    return bad("Could not start the order. Please try again.", 500);
+  }
+
   const artistNameOf = (w: (typeof found)[number]): string => {
     // PostgREST types an embedded to-one relation as an array; at runtime it
     // is the object. Both shapes are handled rather than cast away.
@@ -171,6 +196,7 @@ export async function POST(request: Request) {
 
   if (itemsError) {
     console.error("[checkout] could not write the order lines", itemsError);
+    await releaseHolds(order.id);
     await db.from("orders").delete().eq("id", order.id);
     return bad("Could not start the order. Please try again.", 500);
   }
@@ -213,6 +239,7 @@ export async function POST(request: Request) {
       .from("orders")
       .update({ payment_status: "failed", settled_by: "checkout" })
       .eq("id", order.id);
+    await releaseHolds(order.id);
     return bad("Card payment is not configured yet. Please contact the gallery.", 500);
   }
 
@@ -222,6 +249,7 @@ export async function POST(request: Request) {
       .from("orders")
       .update({ payment_status: "failed", settled_by: "checkout" })
       .eq("id", order.id);
+    await releaseHolds(order.id);
     return bad("The payment gateway could not start a session. Please try again.", 502);
   }
 
