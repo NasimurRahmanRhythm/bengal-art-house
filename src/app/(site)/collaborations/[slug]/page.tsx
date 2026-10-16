@@ -12,10 +12,6 @@ type Params = Promise<{ slug: string }>;
 // Laid out like an exhibition page — the cover, the write-up, the facts beside
 // it, the remaining pictures underneath — so the two read as one family.
 
-export async function generateStaticParams() {
-  return (await getCollaborations()).map((c) => ({ slug: c.slug }));
-}
-
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
   const c = (await getCollaborations()).find((x) => x.slug === slug);

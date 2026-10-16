@@ -11,10 +11,6 @@ import { getArtists, getArtworks } from "@/lib/site-data";
 
 type Params = Promise<{ slug: string }>;
 
-export async function generateStaticParams() {
-  return (await getArtists()).map((a) => ({ slug: a.slug }));
-}
-
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
   const artist = (await getArtists()).find((a) => a.slug === slug);

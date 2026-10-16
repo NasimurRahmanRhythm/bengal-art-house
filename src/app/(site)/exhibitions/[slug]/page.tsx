@@ -15,10 +15,6 @@ const STATUS_LABEL = {
   past: "Archive",
 } as const;
 
-export async function generateStaticParams() {
-  return (await getExhibitions()).map((e) => ({ slug: e.id }));
-}
-
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
   const exhibition = (await getExhibitions()).find((e) => e.id === slug);

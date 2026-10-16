@@ -11,10 +11,6 @@ import styles from "@/components/sections/PostBody.module.css";
 
 type Params = Promise<{ slug: string }>;
 
-export async function generateStaticParams() {
-  return (await getPosts()).map((p) => ({ slug: p.slug }));
-}
-
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
   const post = (await getPosts()).find((p) => p.slug === slug);

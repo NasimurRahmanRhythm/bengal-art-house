@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { checkAdmin } from "./auth";
 import {
@@ -44,11 +43,6 @@ function db() {
     );
   }
   return createAdminClient();
-}
-
-/** Refresh the public pages that render whatever just changed. */
-function revalidatePublic(paths: string[]) {
-  for (const p of paths) revalidatePath(p);
 }
 
 export async function loadAll(): Promise<
@@ -192,14 +186,12 @@ export async function saveArtist(a: Artist): Promise<Artist> {
     : await q.insert(row).select().single();
 
   if (error) throw new Error(error.message);
-  revalidatePublic(["/", "/artists", `/artists/${a.slug}`]);
   return rowToArtist(data);
 }
 
 export async function deleteArtist(id: string): Promise<void> {
   const { error } = await db().from("artists").delete().eq("id", id);
   if (error) throw new Error(error.message);
-  revalidatePublic(["/", "/artists"]);
 }
 
 // --- artworks --------------------------------------------------------------
@@ -230,20 +222,17 @@ export async function saveArtwork(w: Artwork): Promise<Artwork> {
     : await q.insert(row).select().single();
 
   if (error) throw new Error(error.message);
-  revalidatePublic(["/", "/artworks"]);
   return rowToArtwork(data);
 }
 
 export async function deleteArtwork(id: string): Promise<void> {
   const { error } = await db().from("artworks").delete().eq("id", id);
   if (error) throw new Error(error.message);
-  revalidatePublic(["/", "/artworks"]);
 }
 
 export async function setArtworkStatus(id: string, status: Artwork["status"]): Promise<void> {
   const { error } = await db().from("artworks").update({ status }).eq("id", id);
   if (error) throw new Error(error.message);
-  revalidatePublic(["/", "/artworks"]);
 }
 
 // --- exhibitions -----------------------------------------------------------
@@ -271,16 +260,12 @@ export async function saveExhibition(e: Exhibition): Promise<Exhibition> {
     : await q.insert(row).select().single();
 
   if (error) throw new Error(error.message);
-  revalidatePublic(["/", "/exhibitions"]);
-  revalidatePath("/exhibitions/[slug]", "page");
   return rowToExhibition(data);
 }
 
 export async function deleteExhibition(id: string): Promise<void> {
   const { error } = await db().from("exhibitions").delete().eq("id", id);
   if (error) throw new Error(error.message);
-  revalidatePublic(["/", "/exhibitions"]);
-  revalidatePath("/exhibitions/[slug]", "page");
 }
 
 // --- collaborations --------------------------------------------------------
@@ -307,16 +292,12 @@ export async function saveCollaboration(c: Collaboration): Promise<Collaboration
     : await q.insert(row).select().single();
 
   if (error) throw new Error(error.message);
-  revalidatePublic(["/collaborations"]);
-  revalidatePath("/collaborations/[slug]", "page");
   return rowToCollaboration(data);
 }
 
 export async function deleteCollaboration(id: string): Promise<void> {
   const { error } = await db().from("collaborations").delete().eq("id", id);
   if (error) throw new Error(error.message);
-  revalidatePublic(["/collaborations"]);
-  revalidatePath("/collaborations/[slug]", "page");
 }
 
 // --- governing body --------------------------------------------------------
@@ -337,14 +318,12 @@ export async function saveMember(m: GoverningMember): Promise<GoverningMember> {
     : await q.insert(row).select().single();
 
   if (error) throw new Error(error.message);
-  revalidatePublic(["/", "/governing-body"]);
   return rowToMember(data);
 }
 
 export async function deleteMember(id: string): Promise<void> {
   const { error } = await db().from("governing_body").delete().eq("id", id);
   if (error) throw new Error(error.message);
-  revalidatePublic(["/", "/governing-body"]);
 }
 
 // --- enquiries and orders --------------------------------------------------
@@ -429,7 +408,6 @@ export async function recordRefund(
       // The refund is recorded either way; a piece left marked sold is for the
       // admin to fix on the Artworks screen, not a reason to lose the record.
       if (relistError) throw new Error(`Refund recorded, but the works could not be relisted: ${relistError.message}`);
-      revalidatePublic(["/", "/artworks"]);
     }
   }
 
@@ -475,14 +453,12 @@ export async function savePost(p: BlogPost): Promise<BlogPost> {
     : await q.insert(row).select().single();
 
   if (error) throw new Error(error.message);
-  revalidatePublic(["/blog", `/blog/${p.slug}`]);
   return rowToPost(data);
 }
 
 export async function deletePost(id: string): Promise<void> {
   const { error } = await db().from("posts").delete().eq("id", id);
   if (error) throw new Error(error.message);
-  revalidatePublic(["/blog"]);
 }
 
 export async function saveRelease(p: PressRelease): Promise<PressRelease> {
@@ -493,12 +469,10 @@ export async function saveRelease(p: PressRelease): Promise<PressRelease> {
     : await q.insert(row).select().single();
 
   if (error) throw new Error(error.message);
-  revalidatePublic(["/press", `/press/${p.slug}`]);
   return rowToRelease(data);
 }
 
 export async function deleteRelease(id: string): Promise<void> {
   const { error } = await db().from("press_releases").delete().eq("id", id);
   if (error) throw new Error(error.message);
-  revalidatePublic(["/press"]);
 }

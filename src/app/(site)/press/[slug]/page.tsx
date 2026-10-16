@@ -10,10 +10,6 @@ import { formatLongDate } from "@/lib/content";
 
 type Params = Promise<{ slug: string }>;
 
-export async function generateStaticParams() {
-  return (await getPressReleases()).map((p) => ({ slug: p.slug }));
-}
-
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
   const item = (await getPressReleases()).find((p) => p.slug === slug);

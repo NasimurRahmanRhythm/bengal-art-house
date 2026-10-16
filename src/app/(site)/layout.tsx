@@ -7,12 +7,10 @@ import Preloader from "@/components/Preloader/Preloader";
 import SmoothScroll from "@/components/motion/SmoothScroll";
 import CustomCursor from "@/components/motion/CustomCursor";
 
-// Every page under (site) reads the database (src/lib/site-data.ts) and is
-// regenerated at most this many seconds apart, so content added in Supabase
-// or by a migration shows without a redeploy. Saves from the admin panel
-// still refresh their pages at once. Pages that set their own `dynamic`
-// (account, checkout result) are unaffected.
-export const revalidate = 60;
+// Every page under (site) is rendered on request: its server components read
+// the database (src/lib/site-data.ts) each time the page is opened, so what is
+// in Supabase is what the visitor sees — no build-time copies, no caching.
+export const dynamic = "force-dynamic";
 
 // The public gallery's chrome. Everything under (site) gets it; /admin does
 // not — the dashboard is a workbench and stays on native scroll.

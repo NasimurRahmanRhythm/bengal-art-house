@@ -18,10 +18,10 @@ import type { ContentItem } from "@/lib/content";
 // the page shows its own "nothing here yet" state — never invented artists,
 // works or press coverage presented as real.
 //
-// Freshness: pages under (site) are regenerated at most a minute apart (see
-// `revalidate` in (site)/layout.tsx), so a row added from Supabase directly or
-// by a migration appears without a redeploy. Saves from the admin panel
-// refresh the affected pages immediately.
+// Called from server components only. Pages under (site) render on every
+// request (see (site)/layout.tsx), so each visit reads the current rows — a
+// change made from the admin panel, from Supabase or by a migration shows on
+// the next page load.
 //
 // Reads go through the anon key, under the same Row Level Security a visitor
 // gets, so an unpublished draft can never leak out this way. Writes never
